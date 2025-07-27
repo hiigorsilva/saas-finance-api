@@ -9,9 +9,9 @@
     "ignoreUnknown": false,
     "experimentalScannerIgnores": [
       "**/node_modules/**",
-      "**/package-lock.json",
       "**/dist/**",
-      "**/build/**"
+      "**/build/**",
+      "**/public/**"
     ]
   },
   "formatter": {
@@ -31,14 +31,17 @@
         "noUnusedImports": "error"
       },
       "complexity": {
-        "useOptionalChain": "off"
+        "useOptionalChain": "off",
+        "noStaticOnlyClass": "off",
+        "noThisInStatic": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noEmptyInterface": "off"
       },
       "style": {
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useConst": "off"
       }
     }
   },
