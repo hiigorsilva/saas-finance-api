@@ -1,0 +1,9 @@
+# SYSTEM
+.DS_Store
+
+# NODE
+node_modules
+.env
+
+# CUSTOM FILES
+todo.md
