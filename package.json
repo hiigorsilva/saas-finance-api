@@ -11,8 +11,9 @@
   "license": "ISC",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
-    "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate",
+    "db:generate": "npx drizzle-kit generate --config=drizzle.config.ts",
+    "db:migrate": "npx drizzle-kit migrate --config=drizzle.config.ts",
+    "db:studio": "npx drizzle-kit studio",
     "prepare": "husky"
   },
   "devDependencies": {
