@@ -1,11 +1,14 @@
-import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+// users.ts
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { userProfileEnum } from './enums'
 
 export const usersTable = pgTable('users', {
-  id: uuid().primaryKey().defaultRandom(),
-  name: varchar({ length: 255 }).notNull(),
-  email: varchar({ length: 255 }).unique().notNull(),
-  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  passwordHashed: text('password_hashed').notNull(),
+  financialProfile: userProfileEnum('financial_profile'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
   deletedAt: timestamp('deleted_at'),
 })

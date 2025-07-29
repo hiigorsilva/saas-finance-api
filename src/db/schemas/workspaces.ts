@@ -1,17 +1,16 @@
-import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+// workspaces.ts
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { usersTable } from './users'
 
-const WORKSPACE_TYPES = pgEnum('workspace_types', ['PERSONAL', 'SHARED'])
-
 export const workspacesTable = pgTable('workspaces', {
-  id: uuid().primaryKey().defaultRandom(),
-  name: text().notNull(),
-  slug: text(),
-  type: WORKSPACE_TYPES().notNull().default('PERSONAL'),
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
   ownerId: uuid('owner_id')
     .notNull()
-    .references(() => usersTable.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+    .references(() => usersTable.id),
+  type: text('type').$type<'PRIVATE' | 'SHARED'>().notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   deletedAt: timestamp('deleted_at'),
 })
