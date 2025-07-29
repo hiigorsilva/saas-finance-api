@@ -16,7 +16,7 @@ export const registerSwagger = (app: FastifyInstance) => {
   })
 
   app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
+    routePrefix: '/api/docs',
     uiConfig: {
       docExpansion: 'list',
       deepLinking: false,
