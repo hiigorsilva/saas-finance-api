@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
-import { registerHealthRoutes } from '../modules/health/health-check-route'
+import { getHealthStatusRoute } from '../modules/health/routes/get-check-route'
 
 export const registerRoutes = (app: FastifyInstance) => {
-  app.register(registerHealthRoutes, { prefix: '/api' })
+  app.register(getHealthStatusRoute, { prefix: '/api' })
 }
