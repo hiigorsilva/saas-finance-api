@@ -4,5 +4,15 @@
 ###
 
 GET {{baseUrl}}/health
+content-type: application/json
 
 ###
+
+POST {{baseUrl}}/signup
+content-type: application/json
+
+{
+    "name": "John Doe",
+    "email": "johndoe@demail.com",
+    "password": "123456789"
+}

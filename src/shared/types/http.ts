@@ -1,11 +1,6 @@
-export type HttpRequest = {
-  body: Record<string, any>
-  queryParams: Record<string, any>
-  params: Record<string, any>
-  headers: Record<string, any>
-}
+import type { FastifyRequest } from 'fastify'
 
-export type ProtectedHttpRequest = HttpRequest & {
+export type ProtectedHttpRequest = FastifyRequest & {
   userId: string
 }
 
