@@ -4,7 +4,6 @@ import { UserRepository } from '../../repositories/user-repository'
 import * as schema from '../../schemas/signup-schema'
 import { SignUpService } from '../../services/signup-service'
 import { badRequest, internalServerError } from '../../shared/utils/http'
-import { parseRequest } from '../../shared/utils/parse-request'
 import { parseResponse } from '../../shared/utils/parse-response'
 
 const userRepository = new UserRepository()
@@ -14,8 +13,7 @@ const signupController = new SignUpController(signupService)
 export const signupRoute = async (app: FastifyInstance) => {
   app.post('/signup', schema.signup, async (request, reply) => {
     try {
-      const req = parseRequest(request)
-      const response = await signupController.handle(req)
+      const response = await signupController.handle(request)
       return reply.status(response.statusCode).send(response)
     } catch (error) {
       if (error instanceof Error) {
