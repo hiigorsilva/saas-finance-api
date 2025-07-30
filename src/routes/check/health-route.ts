@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify'
-import { badRequest, internalServerError } from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
-import { GetHealthStatusController } from '../controller/get-health-status-controller'
-import * as schema from '../schema/health-schema'
+import { GetHealthStatusController } from '../../controllers/health-controller'
+import * as schema from '../../schemas/health-schema'
+import { badRequest, internalServerError } from '../../shared/utils/http'
+import { parseResponse } from '../../shared/utils/parse-response'
 
-export const getHealthStatusRoute = async (app: FastifyInstance) => {
+export const healthRoute = async (app: FastifyInstance) => {
   app.get('/health', schema.health, async (_, reply) => {
     try {
       const response = await GetHealthStatusController.handle()
@@ -18,7 +18,7 @@ export const getHealthStatusRoute = async (app: FastifyInstance) => {
       return reply
         .status(500)
         .send(
-          parseResponse(internalServerError({ error: 'Internal Server Error' }))
+          parseResponse(internalServerError({ error: 'Internal server error' }))
         )
     }
   })
