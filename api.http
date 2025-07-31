@@ -1,6 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNjg1OTdhNi03ZjY0LTQxMWUtYjMwMC1mY2UyMzVmOWI3YTUiLCJpYXQiOjE3NTM5ODk4NDYsImV4cCI6MTc1NDU5NDY0Nn0.4pwA0U2wSk3wdrz4SwmSyX9gzE_aqYhCGeT33-3DdqI
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YmZhZjE1NS1jNjhiLTQzMjAtYmNlNC0zMTI3ZWU5NThmM2MiLCJpYXQiOjE3NTM5OTU4MDEsImV4cCI6MTc1NDYwMDYwMX0.SwVT3GyXlI7bWbtNPBbkChdXZs3cTvPWq3S_CpNTobE
 
 ###
 
@@ -16,7 +16,7 @@ content-type: application/json
 
 {
     "name": "Higor Silva",
-    "email": "higorsilva@email.com",
+    "email": "higor@email.com",
     "password": "12345678"
 }
 
@@ -27,7 +27,7 @@ POST {{baseUrl}}/signin
 content-type: application/json
 
 {
-    "email": "higorcode@email.com",
+    "email": "higor@email.com",
     "password": "12345678"
 }
 

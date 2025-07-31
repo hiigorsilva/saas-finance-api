@@ -3,11 +3,7 @@ import { MeController } from '../../controllers/me-controller'
 import { UserRepository } from '../../repositories/user-repository'
 import * as schema from '../../schemas/me-schema'
 import { UserService } from '../../services/userService'
-import {
-  badRequest,
-  internalServerError,
-  unauthorized,
-} from '../../shared/utils/http'
+import { badRequest, internalServerError } from '../../shared/utils/http'
 import { parseResponse } from '../../shared/utils/parse-response'
 
 const userRepository = new UserRepository()
@@ -17,11 +13,6 @@ const meController = new MeController(meService)
 export const meRoute = async (app: FastifyInstance) => {
   app.get('/me', schema.me, async (request, reply) => {
     try {
-      if (!request.userId) {
-        return reply
-          .status(401)
-          .send(parseResponse(unauthorized({ error: 'Unauthorized' })))
-      }
       const response = await meController.handle(request)
       return reply.status(response.statusCode).send(response)
     } catch (error) {

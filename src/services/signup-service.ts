@@ -6,7 +6,7 @@ export class SignUpService {
   constructor(private userRepository: UserRepository) {}
 
   async execute(userData: SignUpBodyType) {
-    const userAlreadyExists = await this.userRepository.isUserExists(
+    const userAlreadyExists = await this.userRepository.isUserExistsByEmail(
       userData.email
     )
     if (userAlreadyExists) {

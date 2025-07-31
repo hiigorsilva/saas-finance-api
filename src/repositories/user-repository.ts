@@ -21,13 +21,7 @@ export class UserRepository implements IUserRepository {
   async findUserById(userId: string) {
     const user = await db.query.usersTable.findFirst({
       columns: {
-        id: true,
-        name: true,
-        email: true,
-        financialProfile: true,
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
+        passwordHashed: false,
       },
       where: eq(usersTable.id, userId),
     })
@@ -36,15 +30,6 @@ export class UserRepository implements IUserRepository {
 
   async findUserByEmail(email: string) {
     const user = await db.query.usersTable.findFirst({
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        financialProfile: true,
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
-      },
       where: eq(usersTable.email, email),
     })
     return user ?? null
