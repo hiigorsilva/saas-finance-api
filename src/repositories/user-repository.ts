@@ -1,24 +1,56 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { usersTable } from '../db/schemas/users'
-import type { CreateUser, IUserRepository } from '../interfaces/user'
+import type { InputCreateUser, IUserRepository } from '../interfaces/user'
 
 export class UserRepository implements IUserRepository {
-  async isUserExists(email: string) {
+  async isUserExistsById(userId: string) {
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.email, userId),
+    })
+    return !!user
+  }
+
+  async isUserExistsByEmail(email: string) {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.email, email),
     })
     return !!user
   }
 
+  async findUserById(userId: string) {
+    const user = await db.query.usersTable.findFirst({
+      columns: {
+        id: true,
+        name: true,
+        email: true,
+        financialProfile: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      },
+      where: eq(usersTable.id, userId),
+    })
+    return user ?? null
+  }
+
   async findUserByEmail(email: string) {
     const user = await db.query.usersTable.findFirst({
+      columns: {
+        id: true,
+        name: true,
+        email: true,
+        financialProfile: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      },
       where: eq(usersTable.email, email),
     })
     return user ?? null
   }
 
-  async create(data: CreateUser) {
+  async create(data: InputCreateUser) {
     const [newUser] = await db
       .insert(usersTable)
       .values({
