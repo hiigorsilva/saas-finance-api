@@ -10,15 +10,19 @@ export interface IUser {
     | 'SAVER'
     | 'INVESTOR'
     | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  createdAt: Date
+  updatedAt: Date
   deletedAt: Date | null
 }
 
-export type CreateUser = Pick<IUser, 'name' | 'email' | 'passwordHashed'>
+export type InputCreateUser = Pick<IUser, 'name' | 'email' | 'passwordHashed'>
+export type UserId = Pick<IUser, 'id'>
+export type UserWithoutPassword = Omit<IUser, 'passwordHashed'>
 
 export interface IUserRepository {
-  create(user: CreateUser): Promise<Pick<IUser, 'id'>>
-  isUserExists(email: string): Promise<boolean>
-  findUserByEmail(email: string): Promise<IUser | null>
+  create(user: InputCreateUser): Promise<UserId>
+  isUserExistsById(userId: string): Promise<boolean>
+  isUserExistsByEmail(email: string): Promise<boolean>
+  findUserByEmail(email: string): Promise<UserWithoutPassword | null>
+  findUserById(userId: string): Promise<UserWithoutPassword | null>
 }
