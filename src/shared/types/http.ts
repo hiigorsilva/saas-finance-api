@@ -1,7 +1,7 @@
-import type { FastifyRequest } from 'fastify'
-
-export type ProtectedHttpRequest = FastifyRequest & {
-  userId: string
+declare module 'fastify' {
+  interface FastifyRequest {
+    userId: string | null
+  }
 }
 
 export type HttpResponse = {

@@ -1,18 +1,28 @@
-enum FINANCIAL_PROFILE {
-  DEBTOR,
-  SPENDER,
-  DETACHED,
-  SAVER,
-  INVESTOR,
-}
-
-export interface User {
+export interface IUser {
   id: string
   name: string
   email: string
   passwordHashed: string
-  financialProfile: FINANCIAL_PROFILE | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  financialProfile:
+    | 'DEBTOR'
+    | 'SPENDER'
+    | 'DETACHED'
+    | 'SAVER'
+    | 'INVESTOR'
+    | null
+  createdAt: Date
+  updatedAt: Date
   deletedAt: Date | null
+}
+
+export type InputCreateUser = Pick<IUser, 'name' | 'email' | 'passwordHashed'>
+export type UserId = Pick<IUser, 'id'>
+export type UserWithoutPassword = Omit<IUser, 'passwordHashed'>
+
+export interface IUserRepository {
+  create(user: InputCreateUser): Promise<UserId>
+  isUserExistsById(userId: string): Promise<boolean>
+  isUserExistsByEmail(email: string): Promise<boolean>
+  findUserByEmail(email: string): Promise<UserWithoutPassword | null>
+  findUserById(userId: string): Promise<UserWithoutPassword | null>
 }
