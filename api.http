@@ -1,6 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YmZhZjE1NS1jNjhiLTQzMjAtYmNlNC0zMTI3ZWU5NThmM2MiLCJpYXQiOjE3NTM5OTU4MDEsImV4cCI6MTc1NDYwMDYwMX0.SwVT3GyXlI7bWbtNPBbkChdXZs3cTvPWq3S_CpNTobE
+@authToken = 
 
 ###
 
