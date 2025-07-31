@@ -12,7 +12,17 @@ POST {{baseUrl}}/signup
 content-type: application/json
 
 {
-    "name": "John Doe",
-    "email": "johndoe@demail.com",
+    "name": "Higor",
+    "email": "higor@email.com",
+    "password": "123456789"
+}
+
+###
+
+POST {{baseUrl}}/signin
+content-type: application/json
+
+{
+    "email": "higor@email.com",
     "password": "123456789"
 }
