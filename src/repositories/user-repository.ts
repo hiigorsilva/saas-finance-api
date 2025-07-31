@@ -1,14 +1,9 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { usersTable } from '../db/schemas/users'
+import type { CreateUser, IUserRepository } from '../interfaces/user'
 
-type CreateUser = {
-  name: string
-  email: string
-  passwordHashed: string
-}
-
-export class UserRepository {
+export class UserRepository implements IUserRepository {
   async isUserExists(email: string) {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.email, email),
@@ -20,10 +15,10 @@ export class UserRepository {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.email, email),
     })
-    return user
+    return user ?? null
   }
 
-  async create(data: CreateUser): Promise<{ id: string }> {
+  async create(data: CreateUser) {
     const [newUser] = await db
       .insert(usersTable)
       .values({
