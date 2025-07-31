@@ -2,9 +2,9 @@ import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 
 export const signupBodySchema = z.object({
-  name: z.string(),
-  email: z.email(),
-  password: z.string(),
+  name: z.string().trim(),
+  email: z.email().trim(),
+  password: z.string().min(8).trim(),
 })
 export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
