@@ -1,18 +1,39 @@
 # Variables
 @baseUrl = http://localhost:3333/api
+@authToken = adfdsfdafaffd
 
 ###
 
+# @name HealthCheckFromServer
 GET {{baseUrl}}/health
 content-type: application/json
 
 ###
 
+# @name CreateANewUser
 POST {{baseUrl}}/signup
 content-type: application/json
 
 {
-    "name": "John Doe",
-    "email": "johndoe@demail.com",
-    "password": "123456789"
+    "name": "Higor",
+    "email": "higor@email.com",
+    "password": "12345678"
 }
+
+###
+
+# @name LogInAUser
+POST {{baseUrl}}/signin
+content-type: application/json
+
+{
+    "email": "higor@email.com",
+    "password": "12345678"
+}
+
+###
+
+# @name GetUserDataFromDashboard
+GET {{baseUrl}}/dashboard
+content-type: application/json
+Authorization: Bearer {{authToken}}

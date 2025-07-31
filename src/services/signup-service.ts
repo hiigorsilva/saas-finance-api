@@ -1,5 +1,4 @@
 import { hashSync } from 'bcryptjs'
-import { generateToken } from '../lib/jwt'
 import type { UserRepository } from '../repositories/user-repository'
 import type { SignUpBodyType } from '../schemas/signup-schema'
 
@@ -7,7 +6,7 @@ export class SignUpService {
   constructor(private userRepository: UserRepository) {}
 
   async execute(userData: SignUpBodyType) {
-    const userAlreadyExists = await this.userRepository.findByEmail(
+    const userAlreadyExists = await this.userRepository.isUserExists(
       userData.email
     )
     if (userAlreadyExists) {
@@ -22,11 +21,5 @@ export class SignUpService {
       passwordHashed: hashedPassword,
     })
     return newUser
-  }
-
-  async signAccessTokenFor(userId: string) {
-    const token = await generateToken(userId)
-    if (!token) return null
-    return token
   }
 }

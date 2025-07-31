@@ -9,12 +9,18 @@ type CreateUser = {
 }
 
 export class UserRepository {
-  async findByEmail(email: string): Promise<boolean> {
+  async isUserExists(email: string) {
     const user = await db.query.usersTable.findFirst({
-      columns: { email: true },
       where: eq(usersTable.email, email),
     })
     return !!user
+  }
+
+  async findUserByEmail(email: string) {
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.email, email),
+    })
+    return user
   }
 
   async create(data: CreateUser): Promise<{ id: string }> {
