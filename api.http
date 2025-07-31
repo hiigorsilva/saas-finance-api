@@ -1,6 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
-@authToken = adfdsfdafaffd
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNjg1OTdhNi03ZjY0LTQxMWUtYjMwMC1mY2UyMzVmOWI3YTUiLCJpYXQiOjE3NTM5ODk4NDYsImV4cCI6MTc1NDU5NDY0Nn0.4pwA0U2wSk3wdrz4SwmSyX9gzE_aqYhCGeT33-3DdqI
 
 ###
 
@@ -15,8 +15,8 @@ POST {{baseUrl}}/signup
 content-type: application/json
 
 {
-    "name": "Teste",
-    "email": "teste@email.com",
+    "name": "Higor Silva",
+    "email": "higorsilva@email.com",
     "password": "12345678"
 }
 
@@ -27,13 +27,13 @@ POST {{baseUrl}}/signin
 content-type: application/json
 
 {
-    "email": "higor@email.com",
+    "email": "higorcode@email.com",
     "password": "12345678"
 }
 
 ###
 
 # @name GetUserDataFromDashboard
-GET {{baseUrl}}/dashboard
+GET {{baseUrl}}/me
 content-type: application/json
 Authorization: Bearer {{authToken}}
