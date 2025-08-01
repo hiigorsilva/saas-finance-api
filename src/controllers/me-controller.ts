@@ -1,5 +1,5 @@
 import type { FastifyRequest } from 'fastify'
-import type { UserService } from '../services/userService'
+import type { UserService } from '../services/user-service'
 import { ok, unauthorized } from '../shared/utils/http'
 
 export class MeController {
