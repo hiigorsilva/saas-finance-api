@@ -1,7 +1,8 @@
-import { and, eq } from 'drizzle-orm'
+import { and, eq, isNull } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { workspacesTable } from '../db/schemas/workspaces'
 import type {
+  IWorkspace,
   IWorkspaceId,
   IWorkspaceRepository,
 } from '../interfaces/workspace'
@@ -10,12 +11,12 @@ import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
 export class WorkspaceRepository implements IWorkspaceRepository {
   async create(
     data: CreateWorkspaceBodyType,
-    ownerId: string
+    userId: string
   ): Promise<IWorkspaceId> {
     const [workspace] = await db
       .insert(workspacesTable)
       .values({
-        ownerId: ownerId,
+        ownerId: userId,
         name: data.name,
         description: data.description,
         type: data.type,
@@ -34,5 +35,22 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       ),
     })
     return !!workspace
+  }
+
+  async list(userId: string): Promise<IWorkspace[]> {
+    const workspaces = await db.query.workspacesTable.findMany({
+      columns: {
+        id: true,
+        name: true,
+        description: true,
+        type: true,
+        deletedAt: false,
+      },
+      where: and(
+        eq(workspacesTable.ownerId, userId),
+        isNull(workspacesTable.deletedAt)
+      ),
+    })
+    return workspaces
   }
 }

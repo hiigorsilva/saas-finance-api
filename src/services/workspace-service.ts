@@ -16,4 +16,9 @@ export class WorkspaceService {
     const workspace = await this.workspaceRepository.create(data, userId)
     return workspace
   }
+
+  async list(userId: string) {
+    const workspaces = await this.workspaceRepository.list(userId)
+    return workspaces
+  }
 }
