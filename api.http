@@ -33,7 +33,20 @@ content-type: application/json
 
 ###
 
-# @name GetUserDataFromDashboard
+# @name GetUserDataLoggeIn
 GET {{baseUrl}}/me
 content-type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name CreateANewWorkspace
+POST {{baseUrl}}/workspace
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Buncker",
+    "description": "Controle pessoal",
+    "type": "PRIVATE"
+}
