@@ -1,7 +1,8 @@
 import fastifySwagger from '@fastify/swagger'
-import fastifySwaggerUi from '@fastify/swagger-ui'
+import scalarFastifyApiReference from '@scalar/fastify-api-reference'
 import type { FastifyInstance } from 'fastify'
 import { jsonSchemaTransform } from 'fastify-type-provider-zod'
+import { env } from '../../shared/utils/env'
 
 export const registerSwagger = (app: FastifyInstance) => {
   app.register(fastifySwagger, {
@@ -11,15 +12,28 @@ export const registerSwagger = (app: FastifyInstance) => {
         description: 'API documentation for SaaS Finance application',
         version: '1.0.0',
       },
+      servers: [
+        {
+          url: `http://localhost:${env.PORT}`,
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
     },
     transform: jsonSchemaTransform,
   })
 
-  app.register(fastifySwaggerUi, {
+  app.register(scalarFastifyApiReference, {
     routePrefix: '/api/docs',
-    uiConfig: {
-      docExpansion: 'list',
-      deepLinking: false,
+    configuration: {
+      theme: 'moon',
     },
   })
 }
