@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { MeController } from '../../controllers/me-controller'
 import { UserRepository } from '../../repositories/user-repository'
 import * as schema from '../../schemas/me-schema'
-import { UserService } from '../../services/userService'
+import { UserService } from '../../services/user-service'
 import { badRequest, internalServerError } from '../../shared/utils/http'
 import { parseResponse } from '../../shared/utils/parse-response'
 

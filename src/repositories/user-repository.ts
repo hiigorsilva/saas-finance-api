@@ -44,6 +44,8 @@ export class UserRepository implements IUserRepository {
         passwordHashed: data.passwordHashed,
       })
       .returning({ id: usersTable.id })
+
+    if (!newUser) throw new Error('Error creating user')
     return newUser
   }
 }
