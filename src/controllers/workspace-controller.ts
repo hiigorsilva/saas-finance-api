@@ -13,7 +13,7 @@ export class WorkspaceController {
     const { success, data, error } = createWorkspaceBodySchema.safeParse(body)
     if (!success) return badRequest({ error: error.issues })
 
-    const workspace = await this.workspaceService.execute(data, userId)
+    const workspace = await this.workspaceService.create(data, userId)
     return created({ workspace })
   }
 }

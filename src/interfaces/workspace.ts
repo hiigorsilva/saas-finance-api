@@ -11,6 +11,7 @@ export type IWorkspaceId = Pick<IWorkspace, 'id'>
 
 export interface IWorkspaceRepository {
   create(data: CreateWorkspaceBodyType, ownerId: string): Promise<IWorkspaceId>
+  alreadyExists(workspaceName: string, userId: string): Promise<boolean>
   //   list(workspaceId: string): Promise<IWorkspace[]>
   //   getWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
   //   update(workspaceId: string): Promise<IWorkspace>

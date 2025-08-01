@@ -1,3 +1,4 @@
+import { and, eq } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { workspacesTable } from '../db/schemas/workspaces'
 import type {
@@ -13,10 +14,25 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   ): Promise<IWorkspaceId> {
     const [workspace] = await db
       .insert(workspacesTable)
-      .values({ ...data, ownerId })
+      .values({
+        ownerId: ownerId,
+        name: data.name,
+        description: data.description,
+        type: data.type,
+      })
       .returning({ id: workspacesTable.id })
 
     if (!workspace) throw new Error('Error creating workspace')
     return workspace
+  }
+
+  async alreadyExists(workspaceName: string, userId: string): Promise<boolean> {
+    const workspace = await db.query.workspacesTable.findFirst({
+      where: and(
+        eq(workspacesTable.name, workspaceName),
+        eq(workspacesTable.ownerId, userId)
+      ),
+    })
+    return !!workspace
   }
 }

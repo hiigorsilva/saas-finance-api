@@ -3,8 +3,8 @@ import z from 'zod'
 import { privateRoute } from '../middlewares/private-route'
 
 export const createWorkspaceBodySchema = z.object({
-  name: z.string().min(2),
-  description: z.string().optional(),
+  name: z.string().min(2).trim(),
+  description: z.string().trim().optional(),
   type: z.enum(['PRIVATE', 'SHARED']),
 })
 export type CreateWorkspaceBodyType = z.infer<typeof createWorkspaceBodySchema>
