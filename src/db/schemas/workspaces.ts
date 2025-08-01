@@ -10,7 +10,7 @@ export const workspacesTable = pgTable('workspaces', {
     .notNull()
     .references(() => usersTable.id),
   type: text('type').$type<'PRIVATE' | 'SHARED'>().notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   deletedAt: timestamp('deleted_at'),
 })

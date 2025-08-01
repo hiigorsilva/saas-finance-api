@@ -46,7 +46,14 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Buncker",
-    "description": "Controle pessoal",
-    "type": "PRIVATE"
+    "name": "Projeto de extensão",
+    "description": "Gastos relativos ao projeto da UFG",
+    "type": "SHARED"
 }
+
+###
+
+# @name ListAllWorkspaces
+GET {{baseUrl}}/workspace
+content-type: application/json
+Authorization: Bearer {{authToken}}

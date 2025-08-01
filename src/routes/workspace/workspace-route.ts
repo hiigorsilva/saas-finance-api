@@ -11,9 +11,27 @@ const workspaceService = new WorkspaceService(workspaceRepository)
 const workspaceController = new WorkspaceController(workspaceService)
 
 export const workspaceRoute = async (app: FastifyInstance) => {
-  app.post('/workspace', schema.workspace, async (request, reply) => {
+  app.post('/workspace', schema.createWorkspace, async (request, reply) => {
     try {
-      const response = await workspaceController.handle(request)
+      const response = await workspaceController.create(request)
+      return reply.status(response.statusCode).send(response)
+    } catch (error) {
+      if (error instanceof Error) {
+        return reply
+          .status(400)
+          .send(parseResponse(badRequest({ error: error.message })))
+      }
+      return reply
+        .status(500)
+        .send(
+          parseResponse(internalServerError({ error: 'Internal server error' }))
+        )
+    }
+  })
+
+  app.get('/workspace', schema.listWorkspace, async (request, reply) => {
+    try {
+      const response = await workspaceController.list(request)
       return reply.status(response.statusCode).send(response)
     } catch (error) {
       if (error instanceof Error) {

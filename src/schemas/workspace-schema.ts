@@ -2,9 +2,11 @@ import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../middlewares/private-route'
 
+// ************ CREATE ************
+
 export const createWorkspaceBodySchema = z.object({
-  name: z.string().min(2),
-  description: z.string().optional(),
+  name: z.string().min(2).trim(),
+  description: z.string().trim().optional(),
   type: z.enum(['PRIVATE', 'SHARED']),
 })
 export type CreateWorkspaceBodyType = z.infer<typeof createWorkspaceBodySchema>
@@ -25,7 +27,7 @@ const createWorkspaceBadRequestResponseSchema = z.object({
   }),
 })
 
-export const workspace: RouteShorthandOptions = {
+export const createWorkspace: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Create a new wokspace',
@@ -36,6 +38,43 @@ export const workspace: RouteShorthandOptions = {
     response: {
       201: createWorkspaceSuccessResponseSchema,
       400: createWorkspaceBadRequestResponseSchema,
+    },
+  },
+}
+
+// ************ LIST ************
+
+export const listworkspaceSuccessResponseSchema = z.object({
+  statusCode: z.literal(200),
+  body: z.object({
+    workspaces: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string().nullable(),
+        type: z.string(),
+      })
+    ),
+  }),
+})
+
+export const listWorkspaceBadRequestResponeSchema = z.object({
+  statusCode: z.literal(400),
+  body: z.object({
+    error: z.string(),
+  }),
+})
+
+export const listWorkspace: RouteShorthandOptions = {
+  preHandler: [privateRoute],
+  schema: {
+    summary: 'List all workspaces',
+    consumes: ['application/json'],
+    tags: ['Workspace'],
+    security: [{ bearerAuth: [] }],
+    response: {
+      200: listworkspaceSuccessResponseSchema,
+      400: listWorkspaceBadRequestResponeSchema,
     },
   },
 }

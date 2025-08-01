@@ -4,10 +4,21 @@ import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
 export class WorkspaceService {
   constructor(private workspaceRepository: WorkspaceRepository) {}
 
-  async execute(data: CreateWorkspaceBodyType, userId: string) {
-    // TODO: verificar se já existe um workspace com o mesmo nome
+  async create(data: CreateWorkspaceBodyType, userId: string) {
+    const alreadyExists = await this.workspaceRepository.alreadyExists(
+      data.name,
+      userId
+    )
+    if (alreadyExists) {
+      throw new Error('Workspace name already exists')
+    }
 
-    const workspace = this.workspaceRepository.create(data, userId)
+    const workspace = await this.workspaceRepository.create(data, userId)
     return workspace
+  }
+
+  async list(userId: string) {
+    const workspaces = await this.workspaceRepository.list(userId)
+    return workspaces
   }
 }
