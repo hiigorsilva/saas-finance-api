@@ -2,6 +2,8 @@ import type { FastifyRequest } from 'fastify'
 import {
   createWorkspaceBodySchema,
   type ParamsDeleteWorkspaceType,
+  updateWorkspaceBodySchema,
+  updateWorkspaceParamsSchema,
 } from '../schemas/workspace-schema'
 import type { WorkspaceService } from '../services/workspace-service'
 import { badRequest, created, ok, unauthorized } from '../shared/utils/http'
@@ -40,5 +42,27 @@ export class WorkspaceController {
       userId
     )
     return ok({ status: workspaceDeleted })
+  }
+
+  async update(request: FastifyRequest) {
+    const { userId, body, params } = request
+    if (!userId) return unauthorized({ error: 'Unauthorized' })
+
+    const {
+      success: successParams,
+      data: dataParams,
+      error: errorParams,
+    } = updateWorkspaceParamsSchema.safeParse(params)
+    if (!successParams) return badRequest({ error: errorParams.issues })
+
+    const { success, data, error } = updateWorkspaceBodySchema.safeParse(body)
+    if (!success) return badRequest({ error: error.issues })
+
+    const workspace = await this.workspaceService.update(
+      dataParams.workspaceId,
+      userId,
+      data
+    )
+    return ok({ workspace })
   }
 }

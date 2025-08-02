@@ -1,6 +1,6 @@
 import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
 
-export interface IWorkspaceDetail {
+export interface IWorkspaceDetails {
   id: string
   name: string
   description: string | null
@@ -25,7 +25,11 @@ export interface IWorkspaceRepository {
   alreadyExistsById(workspaceName: string, userId: string): Promise<boolean>
   list(userId: string): Promise<IWorkspace[]>
   delete(workspaceId: string, userId: string): Promise<{ status: string }>
+  update(
+    workspaceId: string,
+    userId: string,
+    data: CreateWorkspaceBodyType
+  ): Promise<IWorkspaceDetails>
   //   getWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
-  //   delete(workspaceId: string): Promise<void>
   // }
 }

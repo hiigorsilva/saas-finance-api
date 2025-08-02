@@ -61,6 +61,20 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name DeleteWorkspaceById
-@workspaceId =
-DELETE {{baseUrl}}/workspace/{{workspaceId}}
+@deleteWorkspaceId =
+DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name UpdateWorkspaceById
+@updateWorkspaceId = 
+PUT {{baseUrl}}/workspace/{{updateWorkspaceId}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Workspace Editado",
+    "description": "Descrição do workspace Editado",
+    "type": "PRIVATE"
+}
