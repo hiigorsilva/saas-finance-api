@@ -5,7 +5,7 @@ export class WorkspaceService {
   constructor(private workspaceRepository: WorkspaceRepository) {}
 
   async create(data: CreateWorkspaceBodyType, userId: string) {
-    const alreadyExists = await this.workspaceRepository.alreadyExists(
+    const alreadyExists = await this.workspaceRepository.alreadyExistsByName(
       data.name,
       userId
     )
@@ -20,5 +20,19 @@ export class WorkspaceService {
   async list(userId: string) {
     const workspaces = await this.workspaceRepository.list(userId)
     return workspaces
+  }
+
+  async delete(workspaceId: string, userId: string) {
+    const workspaceIsExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!workspaceIsExists) throw new Error('Workspace not found.')
+
+    const { status } = await this.workspaceRepository.delete(
+      workspaceId,
+      userId
+    )
+    return status
   }
 }

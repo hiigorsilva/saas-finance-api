@@ -46,9 +46,9 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Projeto de extensão",
-    "description": "Gastos relativos ao projeto da UFG",
-    "type": "SHARED"
+    "name": "Buncker",
+    "description": "Controle pessoal",
+    "type": "PRIVATE"
 }
 
 ###
@@ -56,4 +56,11 @@ Authorization: Bearer {{authToken}}
 # @name ListAllWorkspaces
 GET {{baseUrl}}/workspace
 content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name DeleteWorkspaceById
+@workspaceId =
+DELETE {{baseUrl}}/workspace/{{workspaceId}}
 Authorization: Bearer {{authToken}}

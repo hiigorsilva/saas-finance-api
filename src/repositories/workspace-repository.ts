@@ -27,10 +27,26 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return workspace
   }
 
-  async alreadyExists(workspaceName: string, userId: string): Promise<boolean> {
+  async alreadyExistsByName(
+    workspaceName: string,
+    userId: string
+  ): Promise<boolean> {
     const workspace = await db.query.workspacesTable.findFirst({
       where: and(
         eq(workspacesTable.name, workspaceName),
+        eq(workspacesTable.ownerId, userId)
+      ),
+    })
+    return !!workspace
+  }
+
+  async alreadyExistsById(
+    workspaceId: string,
+    userId: string
+  ): Promise<boolean> {
+    const workspace = await db.query.workspacesTable.findFirst({
+      where: and(
+        eq(workspacesTable.id, workspaceId),
         eq(workspacesTable.ownerId, userId)
       ),
     })
@@ -52,5 +68,20 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       ),
     })
     return workspaces
+  }
+
+  async delete(
+    workspaceId: string,
+    userId: string
+  ): Promise<{ status: string }> {
+    await db
+      .delete(workspacesTable)
+      .where(
+        and(
+          eq(workspacesTable.id, workspaceId),
+          eq(workspacesTable.ownerId, userId)
+        )
+      )
+    return { status: 'workspace deleted successfully.' }
   }
 }
