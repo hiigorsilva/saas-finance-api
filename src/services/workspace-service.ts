@@ -35,4 +35,23 @@ export class WorkspaceService {
     )
     return status
   }
+
+  async update(
+    workspaceId: string,
+    userId: string,
+    data: CreateWorkspaceBodyType
+  ) {
+    const workspaceIsExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!workspaceIsExists) throw new Error('Workspace not found.')
+
+    const workspace = await this.workspaceRepository.update(
+      workspaceId,
+      userId,
+      data
+    )
+    return workspace
+  }
 }

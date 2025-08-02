@@ -115,3 +115,56 @@ export const deleteWorkspace: RouteShorthandOptions = {
     },
   },
 }
+
+// ************ UPDATE ************
+
+export const updateWorkspaceParamsSchema = z.object({
+  workspaceId: z.string(),
+})
+
+const updateWorkspaceSuccessResponseSchema = z.object({
+  statusCode: z.literal(200),
+  body: z.object({
+    workspace: z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string().nullable(),
+      type: z.string(),
+      ownerId: z.string(),
+      createdAt: z.date(),
+      updatedAt: z.date(),
+    }),
+  }),
+})
+
+const updateWorkspaceBadRequestResponseSchema = z.object({
+  statusCode: z.literal(200),
+  body: z.object({
+    status: z.string(),
+  }),
+})
+
+export const updateWorkspaceBodySchema = z.object({
+  name: z
+    .string()
+    .min(2, { error: 'Name must have at least 2 characters' })
+    .trim(),
+  description: z.string().trim().optional(),
+  type: z.enum(['PRIVATE', 'SHARED']),
+})
+
+export const updateWorkspace: RouteShorthandOptions = {
+  preHandler: [privateRoute],
+  schema: {
+    summary: 'Edit a workspace by id',
+    consumes: ['application/json'],
+    tags: ['Workspace'],
+    security: [{ bearerAuth: [] }],
+    params: updateWorkspaceParamsSchema,
+    body: updateWorkspaceBodySchema,
+    response: {
+      200: updateWorkspaceSuccessResponseSchema,
+      400: updateWorkspaceBadRequestResponseSchema,
+    },
+  },
+}

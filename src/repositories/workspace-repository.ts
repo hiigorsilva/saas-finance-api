@@ -3,6 +3,7 @@ import { db } from '../db/connection'
 import { workspacesTable } from '../db/schemas/workspaces'
 import type {
   IWorkspace,
+  IWorkspaceDetails,
   IWorkspaceId,
   IWorkspaceRepository,
 } from '../interfaces/workspace'
@@ -83,5 +84,37 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         )
       )
     return { status: 'workspace deleted successfully.' }
+  }
+
+  async update(
+    workspaceId: string,
+    userId: string,
+    data: CreateWorkspaceBodyType
+  ): Promise<IWorkspaceDetails> {
+    const [workspace] = await db
+      .update(workspacesTable)
+      .set({
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(workspacesTable.ownerId, userId),
+          eq(workspacesTable.id, workspaceId)
+        )
+      )
+      .returning({
+        id: workspacesTable.id,
+        name: workspacesTable.name,
+        description: workspacesTable.description,
+        type: workspacesTable.type,
+        ownerId: workspacesTable.ownerId,
+        createdAt: workspacesTable.createdAt,
+        updatedAt: workspacesTable.updatedAt,
+      })
+
+    return workspace
   }
 }
