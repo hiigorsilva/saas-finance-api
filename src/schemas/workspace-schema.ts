@@ -78,3 +78,40 @@ export const listWorkspace: RouteShorthandOptions = {
     },
   },
 }
+
+// ************ DELETE ************
+
+export const deleteWorkspaceBadRequestResponseSchema = z.object({
+  statusCode: z.literal(400),
+  body: z.object({
+    error: z.string(),
+  }),
+})
+
+export const paramsDeleteWorkspaceSchema = z.object({
+  workspaceId: z.string(),
+})
+export type ParamsDeleteWorkspaceType = z.infer<
+  typeof paramsDeleteWorkspaceSchema
+>
+
+export const deleteWorkspaceSuccessResponseSchema = z.object({
+  statusCode: z.literal(200),
+  body: z.object({
+    status: z.string(),
+  }),
+})
+
+export const deleteWorkspace: RouteShorthandOptions = {
+  preHandler: [privateRoute],
+  schema: {
+    summary: 'Delete a workspace',
+    tags: ['Workspace'],
+    security: [{ bearerAuth: [] }],
+    params: paramsDeleteWorkspaceSchema,
+    response: {
+      200: deleteWorkspaceSuccessResponseSchema,
+      400: deleteWorkspaceBadRequestResponseSchema,
+    },
+  },
+}
