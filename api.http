@@ -61,7 +61,7 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name DeleteWorkspaceById
-@deleteWorkspaceId =
+@deleteWorkspaceId = 
 DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
 Authorization: Bearer {{authToken}}
 
@@ -77,4 +77,26 @@ Authorization: Bearer {{authToken}}
     "name": "Workspace Editado",
     "description": "Descrição do workspace Editado",
     "type": "PRIVATE"
+}
+
+###
+
+# @name CreateANewTransaction
+@paramsWorkspaceId = 
+POST {{baseUrl}}/{{paramsWorkspaceId}}/transaction
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Compra de 2 ingresos para rodeio",
+    "description": "Rodeio de mozarlândia, para o show da Maiara e Maraisa",
+    "type": "EXPENSE",
+    "category": "Entretenimento",
+    "amount": "50",
+    "paymentDate": "1999-10-23",
+    "isRecurring": false,
+    "recurringInterval": null,
+    "recurringEndDate": null,
+    "installmentTotal": null,
+    "currentInstallment": null
 }
