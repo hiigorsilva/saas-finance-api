@@ -1,6 +1,3 @@
-import { categoriesTable } from './categories'
-import { tagsTable } from './tags'
-import { transactionTags } from './transaction-tags'
 import { transactionsTable } from './transactions'
 import { usersTable } from './users'
 import { workspaceInvitationsTable } from './workspace-invitations'
@@ -12,8 +9,5 @@ export const schema = {
   workspacesTable,
   workspaceMembersTable,
   workspaceInvitationsTable,
-  categoriesTable,
-  transactionTags,
-  tagsTable,
   transactionsTable,
 }

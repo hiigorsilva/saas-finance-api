@@ -1,6 +1,5 @@
-// workspaceMembers.ts
 import { pgTable, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { roleEnum } from './enums'
+import { roleMemberWorkspaceEnum } from './enums'
 import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
@@ -9,9 +8,8 @@ export const workspaceMembersTable = pgTable(
   {
     workspaceId: uuid('workspace_id').references(() => workspacesTable.id),
     userId: uuid('user_id').references(() => usersTable.id),
-    role: roleEnum('role').notNull(),
+    role: roleMemberWorkspaceEnum('role').notNull(),
     joinedAt: timestamp('joined_at').defaultNow(),
-
     // PK composta
   },
   table => ({

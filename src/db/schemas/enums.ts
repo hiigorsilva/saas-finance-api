@@ -8,12 +8,24 @@ export const userProfileEnum = pgEnum('financial_profile', [
   'INVESTOR',
 ])
 
-export const roleEnum = pgEnum('ROLE', ['OWNER', 'ADMIN', 'MEMBER'])
+export const roleMemberWorkspaceEnum = pgEnum('role_member_workspace', [
+  'OWNER',
+  'ADMIN',
+  'MEMBER',
+])
+
+export const typeWorkspaceEnum = pgEnum('type_workspace', ['PRIVATE', 'SHARED'])
 
 export const transactionTypeEnum = pgEnum('transaction_type', [
   'INCOME',
   'EXPENSE',
   'INVESTMENT',
+])
+
+export const statusWorkspaceInvitation = pgEnum('status', [
+  'PENDING',
+  'ACCEPTED',
+  'DECLINED',
 ])
 
 export const recurringIntervalEnum = pgEnum('recurring_interval', [

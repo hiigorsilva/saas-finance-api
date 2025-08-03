@@ -1,5 +1,5 @@
-// workspaceInvitations.ts
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { pgTable, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { statusWorkspaceInvitation } from './enums'
 import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
@@ -14,9 +14,7 @@ export const workspaceInvitationsTable = pgTable('workspace_invitations', {
   inviteeId: uuid('invitee_id')
     .notNull()
     .references(() => usersTable.id),
-  status: text('status')
-    .$type<'PENDING' | 'ACCEPTED' | 'DECLINED'>()
-    .default('PENDING'),
+  status: statusWorkspaceInvitation('status').default('PENDING'),
   createdAt: timestamp('created_at').defaultNow(),
   expiresAt: timestamp('expires_at'),
   acceptedAt: timestamp('accepted_at'),

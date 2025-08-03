@@ -1,167 +1,9 @@
 {
-  "id": "27ff6045-72d4-4d01-8c72-386f0204d70f",
+  "id": "afa1f45f-6347-48dd-9d2e-c15585a7b946",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.categories": {
-      "name": "categories",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "workspace_id": {
-          "name": "workspace_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "transaction_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "is_default": {
-          "name": "is_default",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'false'"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "categories_workspace_id_workspaces_id_fk": {
-          "name": "categories_workspace_id_workspaces_id_fk",
-          "tableFrom": "categories",
-          "tableTo": "workspaces",
-          "columnsFrom": [
-            "workspace_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.tags": {
-      "name": "tags",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "workspace_id": {
-          "name": "workspace_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "tags_workspace_id_workspaces_id_fk": {
-          "name": "tags_workspace_id_workspaces_id_fk",
-          "tableFrom": "tags",
-          "tableTo": "workspaces",
-          "columnsFrom": [
-            "workspace_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.transaction_tags": {
-      "name": "transaction_tags",
-      "schema": "",
-      "columns": {
-        "transaction_id": {
-          "name": "transaction_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "transaction_tags_transaction_id_transactions_id_fk": {
-          "name": "transaction_tags_transaction_id_transactions_id_fk",
-          "tableFrom": "transaction_tags",
-          "tableTo": "transactions",
-          "columnsFrom": [
-            "transaction_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "transaction_tags_tag_id_tags_id_fk": {
-          "name": "transaction_tags_tag_id_tags_id_fk",
-          "tableFrom": "transaction_tags",
-          "tableTo": "tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.transactions": {
       "name": "transactions",
       "schema": "",
@@ -206,9 +48,9 @@
         },
         "category_id": {
           "name": "category_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "amount": {
           "name": "amount",
@@ -224,10 +66,10 @@
         },
         "is_recurring": {
           "name": "is_recurring",
-          "type": "text",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "default": "'false'"
+          "default": false
         },
         "recurring_interval": {
           "name": "recurring_interval",
@@ -251,12 +93,6 @@
         "current_installment": {
           "name": "current_installment",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "parent_transaction_id": {
-          "name": "parent_transaction_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -302,19 +138,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "transactions_category_id_categories_id_fk": {
-          "name": "transactions_category_id_categories_id_fk",
-          "tableFrom": "transactions",
-          "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
           ],
           "columnsTo": [
             "id"
@@ -433,7 +256,8 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "status",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
           "default": "'PENDING'"
@@ -530,7 +354,7 @@
         },
         "role": {
           "name": "role",
-          "type": "ROLE",
+          "type": "role_member_workspace",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -609,7 +433,8 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "type_workspace",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -668,13 +493,22 @@
         "YEARLY"
       ]
     },
-    "public.ROLE": {
-      "name": "ROLE",
+    "public.role_member_workspace": {
+      "name": "role_member_workspace",
       "schema": "public",
       "values": [
         "OWNER",
         "ADMIN",
         "MEMBER"
+      ]
+    },
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "ACCEPTED",
+        "DECLINED"
       ]
     },
     "public.transaction_type": {
@@ -684,6 +518,14 @@
         "INCOME",
         "EXPENSE",
         "INVESTMENT"
+      ]
+    },
+    "public.type_workspace": {
+      "name": "type_workspace",
+      "schema": "public",
+      "values": [
+        "PRIVATE",
+        "SHARED"
       ]
     },
     "public.financial_profile": {

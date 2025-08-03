@@ -1,26 +1,9 @@
 CREATE TYPE "public"."recurring_interval" AS ENUM('DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY');--> statement-breakpoint
-CREATE TYPE "public"."ROLE" AS ENUM('OWNER', 'ADMIN', 'MEMBER');--> statement-breakpoint
+CREATE TYPE "public"."role_member_workspace" AS ENUM('OWNER', 'ADMIN', 'MEMBER');--> statement-breakpoint
+CREATE TYPE "public"."status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED');--> statement-breakpoint
 CREATE TYPE "public"."transaction_type" AS ENUM('INCOME', 'EXPENSE', 'INVESTMENT');--> statement-breakpoint
+CREATE TYPE "public"."type_workspace" AS ENUM('PRIVATE', 'SHARED');--> statement-breakpoint
 CREATE TYPE "public"."financial_profile" AS ENUM('DEBTOR', 'SPENDER', 'DETACHED', 'SAVER', 'INVESTOR');--> statement-breakpoint
-CREATE TABLE "categories" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"workspace_id" uuid,
-	"name" text NOT NULL,
-	"type" "transaction_type" NOT NULL,
-	"is_default" text DEFAULT 'false'
-);
---> statement-breakpoint
-CREATE TABLE "tags" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"workspace_id" uuid,
-	"name" text NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE "transaction_tags" (
-	"transaction_id" uuid NOT NULL,
-	"tag_id" uuid NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "transactions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"workspace_id" uuid NOT NULL,
@@ -28,15 +11,14 @@ CREATE TABLE "transactions" (
 	"name" text NOT NULL,
 	"description" text,
 	"type" "transaction_type" NOT NULL,
-	"category_id" uuid,
+	"category_id" text NOT NULL,
 	"amount" numeric(10, 2) NOT NULL,
 	"payment_date" timestamp NOT NULL,
-	"is_recurring" text DEFAULT 'false',
+	"is_recurring" boolean DEFAULT false,
 	"recurring_interval" "recurring_interval",
 	"recurring_end_date" timestamp,
 	"total_installments" integer,
 	"current_installment" integer,
-	"parent_transaction_id" uuid,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -59,7 +41,7 @@ CREATE TABLE "workspace_invitations" (
 	"workspace_id" uuid NOT NULL,
 	"inviter_id" uuid NOT NULL,
 	"invitee_id" uuid NOT NULL,
-	"status" text DEFAULT 'PENDING',
+	"status" "status" DEFAULT 'PENDING',
 	"created_at" timestamp DEFAULT now(),
 	"expires_at" timestamp,
 	"accepted_at" timestamp,
@@ -69,7 +51,7 @@ CREATE TABLE "workspace_invitations" (
 CREATE TABLE "workspace_members" (
 	"workspace_id" uuid,
 	"user_id" uuid,
-	"role" "ROLE" NOT NULL,
+	"role" "role_member_workspace" NOT NULL,
 	"joined_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
@@ -78,19 +60,14 @@ CREATE TABLE "workspaces" (
 	"name" text NOT NULL,
 	"description" text,
 	"owner_id" uuid NOT NULL,
-	"type" text NOT NULL,
+	"type" "type_workspace" NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
-ALTER TABLE "categories" ADD CONSTRAINT "categories_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "tags" ADD CONSTRAINT "tags_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "transaction_tags" ADD CONSTRAINT "transaction_tags_transaction_id_transactions_id_fk" FOREIGN KEY ("transaction_id") REFERENCES "public"."transactions"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "transaction_tags" ADD CONSTRAINT "transaction_tags_tag_id_tags_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."tags"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_created_by_user_id_users_id_fk" FOREIGN KEY ("created_by_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_invitations" ADD CONSTRAINT "workspace_invitations_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_invitations" ADD CONSTRAINT "workspace_invitations_inviter_id_users_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_invitations" ADD CONSTRAINT "workspace_invitations_invitee_id_users_id_fk" FOREIGN KEY ("invitee_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
