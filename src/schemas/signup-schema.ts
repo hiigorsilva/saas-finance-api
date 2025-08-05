@@ -4,7 +4,10 @@ import z from 'zod'
 export const signupBodySchema = z.object({
   name: z.string().trim(),
   email: z.email().trim(),
-  password: z.string().min(8).trim(),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long.')
+    .trim(),
 })
 export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
@@ -26,7 +29,7 @@ export const signup: RouteShorthandOptions = {
   schema: {
     summary: 'Create a new user',
     consumes: ['application/json'],
-    tags: ['Auth'],
+    tags: ['Authentication'],
     body: signupBodySchema,
     response: {
       201: signupSuccessResponseSchema,

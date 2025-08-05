@@ -6,7 +6,7 @@ export interface ITransaction {
   workspaceId: string
   createdByUserId: string
   name: string
-  description?: string | undefined
+  description: string | null
   type: TransactionType
   category: string
   amount: string
@@ -18,7 +18,6 @@ export interface ITransaction {
   currentInstallment: number | null
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
 }
 
 export type CreateTransactionDto = {
@@ -29,10 +28,10 @@ export type CreateTransactionDto = {
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval: RecurringInterval | null
-  recurringEndDate: Date | null
-  installmentTotal: number | null
-  currentInstallment: number | null
+  recurringInterval?: RecurringInterval | undefined
+  recurringEndDate?: Date | undefined
+  installmentTotal?: number | undefined
+  currentInstallment?: number | undefined
 }
 
 export type ITransactionId = Pick<ITransaction, 'id'>
@@ -43,4 +42,5 @@ export interface ITransactionRepository {
     userId: string,
     data: CreateTransactionDto
   ): Promise<ITransactionId>
+  list(userId: string, workspaceId: string): Promise<ITransaction[]>
 }

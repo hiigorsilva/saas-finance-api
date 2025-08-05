@@ -1,10 +1,12 @@
+import { and, eq, isNull } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { transactionsTable } from '../db/schemas/transactions'
 import type {
   CreateTransactionDto,
+  ITransaction,
   ITransactionId,
   ITransactionRepository,
-} from '../interfaces/transactions/create-transaction'
+} from '../interfaces/transactions/transaction'
 
 export class TransactionRepository implements ITransactionRepository {
   async create(
@@ -34,5 +36,19 @@ export class TransactionRepository implements ITransactionRepository {
       })
 
     return transaction
+  }
+
+  async list(userId: string, workspaceId: string): Promise<ITransaction[]> {
+    const transactions = await db.query.transactionsTable.findMany({
+      columns: {
+        deletedAt: false,
+      },
+      where: and(
+        eq(transactionsTable.createdByUserId, userId),
+        eq(transactionsTable.workspaceId, workspaceId),
+        isNull(transactionsTable.deletedAt)
+      ),
+    })
+    return transactions
   }
 }

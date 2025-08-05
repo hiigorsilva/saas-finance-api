@@ -88,15 +88,19 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Compra de 2 ingresos para rodeio",
-    "description": "Rodeio de mozarlândia, para o show da Maiara e Maraisa",
+    "name": "Novo",
+    "description": "Descrição nova",
     "type": "EXPENSE",
-    "category": "Entretenimento",
-    "amount": "50",
-    "paymentDate": "2025-08-03T02:26:00.422", // Data e Horas sem Timezone
-    "isRecurring": false,
-    "recurringInterval": null,
-    "recurringEndDate": null,
-    "installmentTotal": null,
-    "currentInstallment": null
+    "category": "Teste",
+    "amount": "47.50",
+    "paymentDate": "2010-08-05T16:12:00.422",
+    "isRecurring": false
 }
+
+###
+
+# @name ListAllTransactions
+@paramsWorkspaceIdList = 
+GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction
+content-type: application/json
+Authorization: Bearer {{authToken}}
