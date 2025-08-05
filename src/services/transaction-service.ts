@@ -1,4 +1,4 @@
-import type { CreateTransactionDto } from '../interfaces/transactions/create-transaction'
+import type { CreateTransactionDto } from '../interfaces/transactions/transaction'
 import type { TransactionRepository } from '../repositories/transaction-repository'
 import type { WorkspaceRepository } from '../repositories/workspace-repository'
 
@@ -25,5 +25,13 @@ export class TransactionService {
       data
     )
     return transaction
+  }
+
+  async list(userId: string, workspaceId: string) {
+    const transactions = await this.transactionRepository.list(
+      userId,
+      workspaceId
+    )
+    return transactions
   }
 }

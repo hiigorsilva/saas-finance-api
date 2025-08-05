@@ -6,19 +6,18 @@ export interface ITransaction {
   workspaceId: string
   createdByUserId: string
   name: string
-  description?: string | undefined
+  description: string | null
   type: TransactionType
   category: string
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval?: RecurringInterval | undefined
-  recurringEndDate?: Date | undefined
-  installmentTotal?: number | undefined
-  currentInstallment?: number | undefined
+  recurringInterval: RecurringInterval | null
+  recurringEndDate: Date | null
+  installmentTotal: number | null
+  currentInstallment: number | null
   createdAt: Date
   updatedAt: Date
-  deletedAt?: Date | undefined
 }
 
 export type CreateTransactionDto = {
@@ -43,4 +42,5 @@ export interface ITransactionRepository {
     userId: string,
     data: CreateTransactionDto
   ): Promise<ITransactionId>
+  list(userId: string, workspaceId: string): Promise<ITransaction[]>
 }

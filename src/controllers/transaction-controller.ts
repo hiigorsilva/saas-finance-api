@@ -3,8 +3,9 @@ import {
   createTransactionBodySchema,
   createTransactionParamsSchema,
 } from '../schemas/transactions/create-transaction'
+import { listTransactionParamsSchema } from '../schemas/transactions/list-transaction'
 import type { TransactionService } from '../services/transaction-service'
-import { badRequest, created, unauthorized } from '../shared/utils/http'
+import { badRequest, created, ok, unauthorized } from '../shared/utils/http'
 
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
@@ -29,5 +30,20 @@ export class TransactionController {
       data
     )
     return created({ transaction })
+  }
+
+  async list(request: FastifyRequest) {
+    const { userId, params } = request
+    if (!userId) return unauthorized({ error: 'Unauthorized.' })
+
+    const { success, data, error } =
+      listTransactionParamsSchema.safeParse(params)
+    if (!success) return badRequest({ error: error.message })
+
+    const transactions = await this.transactionService.list(
+      userId,
+      data.workspaceId
+    )
+    return ok({ transactions })
   }
 }
