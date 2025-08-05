@@ -43,6 +43,12 @@ export const createTransactionSchema: RouteShorthandOptions = {
           }),
         }),
       }),
+      400: z.object({
+        statusCode: z.literal(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
     },
   },
 }

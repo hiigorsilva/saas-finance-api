@@ -6,7 +6,7 @@ export const listTransactionParamsSchema = z.object({
   workspaceId: z.string(),
 })
 
-export const listTransactionSuccessResponseSchema = z.object({
+const listTransactionSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
     transactions: z.array(
@@ -32,7 +32,7 @@ export const listTransactionSuccessResponseSchema = z.object({
   }),
 })
 
-export const listTransactionBadRequestResponeSchema = z.object({
+const listTransactionBadRequestResponeSchema = z.object({
   statusCode: z.literal(400),
   body: z.object({
     error: z.string(),
