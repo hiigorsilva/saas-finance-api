@@ -26,7 +26,7 @@ export const signup: RouteShorthandOptions = {
   schema: {
     summary: 'Create a new user',
     consumes: ['application/json'],
-    tags: ['Auth'],
+    tags: ['Authentication'],
     body: signupBodySchema,
     response: {
       201: signupSuccessResponseSchema,

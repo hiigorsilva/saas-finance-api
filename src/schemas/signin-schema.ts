@@ -25,7 +25,7 @@ export const signin: RouteShorthandOptions = {
   schema: {
     summary: 'Sign in a user',
     consumes: ['application/json'],
-    tags: ['Auth'],
+    tags: ['Authentication'],
     body: signinBodySchema,
     response: {
       200: signinSuccessResponseSchema,
