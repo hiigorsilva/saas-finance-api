@@ -11,20 +11,16 @@ export type CreateTransactionParamsType = z.infer<
 
 export const createTransactionBodySchema = z.object({
   name: z.string().trim(),
-  description: z.string().trim().nullable(),
+  description: z.string().trim().optional(),
   type: z.enum(['INCOME', 'EXPENSE', 'INVESTMENT']),
   category: z.string().trim(),
   amount: z.string(),
-  // TODO: corrigir o formato de data de pagamento no input
-  paymentDate: z.date().transform(value => new Date(value)),
+  paymentDate: z.coerce.date(),
   isRecurring: z.boolean(),
   recurringInterval: z
     .enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'])
     .nullable(),
-  recurringEndDate: z.iso
-    .date()
-    .transform(value => new Date(value))
-    .nullable(),
+  recurringEndDate: z.coerce.date().nullable(),
   installmentTotal: z.number().nullable(),
   currentInstallment: z.number().nullable(),
 })
@@ -35,6 +31,7 @@ export const createTransaction: RouteShorthandOptions = {
     summary: 'Create a new transaction',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
+    tags: ['Transaction'],
     params: createTransactionParamsSchema,
     body: createTransactionBodySchema,
     response: {
