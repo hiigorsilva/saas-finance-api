@@ -19,10 +19,10 @@ export const createTransactionBodySchema = z.object({
   isRecurring: z.boolean(),
   recurringInterval: z
     .enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'])
-    .nullable(),
-  recurringEndDate: z.coerce.date().nullable(),
-  installmentTotal: z.number().nullable(),
-  currentInstallment: z.number().nullable(),
+    .optional(),
+  recurringEndDate: z.coerce.date().optional(),
+  installmentTotal: z.number().optional(),
+  currentInstallment: z.number().optional(),
 })
 
 export const createTransaction: RouteShorthandOptions = {

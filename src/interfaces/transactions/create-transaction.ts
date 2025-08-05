@@ -12,13 +12,13 @@ export interface ITransaction {
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval: RecurringInterval | null
-  recurringEndDate: Date | null
-  installmentTotal: number | null
-  currentInstallment: number | null
+  recurringInterval?: RecurringInterval | undefined
+  recurringEndDate?: Date | undefined
+  installmentTotal?: number | undefined
+  currentInstallment?: number | undefined
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
+  deletedAt?: Date | undefined
 }
 
 export type CreateTransactionDto = {
@@ -29,10 +29,10 @@ export type CreateTransactionDto = {
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval: RecurringInterval | null
-  recurringEndDate: Date | null
-  installmentTotal: number | null
-  currentInstallment: number | null
+  recurringInterval?: RecurringInterval | undefined
+  recurringEndDate?: Date | undefined
+  installmentTotal?: number | undefined
+  currentInstallment?: number | undefined
 }
 
 export type ITransactionId = Pick<ITransaction, 'id'>
