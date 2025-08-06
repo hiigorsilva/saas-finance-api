@@ -10,6 +10,21 @@ import type {
 } from '../interfaces/transactions/transaction'
 
 export class TransactionRepository implements ITransactionRepository {
+  async alreadyExistsById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<boolean> {
+    const transaction = await db.query.transactionsTable.findFirst({
+      where: and(
+        eq(transactionsTable.id, transactionId),
+        eq(transactionsTable.workspaceId, workspaceId),
+        eq(transactionsTable.createdByUserId, userId)
+      ),
+    })
+    return !!transaction
+  }
+
   async create(
     workspaceId: string,
     userId: string,
