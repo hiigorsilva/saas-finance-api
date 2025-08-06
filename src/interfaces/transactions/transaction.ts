@@ -44,17 +44,26 @@ export type ResponseTransactionDto = {
 }
 
 export interface ITransactionRepository {
+  alreadyExistsById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<boolean>
+
   create(
     workspaceID: string,
     userId: string,
     data: CreateTransactionDto
   ): Promise<ITransactionId>
+
   list(userId: string, workspaceId: string): Promise<ITransaction[]>
+
   delete(
     userId: string,
     workspaceId: string,
     transactionId: string
   ): Promise<{ status: string }>
+
   update(
     userId: string,
     workspaceId: string,

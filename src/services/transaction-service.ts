@@ -42,8 +42,13 @@ export class TransactionService {
     )
     if (!alreadyExists) throw new Error('Workspace not found.')
 
-    // TODO: verificar se transactionId existe
-    // const transactionIsExists = await this.transactionRepository
+    const transactionIsExists =
+      await this.transactionRepository.alreadyExistsById(
+        userId,
+        workspaceId,
+        transactionId
+      )
+    if (!transactionIsExists) throw new Error('Transaction not found.')
 
     const transaction = await this.transactionRepository.delete(
       userId,
@@ -65,7 +70,13 @@ export class TransactionService {
     )
     if (!alreadyExists) throw new Error('Workspace not found.')
 
-    // TODO: verificar se transactionId existe
+    const transactionIsExists =
+      await this.transactionRepository.alreadyExistsById(
+        userId,
+        workspaceId,
+        transactionId
+      )
+    if (!transactionIsExists) throw new Error('Transaction not found.')
 
     const transaction = await this.transactionRepository.update(
       userId,
