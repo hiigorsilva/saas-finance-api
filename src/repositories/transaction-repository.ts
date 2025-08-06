@@ -6,6 +6,7 @@ import type {
   ITransaction,
   ITransactionId,
   ITransactionRepository,
+  ResponseTransactionDto,
 } from '../interfaces/transactions/transaction'
 
 export class TransactionRepository implements ITransactionRepository {
@@ -67,5 +68,44 @@ export class TransactionRepository implements ITransactionRepository {
         )
       )
     return { status: 'Transaction deleted successfully.' }
+  }
+
+  async update(
+    userId: string,
+    workspaceId: string,
+    transactionId: string,
+    data: CreateTransactionDto
+  ): Promise<ResponseTransactionDto> {
+    const [transaction] = await db
+      .update(transactionsTable)
+      .set({
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        category: data.category,
+        amount: data.amount,
+        paymentDate: data.paymentDate,
+        isRecurring: data.isRecurring,
+        recurringEndDate: data.recurringEndDate,
+        recurringInterval: data.recurringInterval,
+        currentInstallment: data.currentInstallment,
+        installmentTotal: data.installmentTotal,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(transactionsTable.id, transactionId),
+          eq(transactionsTable.workspaceId, workspaceId),
+          eq(transactionsTable.createdByUserId, userId),
+          isNull(transactionsTable.deletedAt)
+        )
+      )
+      .returning({
+        id: transactionsTable.id,
+        name: transactionsTable.name,
+        amount: transactionsTable.amount,
+        paymentDate: transactionsTable.paymentDate,
+      })
+    return transaction
   }
 }

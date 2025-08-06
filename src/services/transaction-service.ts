@@ -52,4 +52,27 @@ export class TransactionService {
     )
     return transaction.status
   }
+
+  async update(
+    userId: string,
+    workspaceId: string,
+    transactionId: string,
+    data: CreateTransactionDto
+  ) {
+    const alreadyExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!alreadyExists) throw new Error('Workspace not found.')
+
+    // TODO: verificar se transactionId existe
+
+    const transaction = await this.transactionRepository.update(
+      userId,
+      workspaceId,
+      transactionId,
+      data
+    )
+    return transaction
+  }
 }
