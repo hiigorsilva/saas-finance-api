@@ -83,7 +83,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           eq(workspacesTable.ownerId, userId)
         )
       )
-    return { status: 'workspace deleted successfully.' }
+    return { status: 'Workspace deleted successfully.' }
   }
 
   async update(

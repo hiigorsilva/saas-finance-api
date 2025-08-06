@@ -104,3 +104,11 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction
 content-type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name DeleteTransactionById
+@paramsWorkspaceIdDelete = 
+@deleteTransactionId = 
+DELETE {{baseUrl}}/{{paramsWorkspaceIdDelete}}/{{deleteTransactionId}}
+Authorization: Bearer {{authToken}}

@@ -3,6 +3,7 @@ import {
   createTransactionBodySchema,
   createTransactionParamsSchema,
 } from '../schemas/transactions/create-transaction'
+import { deleteTransactionParamsResponseSchema } from '../schemas/transactions/delete-transaction'
 import { listTransactionParamsSchema } from '../schemas/transactions/list-transaction'
 import type { TransactionService } from '../services/transaction-service'
 import { badRequest, created, ok, unauthorized } from '../shared/utils/http'
@@ -45,5 +46,22 @@ export class TransactionController {
       data.workspaceId
     )
     return ok({ transactions })
+  }
+
+  async delete(request: FastifyRequest) {
+    const { userId, params } = request
+    if (!userId) return unauthorized({ error: 'Unauthorized.' })
+
+    const { success, data, error } =
+      deleteTransactionParamsResponseSchema.safeParse(params)
+    if (!success) return badRequest({ error: error.message })
+
+    const transaction = await this.transactionService.delete(
+      userId,
+      data.workspaceId,
+      data.transactionId
+    )
+
+    return ok({ status: transaction })
   }
 }
