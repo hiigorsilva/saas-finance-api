@@ -36,6 +36,13 @@ export type CreateTransactionDto = {
 
 export type ITransactionId = Pick<ITransaction, 'id'>
 
+export type ResponseTransactionDto = {
+  id: string
+  name: string
+  amount: string
+  paymentDate: Date
+}
+
 export interface ITransactionRepository {
   create(
     workspaceID: string,
@@ -48,4 +55,10 @@ export interface ITransactionRepository {
     workspaceId: string,
     transactionId: string
   ): Promise<{ status: string }>
+  update(
+    userId: string,
+    workspaceId: string,
+    transactionId: string,
+    data: CreateTransactionDto
+  ): Promise<ResponseTransactionDto>
 }

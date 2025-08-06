@@ -112,3 +112,22 @@ Authorization: Bearer {{authToken}}
 @deleteTransactionId = 
 DELETE {{baseUrl}}/{{paramsWorkspaceIdDelete}}/transaction/{{deleteTransactionId}}
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name UpdateWorkspaceById
+@paramsWorkspaceIdIdUpdate = 
+@paramsTransactionIdUpdate = 
+PUT {{baseUrl}}/{{paramsWorkspaceIdIdUpdate}}/transaction/{{paramsTransactionIdUpdate}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Transação editada",
+    "description": "Descrição atualizada",
+    "type": "INCOME",
+    "category": "Testador",
+    "amount": "104.27",
+    "paymentDate": "2025-06-30T15:50:00.000",
+    "isRecurring": false
+}
