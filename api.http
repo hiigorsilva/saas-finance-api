@@ -110,5 +110,5 @@ Authorization: Bearer {{authToken}}
 # @name DeleteTransactionById
 @paramsWorkspaceIdDelete = 
 @deleteTransactionId = 
-DELETE {{baseUrl}}/{{paramsWorkspaceIdDelete}}/{{deleteTransactionId}}
+DELETE {{baseUrl}}/{{paramsWorkspaceIdDelete}}/transaction/{{deleteTransactionId}}
 Authorization: Bearer {{authToken}}

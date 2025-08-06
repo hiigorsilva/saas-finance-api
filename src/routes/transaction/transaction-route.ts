@@ -68,7 +68,7 @@ export const transactionRoute = async (app: FastifyInstance) => {
   )
 
   app.delete(
-    '/:workspaceId/:transactionId',
+    '/:workspaceId/transaction/:transactionId',
     deleteTransaction,
     async (request, reply) => {
       try {
