@@ -43,4 +43,9 @@ export interface ITransactionRepository {
     data: CreateTransactionDto
   ): Promise<ITransactionId>
   list(userId: string, workspaceId: string): Promise<ITransaction[]>
+  delete(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<{ status: string }>
 }

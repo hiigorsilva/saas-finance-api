@@ -51,4 +51,21 @@ export class TransactionRepository implements ITransactionRepository {
     })
     return transactions
   }
+
+  async delete(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<{ status: string }> {
+    await db
+      .delete(transactionsTable)
+      .where(
+        and(
+          eq(transactionsTable.createdByUserId, userId),
+          eq(transactionsTable.workspaceId, workspaceId),
+          eq(transactionsTable.id, transactionId)
+        )
+      )
+    return { status: 'Transaction deleted successfully.' }
+  }
 }

@@ -34,4 +34,22 @@ export class TransactionService {
     )
     return transactions
   }
+
+  async delete(userId: string, workspaceId: string, transactionId: string) {
+    const alreadyExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!alreadyExists) throw new Error('Workspace not found.')
+
+    // TODO: verificar se transactionId existe
+    // const transactionIsExists = await this.transactionRepository
+
+    const transaction = await this.transactionRepository.delete(
+      userId,
+      workspaceId,
+      transactionId
+    )
+    return transaction.status
+  }
 }
