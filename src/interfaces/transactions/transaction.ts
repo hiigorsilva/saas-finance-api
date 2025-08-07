@@ -66,6 +66,12 @@ export interface ITransactionRepository {
 
   list(userId: string, workspaceId: string): Promise<ITransaction[]>
 
+  findTransactionById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<ITransaction | null>
+
   delete(
     userId: string,
     workspaceId: string,
