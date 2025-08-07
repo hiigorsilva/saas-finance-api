@@ -12,8 +12,7 @@ export const validateAccessToken = async (token: string) => {
   try {
     const { sub } = jwt.verify(token, env.JWT_SECRET) as JwtPayload
     return sub ?? null
-  } catch (error) {
-    console.error('FAILED_TO_VALIDATE_ACCESS_TOKEN', error)
+  } catch {
     return null
   }
 }
