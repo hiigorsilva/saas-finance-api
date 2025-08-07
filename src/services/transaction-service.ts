@@ -35,6 +35,34 @@ export class TransactionService {
     return transactions
   }
 
+  async findTransactionById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ) {
+    const alreadyExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!alreadyExists) throw new Error('Workspace not found.')
+
+    const transactionIsExists =
+      await this.transactionRepository.alreadyExistsById(
+        userId,
+        workspaceId,
+        transactionId
+      )
+    if (!transactionIsExists) throw new Error('Transaction not found.')
+
+    const transaction = await this.transactionRepository.findTransactionById(
+      userId,
+      workspaceId,
+      transactionId
+    )
+
+    return transaction
+  }
+
   async delete(userId: string, workspaceId: string, transactionId: string) {
     const alreadyExists = await this.workspaceRepository.alreadyExistsById(
       workspaceId,

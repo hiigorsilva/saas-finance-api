@@ -88,10 +88,10 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Novo",
+    "name": "Teste",
     "description": "Descrição nova",
     "type": "EXPENSE",
-    "category": "Teste",
+    "category": "GROCERIES",
     "amount": "47.50",
     "paymentDate": "2010-08-05T16:12:00.422",
     "isRecurring": false
@@ -123,11 +123,20 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Transação editada",
-    "description": "Descrição atualizada",
-    "type": "INCOME",
-    "category": "Testador",
-    "amount": "104.27",
-    "paymentDate": "2025-06-30T15:50:00.000",
+    "name": "Mudou para o correto",
+    "description": "Esse mesmo",
+    "type": "EXPENSE",
+    "category": "HEALTH",
+    "amount": "08.47",
+    "paymentDate": "2025-08-07T15:44:00.000",
     "isRecurring": false
 }
+
+###
+
+# @name GetTransactionById
+@paramsGetWorkspaceIdId = 
+@paramsGetTransactionId = 
+GET {{baseUrl}}/{{paramsGetWorkspaceIdId}}/transaction/{{paramsGetTransactionId}}
+content-type: application/json
+Authorization: Bearer {{authToken}}

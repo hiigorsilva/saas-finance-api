@@ -1,5 +1,5 @@
 {
-  "id": "afa1f45f-6347-48dd-9d2e-c15585a7b946",
+  "id": "5aa2d6d9-f7c6-4f15-8578-f0b9ae1cc58c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -46,9 +46,10 @@
           "primaryKey": false,
           "notNull": true
         },
-        "category_id": {
-          "name": "category_id",
-          "type": "text",
+        "category": {
+          "name": "category",
+          "type": "category",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -68,7 +69,7 @@
           "name": "is_recurring",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": false
         },
         "recurring_interval": {
@@ -100,7 +101,7 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
         "updated_at": {
@@ -483,6 +484,25 @@
     }
   },
   "enums": {
+    "public.category": {
+      "name": "category",
+      "schema": "public",
+      "values": [
+        "HOUSING",
+        "PERSONAL_CARE",
+        "TRANSPORTATION",
+        "FOOD",
+        "GROCERIES",
+        "ENTERTAINMENT",
+        "FAMILY",
+        "WORK",
+        "HEALTH",
+        "GIFTS",
+        "SALARY",
+        "INVESTMENT",
+        "OTHER"
+      ]
+    },
     "public.recurring_interval": {
       "name": "recurring_interval",
       "schema": "public",

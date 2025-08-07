@@ -34,3 +34,19 @@ export const recurringIntervalEnum = pgEnum('recurring_interval', [
   'MONTHLY',
   'YEARLY',
 ])
+
+export const categoryEnum = pgEnum('category', [
+  'HOUSING',
+  'PERSONAL_CARE',
+  'TRANSPORTATION',
+  'FOOD',
+  'GROCERIES',
+  'ENTERTAINMENT',
+  'FAMILY',
+  'WORK',
+  'HEALTH',
+  'GIFTS',
+  'SALARY',
+  'INVESTMENT',
+  'OTHER',
+])

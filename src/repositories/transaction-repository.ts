@@ -68,6 +68,25 @@ export class TransactionRepository implements ITransactionRepository {
     return transactions
   }
 
+  async findTransactionById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<ITransaction | null> {
+    const transaction = await db.query.transactionsTable.findFirst({
+      columns: {
+        deletedAt: false,
+      },
+      where: and(
+        eq(transactionsTable.createdByUserId, userId),
+        eq(transactionsTable.workspaceId, workspaceId),
+        eq(transactionsTable.id, transactionId),
+        isNull(transactionsTable.deletedAt)
+      ),
+    })
+    return transaction ?? null
+  }
+
   async delete(
     userId: string,
     workspaceId: string,

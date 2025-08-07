@@ -1,25 +1,25 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
+import {
+  categorySchema,
+  recurringIntervalSchema,
+  typeSchema,
+} from '../../data/transactions'
 import { privateRoute } from '../../middlewares/private-route'
 
 export const createTransactionParamsSchema = z.object({
   workspaceId: z.string(),
 })
-export type CreateTransactionParamsType = z.infer<
-  typeof createTransactionParamsSchema
->
 
 export const createTransactionBodySchema = z.object({
   name: z.string().trim(),
   description: z.string().trim().optional(),
-  type: z.enum(['INCOME', 'EXPENSE', 'INVESTMENT']),
-  category: z.string().trim(),
+  type: typeSchema,
+  category: categorySchema,
   amount: z.string(),
   paymentDate: z.coerce.date(),
   isRecurring: z.boolean(),
-  recurringInterval: z
-    .enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'])
-    .optional(),
+  recurringInterval: recurringIntervalSchema.optional(),
   recurringEndDate: z.coerce.date().optional(),
   installmentTotal: z.number().optional(),
   currentInstallment: z.number().optional(),

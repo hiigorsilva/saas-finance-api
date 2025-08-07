@@ -1,5 +1,13 @@
-export type TransactionType = 'INCOME' | 'EXPENSE' | 'INVESTMENT'
-export type RecurringInterval = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY'
+import type z from 'zod'
+import type {
+  categorySchema,
+  recurringIntervalSchema,
+  typeSchema,
+} from '../../data/transactions'
+
+type TypeTransaction = z.infer<typeof typeSchema>
+type RecurringIntervalTransaction = z.infer<typeof recurringIntervalSchema>
+type CategoryTransaction = z.infer<typeof categorySchema>
 
 export interface ITransaction {
   id: string
@@ -7,12 +15,12 @@ export interface ITransaction {
   createdByUserId: string
   name: string
   description: string | null
-  type: TransactionType
-  category: string
+  type: TypeTransaction
+  category: CategoryTransaction
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval: RecurringInterval | null
+  recurringInterval: RecurringIntervalTransaction | null
   recurringEndDate: Date | null
   installmentTotal: number | null
   currentInstallment: number | null
@@ -20,21 +28,21 @@ export interface ITransaction {
   updatedAt: Date
 }
 
+export type ITransactionId = Pick<ITransaction, 'id'>
+
 export type CreateTransactionDto = {
   name: string
   description?: string | undefined
-  type: TransactionType
-  category: string
+  type: TypeTransaction
+  category: CategoryTransaction
   amount: string
   paymentDate: Date
   isRecurring: boolean
-  recurringInterval?: RecurringInterval | undefined
+  recurringInterval?: RecurringIntervalTransaction | undefined
   recurringEndDate?: Date | undefined
   installmentTotal?: number | undefined
   currentInstallment?: number | undefined
 }
-
-export type ITransactionId = Pick<ITransaction, 'id'>
 
 export type ResponseTransactionDto = {
   id: string
@@ -57,6 +65,12 @@ export interface ITransactionRepository {
   ): Promise<ITransactionId>
 
   list(userId: string, workspaceId: string): Promise<ITransaction[]>
+
+  findTransactionById(
+    userId: string,
+    workspaceId: string,
+    transactionId: string
+  ): Promise<ITransaction | null>
 
   delete(
     userId: string,
