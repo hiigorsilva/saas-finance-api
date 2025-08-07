@@ -71,6 +71,23 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return workspaces
   }
 
+  async findWorkspaceById(
+    userId: string,
+    workspaceId: string
+  ): Promise<IWorkspaceDetails | null> {
+    const workspace = await db.query.workspacesTable.findFirst({
+      columns: {
+        deletedAt: false,
+      },
+      where: and(
+        eq(workspacesTable.ownerId, userId),
+        eq(workspacesTable.id, workspaceId),
+        isNull(workspacesTable.deletedAt)
+      ),
+    })
+    return workspace ?? null
+  }
+
   async delete(
     workspaceId: string,
     userId: string

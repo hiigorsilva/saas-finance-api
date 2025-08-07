@@ -21,15 +21,23 @@ export type IWorkspaceId = Pick<IWorkspace, 'id'>
 
 export interface IWorkspaceRepository {
   create(data: CreateWorkspaceBodyType, userId: string): Promise<IWorkspaceId>
+
   alreadyExistsByName(workspaceName: string, userId: string): Promise<boolean>
+
   alreadyExistsById(workspaceName: string, userId: string): Promise<boolean>
+
   list(userId: string): Promise<IWorkspace[]>
+
+  findWorkspaceById(
+    userId: string,
+    workspaceId: string
+  ): Promise<IWorkspaceDetails | null>
+
   delete(workspaceId: string, userId: string): Promise<{ status: string }>
+
   update(
     workspaceId: string,
     userId: string,
     data: CreateWorkspaceBodyType
   ): Promise<IWorkspaceDetails>
-  //   getWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
-  // }
 }

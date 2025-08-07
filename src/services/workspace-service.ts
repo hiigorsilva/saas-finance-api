@@ -22,6 +22,20 @@ export class WorkspaceService {
     return workspaces
   }
 
+  async findWorkspaceById(userId: string, workspaceId: string) {
+    const workspaceIsExists = await this.workspaceRepository.alreadyExistsById(
+      workspaceId,
+      userId
+    )
+    if (!workspaceIsExists) throw new Error('Workspace not found.')
+
+    const workspace = await this.workspaceRepository.findWorkspaceById(
+      userId,
+      workspaceId
+    )
+    return workspace
+  }
+
   async delete(workspaceId: string, userId: string) {
     const workspaceIsExists = await this.workspaceRepository.alreadyExistsById(
       workspaceId,

@@ -79,6 +79,44 @@ export const listWorkspace: RouteShorthandOptions = {
   },
 }
 
+// ************ FIND WORKSPACE BY ID ************
+
+export const findWorkspaceByIdParamsSchema = z.object({
+  workspaceId: z.string(),
+})
+
+export const findWorkspaceById: RouteShorthandOptions = {
+  preHandler: [privateRoute],
+  schema: {
+    summary: 'Find a workspace by id',
+    tags: ['Workspace'],
+    security: [{ bearerAuth: [] }],
+    params: findWorkspaceByIdParamsSchema,
+    response: {
+      200: z.object({
+        statusCode: z.literal(200),
+        body: z.object({
+          workspace: z.object({
+            id: z.string(),
+            name: z.string(),
+            description: z.string().nullable(),
+            type: z.enum(['PRIVATE', 'SHARED']),
+            ownerId: z.string(),
+            createdAt: z.date(),
+            updatedAt: z.date(),
+          }),
+        }),
+      }),
+      400: z.object({
+        statusCode: z.literal(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+    },
+  },
+}
+
 // ************ DELETE ************
 
 export const deleteWorkspaceBadRequestResponseSchema = z.object({
