@@ -47,6 +47,30 @@ export const workspaceRoute = async (app: FastifyInstance) => {
     }
   })
 
+  app.get(
+    '/workspace/:workspaceId',
+    schema.findWorkspaceById,
+    async (request, reply) => {
+      try {
+        const response = await workspaceController.findWorkspaceById(request)
+        return reply.status(response.statusCode).send(response)
+      } catch (error) {
+        if (error instanceof Error) {
+          return reply
+            .status(400)
+            .send(parseResponse(badRequest({ error: error.message })))
+        }
+        return reply
+          .status(500)
+          .send(
+            parseResponse(
+              internalServerError({ error: 'Internal server error' })
+            )
+          )
+      }
+    }
+  )
+
   app.delete(
     '/workspace/:workspaceId',
     schema.deleteWorkspace,
