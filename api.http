@@ -109,7 +109,7 @@ Authorization: Bearer {{authToken}}
 
 # @name ListAllTransactions
 @paramsWorkspaceIdList = 
-GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction
+GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction?page=1&limit=10
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

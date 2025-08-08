@@ -28,6 +28,14 @@ export interface ITransaction {
   updatedAt: Date
 }
 
+export type IPaginatedTransaction = {
+  transactions: ITransaction[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+  limit: number
+}
+
 export type ITransactionId = Pick<ITransaction, 'id'>
 
 export type CreateTransactionDto = {
@@ -64,7 +72,12 @@ export interface ITransactionRepository {
     data: CreateTransactionDto
   ): Promise<ITransactionId>
 
-  list(userId: string, workspaceId: string): Promise<ITransaction[]>
+  list(
+    userId: string,
+    workspaceId: string,
+    page?: number,
+    limit?: number
+  ): Promise<IPaginatedTransaction>
 
   findTransactionById(
     userId: string,

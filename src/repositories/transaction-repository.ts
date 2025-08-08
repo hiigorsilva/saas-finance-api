@@ -1,8 +1,9 @@
-import { and, eq, isNull } from 'drizzle-orm'
+import { and, count, eq, isNull } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { transactionsTable } from '../db/schemas/transactions'
 import type {
   CreateTransactionDto,
+  IPaginatedTransaction,
   ITransaction,
   ITransactionId,
   ITransactionRepository,
@@ -54,7 +55,27 @@ export class TransactionRepository implements ITransactionRepository {
     return transaction
   }
 
-  async list(userId: string, workspaceId: string): Promise<ITransaction[]> {
+  async list(
+    userId: string,
+    workspaceId: string,
+    page = 1,
+    limit = 10
+  ): Promise<IPaginatedTransaction> {
+    const safePage = Math.max(1, page)
+    const safeLimit = Math.max(1, Math.min(limit, 100))
+    const offset = (safePage - 1) * safeLimit
+
+    const [{ count: totalCount }] = await db
+      .select({ count: count() })
+      .from(transactionsTable)
+      .where(
+        and(
+          eq(transactionsTable.createdByUserId, userId),
+          eq(transactionsTable.workspaceId, workspaceId),
+          isNull(transactionsTable.deletedAt)
+        )
+      )
+
     const transactions = await db.query.transactionsTable.findMany({
       columns: {
         deletedAt: false,
@@ -64,8 +85,17 @@ export class TransactionRepository implements ITransactionRepository {
         eq(transactionsTable.workspaceId, workspaceId),
         isNull(transactionsTable.deletedAt)
       ),
+      limit: safeLimit,
+      offset: offset,
     })
-    return transactions
+
+    return {
+      transactions: transactions,
+      totalCount: totalCount,
+      totalPages: Math.ceil(totalCount / safeLimit),
+      currentPage: safePage,
+      limit: safeLimit,
+    }
   }
 
   async findTransactionById(

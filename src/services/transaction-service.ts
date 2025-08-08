@@ -27,10 +27,12 @@ export class TransactionService {
     return transaction
   }
 
-  async list(userId: string, workspaceId: string) {
+  async list(userId: string, workspaceId: string, page: number, limit: number) {
     const transactions = await this.transactionRepository.list(
       userId,
-      workspaceId
+      workspaceId,
+      page,
+      limit
     )
     return transactions
   }

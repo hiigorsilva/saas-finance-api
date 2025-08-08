@@ -29,7 +29,6 @@ export const transactionRoute = async (app: FastifyInstance) => {
         return reply.status(response.statusCode).send(response)
       } catch (error) {
         if (error instanceof Error) {
-          console.log('Erro na resposta da rota', error)
           return reply
             .status(400)
             .send(parseResponse(badRequest({ error: error.message })))

@@ -6,6 +6,11 @@ export const listTransactionParamsSchema = z.object({
   workspaceId: z.string(),
 })
 
+export const listTransactionQuerySchema = z.object({
+  page: z.coerce.number().positive().default(1),
+  limit: z.coerce.number().positive().max(100).default(10),
+})
+
 const listTransactionSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
@@ -29,6 +34,10 @@ const listTransactionSuccessResponseSchema = z.object({
         updatedAt: z.date(),
       })
     ),
+    totalCount: z.number(),
+    totalPages: z.number(),
+    currentPage: z.number(),
+    limit: z.number(),
   }),
 })
 
@@ -45,6 +54,7 @@ export const listTransactionSchema: RouteShorthandOptions = {
     summary: 'List all transactinos',
     consumes: ['application/json'],
     tags: ['Transaction'],
+    querystring: listTransactionQuerySchema,
     params: listTransactionParamsSchema,
     security: [{ bearerAuth: [] }],
     response: {

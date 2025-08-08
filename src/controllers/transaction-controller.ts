@@ -5,7 +5,10 @@ import {
 } from '../schemas/transactions/create-transaction'
 import { deleteTransactionParamsResponseSchema } from '../schemas/transactions/delete-transaction'
 import { findTransactionByIdParamsSchema } from '../schemas/transactions/find-by-id-transaction'
-import { listTransactionParamsSchema } from '../schemas/transactions/list-transaction'
+import {
+  listTransactionParamsSchema,
+  listTransactionQuerySchema,
+} from '../schemas/transactions/list-transaction'
 import {
   updateTransactionBodySchema,
   updateTransactionParamsSchema,
@@ -39,18 +42,27 @@ export class TransactionController {
   }
 
   async list(request: FastifyRequest) {
-    const { userId, params } = request
+    const { userId, params, query } = request
     if (!userId) return unauthorized({ error: 'Unauthorized.' })
 
     const { success, data, error } =
       listTransactionParamsSchema.safeParse(params)
     if (!success) return badRequest({ error: error.message })
 
+    const {
+      success: successQuery,
+      data: dataQuery,
+      error: errorQuery,
+    } = listTransactionQuerySchema.safeParse(query)
+    if (!successQuery) return badRequest({ error: errorQuery.message })
+
     const transactions = await this.transactionService.list(
       userId,
-      data.workspaceId
+      data.workspaceId,
+      dataQuery.page,
+      dataQuery.limit
     )
-    return ok({ transactions })
+    return ok({ ...transactions })
   }
 
   async findTransactionById(request: FastifyRequest) {
