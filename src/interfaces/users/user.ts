@@ -1,3 +1,6 @@
+import type z from 'zod'
+import type { signupBodySchema } from '../../schemas/auth/signup-schema'
+
 export interface IUser {
   id: string
   name: string
@@ -18,6 +21,7 @@ export interface IUser {
 export type InputCreateUser = Pick<IUser, 'name' | 'email' | 'passwordHashed'>
 export type UserId = Pick<IUser, 'id'>
 export type UserWithoutPassword = Omit<IUser, 'passwordHashed'>
+export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
 export interface IUserRepository {
   create(user: InputCreateUser): Promise<UserId>
