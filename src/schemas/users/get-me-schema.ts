@@ -1,8 +1,8 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { privateRoute } from '../middlewares/private-route'
+import { privateRoute } from '../../middlewares/private-route'
 
-export const meSuccessResponseSchema = z.object({
+const getDataUserSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
     user: z.object({
@@ -17,7 +17,7 @@ export const meSuccessResponseSchema = z.object({
   }),
 })
 
-export const me: RouteShorthandOptions = {
+export const getDataUser: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Get data user logged',
@@ -25,7 +25,7 @@ export const me: RouteShorthandOptions = {
     security: [{ bearerAuth: [] }],
     consumes: ['application/json'],
     response: {
-      200: meSuccessResponseSchema,
+      200: getDataUserSuccessResponseSchema,
     },
   },
 }
