@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { GetHealthStatusController } from '../../controllers/health-controller'
-import * as schema from '../../schemas/health-schema'
+import * as schema from '../../schemas/health/health-schema'
 import { badRequest, internalServerError } from '../../shared/utils/http'
 import { parseResponse } from '../../shared/utils/parse-response'
 
