@@ -9,23 +9,22 @@ export const signupBodySchema = z.object({
     .min(8, 'Password must be at least 8 characters long.')
     .trim(),
 })
-export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
-export const signupSuccessResponseSchema = z.object({
+const signupSuccessResponseSchema = z.object({
   statusCode: z.literal(201),
   body: z.object({
     accessToken: z.string(),
   }),
 })
 
-export const signupBadRequestResponseSchema = z.object({
+const signupBadRequestResponseSchema = z.object({
   statusCode: z.literal(400),
   body: z.object({
     error: z.string(),
   }),
 })
 
-export const signup: RouteShorthandOptions = {
+export const signupSchema: RouteShorthandOptions = {
   schema: {
     summary: 'Create a new user',
     consumes: ['application/json'],

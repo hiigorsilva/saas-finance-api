@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { SignUpController } from '../../controllers/signup-controller'
 import { UserRepository } from '../../repositories/user-repository'
-import * as schema from '../../schemas/signup-schema'
+import { signupSchema } from '../../schemas/auth/signup-schema'
 import { SignUpService } from '../../services/signup-service'
 import { badRequest, internalServerError } from '../../shared/utils/http'
 import { parseResponse } from '../../shared/utils/parse-response'
@@ -11,7 +11,7 @@ const signupService = new SignUpService(userRepository)
 const signupController = new SignUpController(signupService)
 
 export const signupRoute = async (app: FastifyInstance) => {
-  app.post('/signup', schema.signup, async (request, reply) => {
+  app.post('/signup', signupSchema, async (request, reply) => {
     try {
       const response = await signupController.handle(request)
       return reply.status(response.statusCode).send(response)
