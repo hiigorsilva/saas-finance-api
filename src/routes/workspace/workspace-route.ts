@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { WorkspaceController } from '../../controllers/workspace-controller'
 import { WorkspaceRepository } from '../../repositories/workspace-repository'
-import * as schema from '../../schemas/workspace-schema'
+import * as schema from '../../schemas/workspaces/workspace-schema'
 import { WorkspaceService } from '../../services/workspace-service'
 import { badRequest, internalServerError } from '../../shared/utils/http'
 import { parseResponse } from '../../shared/utils/parse-response'

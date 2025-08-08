@@ -1,6 +1,6 @@
 import { compare } from 'bcryptjs'
 import type { UserRepository } from '../repositories/user-repository'
-import type { SignInBodyType } from '../schemas/signin-schema'
+import type { SignInBodyType } from '../schemas/auth/signin-schema'
 
 export class SignInService {
   constructor(private userRepository: UserRepository) {}

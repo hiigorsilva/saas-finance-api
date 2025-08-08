@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify'
 import { signAccessTokenFor } from '../lib/jwt'
-import { signupBodySchema } from '../schemas/signup-schema'
+import { signupBodySchema } from '../schemas/auth/signup-schema'
 import type { SignUpService } from '../services/signup-service'
 import { badRequest, created } from '../shared/utils/http'
 

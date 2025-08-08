@@ -1,4 +1,4 @@
-import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
+import type { CreateWorkspaceBodyType } from '../../schemas/workspaces/workspace-schema'
 
 export interface IWorkspaceDetails {
   id: string

@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify'
 import { signAccessTokenFor } from '../lib/jwt'
-import { signinBodySchema } from '../schemas/signin-schema'
+import { signinBodySchema } from '../schemas/auth/signin-schema'
 import type { SignInService } from '../services/signin-service'
 import { ok, unauthorized } from '../shared/utils/http'
 

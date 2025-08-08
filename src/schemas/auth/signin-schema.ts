@@ -14,14 +14,14 @@ const signinSuccessResponseSchema = z.object({
   }),
 })
 
-export const signupUnauthorizedResponseSchema = z.object({
+const signupUnauthorizedResponseSchema = z.object({
   statusCode: z.literal(401),
   body: z.object({
     error: z.string(),
   }),
 })
 
-export const signin: RouteShorthandOptions = {
+export const signinSchema: RouteShorthandOptions = {
   schema: {
     summary: 'Sign in a user',
     consumes: ['application/json'],

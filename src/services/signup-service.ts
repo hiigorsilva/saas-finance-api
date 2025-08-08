@@ -1,6 +1,6 @@
 import { hashSync } from 'bcryptjs'
+import type { SignUpBodyType } from '../interfaces/users/user'
 import type { UserRepository } from '../repositories/user-repository'
-import type { SignUpBodyType } from '../schemas/signup-schema'
 
 export class SignUpService {
   constructor(private userRepository: UserRepository) {}

@@ -6,8 +6,8 @@ import type {
   IWorkspaceDetails,
   IWorkspaceId,
   IWorkspaceRepository,
-} from '../interfaces/workspace'
-import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
+} from '../interfaces/workspaces/workspace'
+import type { CreateWorkspaceBodyType } from '../schemas/workspaces/workspace-schema'
 
 export class WorkspaceRepository implements IWorkspaceRepository {
   async create(

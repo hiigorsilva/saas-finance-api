@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { usersTable } from '../db/schemas/users'
-import type { InputCreateUser, IUserRepository } from '../interfaces/user'
+import type { InputCreateUser, IUserRepository } from '../interfaces/users/user'
 
 export class UserRepository implements IUserRepository {
   async isUserExistsById(userId: string) {

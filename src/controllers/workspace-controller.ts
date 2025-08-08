@@ -5,7 +5,7 @@ import {
   type ParamsDeleteWorkspaceType,
   updateWorkspaceBodySchema,
   updateWorkspaceParamsSchema,
-} from '../schemas/workspace-schema'
+} from '../schemas/workspaces/workspace-schema'
 import type { WorkspaceService } from '../services/workspace-service'
 import { badRequest, created, ok, unauthorized } from '../shared/utils/http'
 
