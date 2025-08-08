@@ -1,6 +1,6 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { privateRoute } from '../middlewares/private-route'
+import { privateRoute } from '../../middlewares/private-route'
 
 // ************ CREATE ************
 

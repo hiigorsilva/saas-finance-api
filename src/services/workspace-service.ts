@@ -1,5 +1,5 @@
 import type { WorkspaceRepository } from '../repositories/workspace-repository'
-import type { CreateWorkspaceBodyType } from '../schemas/workspace-schema'
+import type { CreateWorkspaceBodyType } from '../schemas/workspaces/workspace-schema'
 
 export class WorkspaceService {
   constructor(private workspaceRepository: WorkspaceRepository) {}
