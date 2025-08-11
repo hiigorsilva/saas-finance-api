@@ -12,6 +12,7 @@ export const roleMemberWorkspaceEnum = pgEnum('role_member_workspace', [
   'OWNER',
   'ADMIN',
   'MEMBER',
+  'VIEWER',
 ])
 
 export const typeWorkspaceEnum = pgEnum('type_workspace', ['PRIVATE', 'SHARED'])

@@ -1,6 +1,11 @@
+import { and, eq } from 'drizzle-orm'
+import { Permissions, type Roles } from '../data/roles'
+import { db } from '../db/connection'
+import { workspaceMembersTable } from '../db/schemas/workspace-members'
 import type { CreateTransactionDto } from '../interfaces/transactions/transaction'
 import type { TransactionRepository } from '../repositories/transaction-repository'
 import type { WorkspaceRepository } from '../repositories/workspace-repository'
+import { can } from '../validations/permissions'
 
 export class TransactionService {
   constructor(
@@ -66,6 +71,22 @@ export class TransactionService {
   }
 
   async delete(userId: string, workspaceId: string, transactionId: string) {
+    const memberRole = await db.query.workspaceMembersTable.findFirst({
+      where: and(
+        eq(workspaceMembersTable.workspaceId, workspaceId),
+        eq(workspaceMembersTable.userId, userId)
+      ),
+    })
+    if (!memberRole) throw new Error('You are not a member of this workspace.')
+
+    const hasPermission = can(
+      memberRole.role as Roles,
+      Permissions.TRANSACTION_DELETE
+    )
+    if (!hasPermission) {
+      throw new Error('You do not have permission to delete this transaction.')
+    }
+
     const alreadyExists = await this.workspaceRepository.alreadyExistsById(
       workspaceId,
       userId
