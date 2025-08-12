@@ -148,3 +148,16 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/{{paramsGetWorkspaceIdId}}/transaction/{{paramsGetTransactionId}}
 content-type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name AddMemberToWorkspace
+@paramsWorkspaceIdAddMember = 
+POST {{baseUrl}}/workspace/{{paramsWorkspaceIdAddMember}}/member
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "convidado@email.com",
+    "role": "MEMBER"
+}
