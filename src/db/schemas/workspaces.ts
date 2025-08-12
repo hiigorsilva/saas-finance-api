@@ -8,7 +8,7 @@ export const workspacesTable = pgTable('workspaces', {
   description: text('description'),
   ownerId: uuid('owner_id')
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
   type: typeWorkspaceEnum('type').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

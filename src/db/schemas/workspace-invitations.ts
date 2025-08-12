@@ -7,13 +7,13 @@ export const workspaceInvitationsTable = pgTable('workspace_invitations', {
   id: uuid('id').defaultRandom().primaryKey(),
   workspaceId: uuid('workspace_id')
     .notNull()
-    .references(() => workspacesTable.id),
+    .references(() => workspacesTable.id, { onDelete: 'cascade' }),
   inviterId: uuid('inviter_id')
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
   inviteeId: uuid('invitee_id')
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
   status: statusWorkspaceInvitation('status').default('PENDING'),
   createdAt: timestamp('created_at').defaultNow(),
   expiresAt: timestamp('expires_at'),
