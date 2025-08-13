@@ -23,7 +23,6 @@ export class WorkspaceMemberService {
       await this.workspaceRepository.alreadyExistsById(workspaceId, userId)
     if (!workspaceAlreadyExists) throw new Error('Workspace not found.')
 
-    // Check if user is already a member
     const isAMember = await this.workspaceMemberRepository.isMember(
       workspaceId,
       user.id
@@ -38,5 +37,18 @@ export class WorkspaceMemberService {
       role
     )
     return member
+  }
+
+  async listMembers(workspaceId: string, userId: string) {
+    const workspaceAlreadyExists =
+      await this.workspaceMemberRepository.isMember(workspaceId, userId)
+    if (!workspaceAlreadyExists) {
+      throw new Error('Workspace not found or user is not a member.')
+    }
+
+    const members =
+      await this.workspaceMemberRepository.listMembers(workspaceId)
+
+    return members
   }
 }

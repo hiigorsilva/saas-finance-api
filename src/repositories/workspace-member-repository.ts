@@ -43,4 +43,11 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
 
     return member
   }
+
+  async listMembers(workspaceId: string): Promise<WorkspaceMember[]> {
+    const members = await db.query.workspaceMembersTable.findMany({
+      where: eq(workspaceMembersTable.workspaceId, workspaceId),
+    })
+    return members
+  }
 }
