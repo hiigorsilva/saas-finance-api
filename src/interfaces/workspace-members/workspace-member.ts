@@ -20,6 +20,8 @@ export interface IWorkspaceMemberRepository {
 
   isMember(workspaceId: string, userId: string): Promise<boolean>
 
+  listMembers(workspaceId: string): Promise<WorkspaceMember[]>
+
   // removeMember(workspaceId: string, userId: string): Promise<void>
 
   // changeMemberRole(
@@ -27,6 +29,4 @@ export interface IWorkspaceMemberRepository {
   //   userId: string,
   //   newRole: WorkspaceMember['role']
   // ): Promise<void>
-
-  // listMembers(workspaceId: string): Promise<WorkspaceMember[]>
 }

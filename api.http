@@ -158,6 +158,14 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "email": "convidado@email.com",
+    "email": "admin@email.com",
     "role": "MEMBER"
 }
+
+###
+
+# @name ListAllMembersWorkspace
+@paramsWorkspaceIdListMembers = 
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member
+content-type: application/json
+Authorization: Bearer {{authToken}}
