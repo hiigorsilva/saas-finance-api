@@ -5,6 +5,7 @@ import { healthRoute } from './check/health-route'
 import { transactionRoute } from './transaction/transaction-route'
 import { meRoute } from './user/me-route'
 import { workspaceRoute } from './workspace/workspace-route'
+import { workspaceMemberRoute } from './workspace-member/workspace-member-route'
 
 export const registerRoutes = (app: FastifyInstance) => {
   app.register(healthRoute, { prefix: '/api' })
@@ -12,5 +13,6 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(signinRoute, { prefix: '/api' })
   app.register(meRoute, { prefix: '/api' })
   app.register(workspaceRoute, { prefix: '/api' })
+  app.register(workspaceMemberRoute, { prefix: '/api' })
   app.register(transactionRoute, { prefix: '/api' })
 }

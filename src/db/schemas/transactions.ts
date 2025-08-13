@@ -19,10 +19,10 @@ export const transactionsTable = pgTable('transactions', {
   id: uuid('id').defaultRandom().primaryKey(),
   workspaceId: uuid('workspace_id')
     .notNull()
-    .references(() => workspacesTable.id),
+    .references(() => workspacesTable.id, { onDelete: 'cascade' }),
   createdByUserId: uuid('created_by_user_id')
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   description: text('description'),
   type: transactionTypeEnum('type').notNull(),
