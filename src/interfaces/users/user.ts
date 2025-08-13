@@ -24,11 +24,19 @@ export type UserWithoutPassword = Omit<IUser, 'passwordHashed'>
 export type ListAllUsersReponse = Omit<IUser, 'passwordHashed' | 'deletedAt'>
 export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
+export type IPaginatedUsers = {
+  users: ListAllUsersReponse[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+  limit: number
+}
+
 export interface IUserRepository {
   create(user: InputCreateUser): Promise<UserId>
   isUserExistsById(userId: string): Promise<boolean>
   isUserExistsByEmail(email: string): Promise<boolean>
   findUserByEmail(email: string): Promise<UserWithoutPassword | null>
   findUserById(userId: string): Promise<UserWithoutPassword | null>
-  listAllUsers(): Promise<ListAllUsersReponse[]>
+  listAllUsers(page: number, limit: number): Promise<IPaginatedUsers>
 }

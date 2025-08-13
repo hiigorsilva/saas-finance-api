@@ -11,8 +11,8 @@ export class UserService {
     return user
   }
 
-  async listAllUsers() {
-    const users = await this.userRepository.listAllUsers()
+  async listAllUsers(page: number, limit: number) {
+    const users = await this.userRepository.listAllUsers(page, limit)
     return users
   }
 }

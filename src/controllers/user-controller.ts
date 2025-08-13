@@ -1,6 +1,7 @@
 import type { FastifyRequest } from 'fastify'
+import { listTransactionQuerySchema } from '../schemas/transactions/list-transaction'
 import type { UserService } from '../services/user-service'
-import { ok, unauthorized } from '../shared/utils/http'
+import { badRequest, ok, unauthorized } from '../shared/utils/http'
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -15,10 +16,19 @@ export class UserController {
   }
 
   async listAllUsers(request: FastifyRequest) {
-    const { userId } = request
+    const { userId, query } = request
     if (!userId) return unauthorized({ error: 'Unauthorized' })
 
-    const users = await this.userService.listAllUsers()
-    return ok({ users })
+    const { success, data, error } = listTransactionQuerySchema.safeParse(query)
+    if (!success) return badRequest({ error: error.message })
+
+    const users = await this.userService.listAllUsers(data.page, data.limit)
+    return ok({
+      data: users.users,
+      totalCount: users.totalCount,
+      totalPages: users.totalPages,
+      currentPage: users.currentPage,
+      limit: users.limit,
+    })
   }
 }

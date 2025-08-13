@@ -1,10 +1,10 @@
-import { eq } from 'drizzle-orm'
+import { count, eq, isNull } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { usersTable } from '../db/schemas/users'
 import type {
   InputCreateUser,
+  IPaginatedUsers,
   IUserRepository,
-  ListAllUsersReponse,
 } from '../interfaces/users/user'
 
 export class UserRepository implements IUserRepository {
@@ -53,13 +53,32 @@ export class UserRepository implements IUserRepository {
     return newUser
   }
 
-  async listAllUsers(): Promise<ListAllUsersReponse[]> {
-    const users = await db.query.usersTable.findMany({
-      columns: {
-        passwordHashed: false,
-        deletedAt: false,
-      },
-    })
-    return users
+  async listAllUsers(page = 1, limit = 10): Promise<IPaginatedUsers> {
+    const safePage = Math.max(1, page)
+    const safeLimit = Math.max(1, Math.min(limit, 100))
+    const offset = (safePage - 1) * safeLimit
+
+    const [totalCount, users] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(usersTable)
+        .where(isNull(usersTable.deletedAt))
+        .then(row => Number(row[0].count ?? 0)),
+
+      db.query.usersTable.findMany({
+        columns: { passwordHashed: false, deletedAt: false },
+        limit: safeLimit,
+        offset: offset,
+        where: isNull(usersTable.deletedAt),
+      }),
+    ])
+
+    return {
+      users: users,
+      totalCount: totalCount,
+      totalPages: Math.ceil(totalCount / safeLimit),
+      currentPage: safePage,
+      limit: safeLimit,
+    }
   }
 }
