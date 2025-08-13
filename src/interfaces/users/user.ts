@@ -21,6 +21,7 @@ export interface IUser {
 export type InputCreateUser = Pick<IUser, 'name' | 'email' | 'passwordHashed'>
 export type UserId = Pick<IUser, 'id'>
 export type UserWithoutPassword = Omit<IUser, 'passwordHashed'>
+export type ListAllUsersReponse = Omit<IUser, 'passwordHashed' | 'deletedAt'>
 export type SignUpBodyType = z.infer<typeof signupBodySchema>
 
 export interface IUserRepository {
@@ -29,4 +30,5 @@ export interface IUserRepository {
   isUserExistsByEmail(email: string): Promise<boolean>
   findUserByEmail(email: string): Promise<UserWithoutPassword | null>
   findUserById(userId: string): Promise<UserWithoutPassword | null>
+  listAllUsers(): Promise<ListAllUsersReponse[]>
 }

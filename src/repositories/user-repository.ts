@@ -1,7 +1,11 @@
 import { eq } from 'drizzle-orm'
 import { db } from '../db/connection'
 import { usersTable } from '../db/schemas/users'
-import type { InputCreateUser, IUserRepository } from '../interfaces/users/user'
+import type {
+  InputCreateUser,
+  IUserRepository,
+  ListAllUsersReponse,
+} from '../interfaces/users/user'
 
 export class UserRepository implements IUserRepository {
   async isUserExistsById(userId: string) {
@@ -47,5 +51,15 @@ export class UserRepository implements IUserRepository {
 
     if (!newUser) throw new Error('Error creating user')
     return newUser
+  }
+
+  async listAllUsers(): Promise<ListAllUsersReponse[]> {
+    const users = await db.query.usersTable.findMany({
+      columns: {
+        passwordHashed: false,
+        deletedAt: false,
+      },
+    })
+    return users
   }
 }
