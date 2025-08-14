@@ -38,7 +38,7 @@ export const updateTransaction: RouteShorthandOptions = {
       200: z.object({
         statusCode: z.literal(200),
         body: z.object({
-          transaction: z.object({
+          data: z.object({
             id: z.string(),
             name: z.string(),
             amount: z.string(),

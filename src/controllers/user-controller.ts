@@ -12,7 +12,7 @@ export class UserController {
 
     const user = await this.userService.findUserById(userId)
 
-    return ok({ user })
+    return ok({ data: user })
   }
 
   async listAllUsers(request: FastifyRequest) {

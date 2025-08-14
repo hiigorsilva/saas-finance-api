@@ -32,7 +32,7 @@ export class WorkspaceMemberController {
       data.role
     )
 
-    return created({ member })
+    return created({ data: member })
   }
 
   async listMembers(request: FastifyRequest) {
@@ -47,6 +47,6 @@ export class WorkspaceMemberController {
       userId
     )
 
-    return ok({ members })
+    return ok({ data: members })
   }
 }

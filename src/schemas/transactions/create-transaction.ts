@@ -38,7 +38,7 @@ export const createTransactionSchema: RouteShorthandOptions = {
       201: z.object({
         statusCode: z.literal(201),
         body: z.object({
-          transaction: z.object({
+          data: z.object({
             id: z.string(),
           }),
         }),

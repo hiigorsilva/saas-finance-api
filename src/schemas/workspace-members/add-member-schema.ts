@@ -24,7 +24,7 @@ export const addWorkspaceMember: RouteShorthandOptions = {
       201: z.object({
         statusCode: z.literal(201),
         body: z.object({
-          member: z.object({
+          data: z.object({
             id: z.string(),
             workspaceId: z.string(),
             userId: z.string(),

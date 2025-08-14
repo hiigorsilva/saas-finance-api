@@ -20,7 +20,7 @@ export class WorkspaceController {
     if (!success) return badRequest({ error: error.issues })
 
     const workspace = await this.workspaceService.create(data, userId)
-    return created({ workspace })
+    return created({ data: workspace })
   }
 
   async list(request: FastifyRequest) {
@@ -28,7 +28,7 @@ export class WorkspaceController {
     if (!userId) return unauthorized({ error: 'Unauthorized' })
 
     const workspaces = await this.workspaceService.list(userId)
-    return ok({ workspaces })
+    return ok({ data: workspaces })
   }
 
   async findWorkspaceById(request: FastifyRequest) {
@@ -43,7 +43,7 @@ export class WorkspaceController {
       userId,
       data.workspaceId
     )
-    return ok({ workspace })
+    return ok({ data: workspace })
   }
 
   async delete(request: FastifyRequest) {
@@ -79,6 +79,6 @@ export class WorkspaceController {
       userId,
       data
     )
-    return ok({ workspace })
+    return ok({ data: workspace })
   }
 }

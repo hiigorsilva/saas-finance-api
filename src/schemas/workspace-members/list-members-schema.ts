@@ -18,7 +18,7 @@ export const listMembersSchema: RouteShorthandOptions = {
       200: z.object({
         statusCode: z.literal(200),
         body: z.object({
-          members: z.array(
+          data: z.array(
             z.object({
               id: z.string(),
               workspaceId: z.string(),

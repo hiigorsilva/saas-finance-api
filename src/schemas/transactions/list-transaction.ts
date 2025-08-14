@@ -14,7 +14,7 @@ export const listTransactionQuerySchema = z.object({
 const listTransactionSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
-    transactions: z.array(
+    data: z.array(
       z.object({
         id: z.string(),
         workspaceId: z.string(),

@@ -38,7 +38,7 @@ export class TransactionController {
       userId,
       data
     )
-    return created({ transaction })
+    return created({ data: transaction })
   }
 
   async list(request: FastifyRequest) {
@@ -62,7 +62,13 @@ export class TransactionController {
       dataQuery.page,
       dataQuery.limit
     )
-    return ok({ ...transactions })
+    return ok({
+      data: transactions.transactions,
+      totalCount: transactions.totalCount,
+      totalPages: transactions.totalPages,
+      currentPage: transactions.currentPage,
+      limit: transactions.limit,
+    })
   }
 
   async findTransactionById(request: FastifyRequest) {
@@ -79,7 +85,7 @@ export class TransactionController {
       data.transactionId
     )
 
-    return ok({ transaction })
+    return ok({ data: transaction })
   }
 
   async delete(request: FastifyRequest) {
@@ -121,6 +127,6 @@ export class TransactionController {
       data
     )
 
-    return ok({ transaction })
+    return ok({ data: transaction })
   }
 }

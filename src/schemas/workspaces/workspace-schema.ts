@@ -14,7 +14,7 @@ export type CreateWorkspaceBodyType = z.infer<typeof createWorkspaceBodySchema>
 const createWorkspaceSuccessResponseSchema = z.object({
   statusCode: z.literal(201),
   body: z.object({
-    workspace: z.object({
+    data: z.object({
       id: z.string(),
     }),
   }),
@@ -47,7 +47,7 @@ export const createWorkspace: RouteShorthandOptions = {
 export const listworkspaceSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
-    workspaces: z.array(
+    data: z.array(
       z.object({
         id: z.string(),
         name: z.string(),
@@ -96,7 +96,7 @@ export const findWorkspaceById: RouteShorthandOptions = {
       200: z.object({
         statusCode: z.literal(200),
         body: z.object({
-          workspace: z.object({
+          data: z.object({
             id: z.string(),
             name: z.string(),
             description: z.string().nullable(),
@@ -163,7 +163,7 @@ export const updateWorkspaceParamsSchema = z.object({
 const updateWorkspaceSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
-    workspace: z.object({
+    data: z.object({
       id: z.string(),
       name: z.string(),
       description: z.string().nullable(),

@@ -5,7 +5,7 @@ import { privateRoute } from '../../middlewares/private-route'
 const getDataUserSuccessResponseSchema = z.object({
   statusCode: z.literal(200),
   body: z.object({
-    user: z.object({
+    data: z.object({
       id: z.string(),
       name: z.string(),
       email: z.email(),
