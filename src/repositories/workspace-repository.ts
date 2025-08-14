@@ -64,6 +64,17 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return !!workspace
   }
 
+  async isPrivateWorkspace(workspaceId: string): Promise<boolean> {
+    const workspace = await db.query.workspacesTable.findFirst({
+      where: and(
+        eq(workspacesTable.id, workspaceId),
+        eq(workspacesTable.type, 'PRIVATE'),
+        isNull(workspacesTable.deletedAt)
+      ),
+    })
+    return !!workspace
+  }
+
   async list(userId: string): Promise<IWorkspace[]> {
     const workspaces = await db.query.workspacesTable.findMany({
       columns: {

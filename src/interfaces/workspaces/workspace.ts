@@ -26,6 +26,8 @@ export interface IWorkspaceRepository {
 
   alreadyExistsById(workspaceName: string, userId: string): Promise<boolean>
 
+  isPrivateWorkspace(workspaceId: string): Promise<boolean>
+
   list(userId: string): Promise<IWorkspace[]>
 
   findWorkspaceById(

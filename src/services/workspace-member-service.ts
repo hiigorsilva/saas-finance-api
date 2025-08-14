@@ -23,6 +23,11 @@ export class WorkspaceMemberService {
       await this.workspaceRepository.alreadyExistsById(workspaceId, userId)
     if (!workspaceAlreadyExists) throw new Error('Workspace not found.')
 
+    const isPrivateWorkspace =
+      await this.workspaceRepository.isPrivateWorkspace(workspaceId)
+    if (isPrivateWorkspace)
+      throw new Error('Cannot add members to a private workspace.')
+
     const isAMember = await this.workspaceMemberRepository.isMember(
       workspaceId,
       user.id
