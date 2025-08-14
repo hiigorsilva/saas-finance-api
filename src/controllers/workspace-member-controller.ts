@@ -4,6 +4,7 @@ import {
   addMemberParamsSchema,
 } from '../schemas/workspace-members/add-member-schema'
 import { listMembersParamsSchema } from '../schemas/workspace-members/list-members-schema'
+import { removeMemberParamsSchema } from '../schemas/workspace-members/remove-member-schema'
 import type { WorkspaceMemberService } from '../services/workspace-member-service'
 import { badRequest, created, ok, unauthorized } from '../shared/utils/http'
 
@@ -48,5 +49,21 @@ export class WorkspaceMemberController {
     )
 
     return ok({ data: members })
+  }
+
+  async removeMember(request: FastifyRequest) {
+    const { userId, params } = request
+    if (!userId) return unauthorized({ error: 'Unauthorized.' })
+
+    const { success, data, error } = removeMemberParamsSchema.safeParse(params)
+    if (!success) return badRequest({ error: error.issues })
+
+    const { status } = await this.workspaceMemberService.removeMember(
+      data.workspaceId,
+      userId,
+      data.memberId
+    )
+
+    return ok({ status: status })
   }
 }

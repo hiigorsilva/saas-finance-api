@@ -50,4 +50,19 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     })
     return members
   }
+
+  async removeMember(
+    workspaceId: string,
+    memberId: string
+  ): Promise<{ status: string }> {
+    await db
+      .delete(workspaceMembersTable)
+      .where(
+        and(
+          eq(workspaceMembersTable.workspaceId, workspaceId),
+          eq(workspaceMembersTable.userId, memberId)
+        )
+      )
+    return { status: 'Member successfully removed.' }
+  }
 }
