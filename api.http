@@ -176,3 +176,11 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member
 content-type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name RemoveMemberFromWorkspace
+@paramsWorkspaceIdRemoveMember = 
+@paramsMemberIdToRemove = 
+Delete {{baseUrl}}/workspace/{{paramsWorkspaceIdRemoveMember}}/member/{{paramsMemberIdToRemove}}
+Authorization: Bearer {{authToken}}
