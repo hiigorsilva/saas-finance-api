@@ -22,7 +22,10 @@ export interface IWorkspaceMemberRepository {
 
   listMembers(workspaceId: string): Promise<WorkspaceMember[]>
 
-  // removeMember(workspaceId: string, userId: string): Promise<void>
+  removeMember(
+    workspaceId: string,
+    memberId: string
+  ): Promise<{ status: string }>
 
   // changeMemberRole(
   //   workspaceId: string,
