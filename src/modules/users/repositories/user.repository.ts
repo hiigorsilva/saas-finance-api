@@ -56,8 +56,8 @@ export class UserRepository implements IUserRepository {
   }
 
   async listAllUsers(
-    page: number,
-    limit: number
+    page = 1,
+    limit = 10
   ): Promise<IPaginationOutput<IUserOutput>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
@@ -95,8 +95,8 @@ export class UserRepository implements IUserRepository {
   }
 
   async listInactiveUsers(
-    page: number,
-    limit: number
+    page = 1,
+    limit = 10
   ): Promise<IPaginationOutput<IUserOutput>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
