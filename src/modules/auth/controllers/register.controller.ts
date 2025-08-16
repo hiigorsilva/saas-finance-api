@@ -1,23 +1,27 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { signAccessTokenFor } from '../../../lib/jwt'
-import { badRequest, internalServerError, ok } from '../../../shared/utils/http'
+import { signupBodySchema } from '../../../schemas/auth/signup-schema'
+import {
+  badRequest,
+  created,
+  internalServerError,
+} from '../../../shared/utils/http'
 import { parseResponse } from '../../../shared/utils/parse-response'
-import { signinBodySchema } from '../schemas/signin.schema'
-import type { SignInService } from '../services/signin.service'
+import type { RegisterService } from '../services/register.service'
 
-export class SignInController {
-  constructor(private signinService: SignInService) {}
+export class RegisterController {
+  constructor(private registerService: RegisterService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { body } = request
 
-      const { success, data, error } = signinBodySchema.safeParse(body)
+      const { success, data, error } = signupBodySchema.safeParse(body)
       if (!success) return badRequest({ error: error.issues })
 
-      const user = await this.signinService.execute(data)
-      const accessToken = await signAccessTokenFor(user.id)
-      const response = ok({ accessToken })
+      const newUser = await this.registerService.execute(data)
+      const accessToken = await signAccessTokenFor(newUser.id)
+      const response = created({ accessToken })
 
       return reply.status(response.statusCode).send(response)
     } catch (error) {

@@ -11,7 +11,7 @@ content-type: application/json
 ###
 
 # @name CreateANewUser
-POST {{baseUrl}}/signup
+POST {{baseUrl}}/register
 content-type: application/json
 
 {

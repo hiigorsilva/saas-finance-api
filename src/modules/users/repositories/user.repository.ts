@@ -3,8 +3,10 @@ import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import type {
   IUser,
+  IUserId,
   IUserRepository,
 } from '../../../interfaces/users/user.interface'
+import type { RegisterUserDTO } from '../../auth/dto/register.dto'
 
 export class UserRepository implements IUserRepository {
   async isUserExistsByEmail(email: string): Promise<boolean> {
@@ -26,5 +28,18 @@ export class UserRepository implements IUserRepository {
       where: eq(usersTable.email, email),
     })
     return user ?? null
+  }
+
+  async save(data: RegisterUserDTO): Promise<IUserId> {
+    const [newUser] = await db
+      .insert(usersTable)
+      .values({
+        name: data.name,
+        email: data.email,
+        passwordHashed: data.password,
+      })
+      .returning({ id: usersTable.id })
+
+    return newUser
   }
 }
