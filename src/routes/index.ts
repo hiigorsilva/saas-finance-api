@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { signinRoute } from './auth/signin-route'
+import { signinRoute } from '../modules/auth/routes/signin.route'
 import { signupRoute } from './auth/signup-route'
 import { healthRoute } from './check/health-route'
 import { transactionRoute } from './transaction/transaction-route'
