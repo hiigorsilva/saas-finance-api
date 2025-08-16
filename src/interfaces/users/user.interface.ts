@@ -31,4 +31,8 @@ export interface IUserRepository {
     page: number,
     limit: number
   ): Promise<IPaginationOutput<IUserOutput>>
+  listInactiveUsers(
+    page: number,
+    limit: number
+  ): Promise<IPaginationOutput<IUserOutput>>
 }

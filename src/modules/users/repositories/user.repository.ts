@@ -1,4 +1,4 @@
-import { and, count, desc, eq, isNull } from 'drizzle-orm'
+import { and, count, desc, eq, isNotNull, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import type {
@@ -80,14 +80,54 @@ export class UserRepository implements IUserRepository {
     ])
 
     const totalPages = Math.ceil(totalCount / safeLimit)
-    if (safePage > totalPages) {
+    const safeTotalPages = Math.max(1, totalPages)
+    if (safePage > safeTotalPages) {
       throw new Error('Page out of range. Please enter a valid page.')
     }
 
     return {
       data: users,
       totalCount: totalCount,
-      totalPages: totalPages,
+      totalPages: safeTotalPages,
+      currentPage: safePage,
+      limit: safeLimit,
+    }
+  }
+
+  async listInactiveUsers(
+    page: number,
+    limit: number
+  ): Promise<IPaginationOutput<IUserOutput>> {
+    const safePage = Math.max(1, page)
+    const safeLimit = Math.max(1, Math.min(limit, 100))
+    const offset = (safePage - 1) * safeLimit
+
+    const [totalCount, users] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(usersTable)
+        .where(isNotNull(usersTable.deletedAt))
+        .then(row => Number(row[0].count ?? 0)),
+
+      db.query.usersTable.findMany({
+        columns: { passwordHashed: false, deletedAt: false },
+        where: isNotNull(usersTable.deletedAt),
+        limit: safeLimit,
+        offset: offset,
+        orderBy: desc(usersTable.createdAt),
+      }),
+    ])
+
+    const totalPages = Math.ceil(totalCount / safeLimit)
+    const safeTotalPages = Math.max(1, totalPages)
+    if (safePage > safeTotalPages) {
+      throw new Error('Page out of range. Please enter a valid page.')
+    }
+
+    return {
+      data: users,
+      totalCount: totalCount,
+      totalPages: safeTotalPages,
       currentPage: safePage,
       limit: safeLimit,
     }
