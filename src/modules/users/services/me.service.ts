@@ -7,7 +7,7 @@ export class MeService {
     const userAlreadyExists = this.userRepository.isUserExistsById(userId)
     if (!userAlreadyExists) throw new Error('User not found')
 
-    const user = this.userRepository.findUserById(userId)
+    const user = await this.userRepository.findUserById(userId)
     return user
   }
 }

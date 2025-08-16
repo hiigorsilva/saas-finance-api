@@ -1,7 +1,8 @@
-import { and, eq, isNull } from 'drizzle-orm'
+import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import type {
+  IPaginationOutput,
   IUser,
   IUserRepository,
 } from '../../../interfaces/users/user.interface'
@@ -18,7 +19,7 @@ export class UserRepository implements IUserRepository {
 
   async isUserExistsById(userId: string): Promise<boolean> {
     const user = await db.query.usersTable.findFirst({
-      where: eq(usersTable.email, userId),
+      where: eq(usersTable.id, userId),
     })
     return !!user
   }
@@ -52,5 +53,43 @@ export class UserRepository implements IUserRepository {
       where: and(eq(usersTable.id, userId), isNull(usersTable.deletedAt)),
     })
     return user ?? null
+  }
+
+  async listAllUsers(
+    page: number,
+    limit: number
+  ): Promise<IPaginationOutput<IUserOutput>> {
+    const safePage = Math.max(1, page)
+    const safeLimit = Math.max(1, Math.min(limit, 100))
+    const offset = (safePage - 1) * safeLimit
+
+    const [totalCount, users] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(usersTable)
+        .where(isNull(usersTable.deletedAt))
+        .then(row => Number(row[0].count ?? 0)),
+
+      db.query.usersTable.findMany({
+        columns: { passwordHashed: false, deletedAt: false },
+        where: isNull(usersTable.deletedAt),
+        limit: safeLimit,
+        offset: offset,
+        orderBy: desc(usersTable.createdAt),
+      }),
+    ])
+
+    const totalPages = Math.ceil(totalCount / safeLimit)
+    if (safePage > totalPages) {
+      throw new Error('Page out of range. Please enter a valid page.')
+    }
+
+    return {
+      data: users,
+      totalCount: totalCount,
+      totalPages: totalPages,
+      currentPage: safePage,
+      limit: safeLimit,
+    }
   }
 }

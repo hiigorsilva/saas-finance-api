@@ -13,10 +13,22 @@ export interface IUser {
   deletedAt: Date | null
 }
 
+export interface IPaginationOutput<T> {
+  data: T[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+  limit: number
+}
+
 export interface IUserRepository {
   isUserExistsByEmail(email: string): Promise<boolean>
   isUserExistsById(userId: string): Promise<boolean>
   save(userData: RegisterUserDTO): Promise<IUserId>
   findUserByEmail(email: string): Promise<IUser | null>
   findUserById(userId: string): Promise<IUserOutput | null>
+  listAllUsers(
+    page: number,
+    limit: number
+  ): Promise<IPaginationOutput<IUserOutput>>
 }

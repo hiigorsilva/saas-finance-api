@@ -23,6 +23,18 @@ export const meSchema: RouteShorthandOptions = {
           }),
         }),
       }),
+      400: z.object({
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      401: z.object({
+        statusCode: z.number().default(401),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
     },
   },
 }
