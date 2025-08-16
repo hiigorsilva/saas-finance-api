@@ -10,7 +10,7 @@ export const listInactiveUserParamsSchema = z.object({
 export const listInactiveUserSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'List all users',
+    summary: 'List all inactive users',
     querystring: listInactiveUserParamsSchema,
     tags: ['User'],
     security: [{ bearerAuth: [] }],
