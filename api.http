@@ -40,6 +40,13 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name ListInactiveUsers
+GET {{baseUrl}}/users-inactive?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name GetUserDataLoggeIn
 GET {{baseUrl}}/me
 content-type: application/json
