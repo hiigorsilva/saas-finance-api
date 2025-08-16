@@ -17,7 +17,9 @@ export class RegisterController {
       const { body } = request
 
       const { success, data, error } = signupBodySchema.safeParse(body)
-      if (!success) return badRequest({ error: error.issues })
+      if (!success) {
+        return badRequest({ error: error.issues.map(issue => issue.message) })
+      }
 
       const newUser = await this.registerService.execute(data)
       const accessToken = await signAccessTokenFor(newUser.id)
