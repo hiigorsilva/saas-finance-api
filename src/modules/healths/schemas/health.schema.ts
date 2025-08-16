@@ -8,13 +8,13 @@ export const healthSchema: RouteShorthandOptions = {
     tags: ['Health'],
     response: {
       200: z.object({
-        statusCode: z.number(),
+        statusCode: z.number().default(200),
         body: z.object({
           status: z.string(),
         }),
       }),
       400: z.object({
-        statusCode: z.number(),
+        statusCode: z.number().default(400),
         error: z.string(),
       }),
     },
