@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { registerRoute } from '../modules/auth/routes/register.route'
 import { signinRoute } from '../modules/auth/routes/signin.route'
-import { healthRoute } from './check/health-route'
+import { healthRoute } from '../modules/healths/routes/health.route'
 import { transactionRoute } from './transaction/transaction-route'
 import { userRoute } from './user/user-route'
 import { workspaceRoute } from './workspace/workspace-route'
