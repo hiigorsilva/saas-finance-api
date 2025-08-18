@@ -1,6 +1,7 @@
 import type { TFinancialProfile } from '../../data/user'
 import type { RegisterUserDTO } from '../../modules/auth/dto/register.dto'
 import type { IUserId, IUserOutput } from '../../modules/users/dto/user.dto'
+import type { IPaginationOutput } from '../../shared/types/response'
 
 export interface IUser {
   id: string
@@ -11,14 +12,6 @@ export interface IUser {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
-}
-
-export interface IPaginationOutput<T> {
-  data: T[]
-  totalCount: number
-  totalPages: number
-  currentPage: number
-  limit: number
 }
 
 export interface IUserRepository {
