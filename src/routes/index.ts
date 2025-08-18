@@ -6,8 +6,8 @@ import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-use
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
 import { addMemberToWorkspaceRoute } from '../modules/workspace-members/routes/add-member.route'
+import { createWorkspaceRoute } from '../modules/workspaces/routes/create-workspace.route'
 import { transactionRoute } from './transaction/transaction-route'
-import { workspaceRoute } from './workspace/workspace-route'
 
 export const registerRoutes = (app: FastifyInstance) => {
   app.register(healthRoute, { prefix: '/api' })
@@ -17,7 +17,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
+  app.register(createWorkspaceRoute, { prefix: '/api' })
 
-  app.register(workspaceRoute, { prefix: '/api' })
   app.register(transactionRoute, { prefix: '/api' })
 }

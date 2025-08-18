@@ -40,7 +40,8 @@ export class AddMemberToWorkspaceController {
         role,
       })
 
-      return created({ data: member })
+      const response = created({ data: member })
+      return reply.status(response.statusCode).send(response)
     } catch (error) {
       if (error instanceof Error) {
         return reply

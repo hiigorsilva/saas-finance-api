@@ -29,6 +29,7 @@ export class WorkspaceMembersRepository implements IWorkspaceMemberRepository {
         workspaceId: workspaceId,
         userId: userId,
         role: role,
+        joinedAt: new Date(),
       })
       .returning({
         id: workspaceMembersTable.id,
