@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { listUserController } from '../instances/list-user.instance'
 import { listUserSchema } from '../schemas/list-user.schema'
 
-export const listUserRoute = (app: FastifyInstance) => {
+export const listUserRoute = async (app: FastifyInstance) => {
   app.get(
     '/users',
     listUserSchema,

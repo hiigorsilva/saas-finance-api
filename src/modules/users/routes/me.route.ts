@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { meController } from '../instances/me.instance'
 import { meSchema } from '../schemas/me.schema'
 
-export const meRoute = (app: FastifyInstance) => {
+export const meRoute = async (app: FastifyInstance) => {
   app.get(
     '/me',
     meSchema,
