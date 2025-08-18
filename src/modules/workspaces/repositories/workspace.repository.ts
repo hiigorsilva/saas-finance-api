@@ -1,7 +1,5 @@
 import { and, count, desc, eq, isNull } from 'drizzle-orm'
-import { Roles } from '../../../data/roles'
 import { db } from '../../../db/connection'
-import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
 import { workspacesTable } from '../../../db/schemas/workspaces'
 import type {
   IWorkspace,
@@ -47,14 +45,6 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .returning({ id: workspacesTable.id })
 
     if (!workspace) throw new Error('Error creating workspace')
-
-    //TODO: ADICIONAR ESSA QUERY NO SERVICE APOS CRIAR O WORKSPACE
-    await db.insert(workspaceMembersTable).values({
-      workspaceId: workspace.id,
-      userId: userId,
-      role: Roles.OWNER,
-      joinedAt: new Date(),
-    })
 
     return workspace
   }

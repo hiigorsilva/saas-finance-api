@@ -8,7 +8,7 @@ export const createWorkspaceBodySchema = z.object({
   type: z.enum(['PRIVATE', 'SHARED']),
 })
 
-export const createWorkspace: RouteShorthandOptions = {
+export const createWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Create a new wokspace',
