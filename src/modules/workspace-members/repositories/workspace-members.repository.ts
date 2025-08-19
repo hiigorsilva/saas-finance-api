@@ -1,11 +1,11 @@
 import { and, eq } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
+import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
 import type {
   IWorkspaceMember,
   IWorkspaceMemberRepository,
-} from '../../../interfaces/workspace-members/workspace-member.interface'
-import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
+} from '../interfaces/workspace-member.interface'
 
 export class WorkspaceMembersRepository implements IWorkspaceMemberRepository {
   async isMember(workspaceId: string, memberId: string): Promise<boolean> {

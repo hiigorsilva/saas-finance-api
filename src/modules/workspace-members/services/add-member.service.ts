@@ -1,6 +1,6 @@
-import type { IWorkspaceMember } from '../../../interfaces/workspace-members/workspace-member.interface'
 import type { UserRepository } from '../../users/repositories/user.repository'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
+import type { IWorkspaceMember } from '../interfaces/workspace-member.interface'
 import type { WorkspaceMembersRepository } from '../repositories/workspace-members.repository'
 
 type AddMemberProps = {
@@ -19,7 +19,7 @@ export class WorkspaceMemberService {
 
   async addMember({ workspaceId, email, role }: AddMemberProps) {
     // Receber o usuário logado do controller
-    // Verificar se o usuário logado tem permissão para adicionar membro
+    // TODO: Verificar se o usuário logado tem permissão para adicionar membro
 
     const user = await this.userRepository.findUserByEmail(email)
     if (!user) throw new Error('User not exists.')
