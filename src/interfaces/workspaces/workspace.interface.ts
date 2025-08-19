@@ -34,7 +34,7 @@ export interface IWorkspaceRepository {
 
   delete(workspaceId: string, userId: string): Promise<{ status: string }>
 
-  update(
+  edit(
     workspaceId: string,
     userId: string,
     data: CreateWorkspaceDTO
