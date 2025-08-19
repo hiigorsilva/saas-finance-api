@@ -1,16 +1,16 @@
 import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { workspacesTable } from '../../../db/schemas/workspaces'
-import type {
-  IWorkspace,
-  IWorkspaceRepository,
-} from '../../../interfaces/workspaces/workspace.interface'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type {
   CreateWorkspaceDTO,
   IWorkspaceId,
   IWorkspaceOutput,
 } from '../dto/workspace.dto'
+import type {
+  IWorkspace,
+  IWorkspaceRepository,
+} from '../interfaces/workspace.interface'
 
 export class WorkspaceRepository implements IWorkspaceRepository {
   async alreadyExistsByName(

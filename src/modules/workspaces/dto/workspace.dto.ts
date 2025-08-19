@@ -1,5 +1,5 @@
 import type z from 'zod'
-import type { IWorkspace } from '../../../interfaces/workspaces/workspace.interface'
+import type { IWorkspace } from '../interfaces/workspace.interface'
 import type { createWorkspaceBodySchema } from '../schemas/create-workspace.schema'
 import type { editWorkspaceBodySchema } from '../schemas/edit-workspace.schema'
 
