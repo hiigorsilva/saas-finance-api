@@ -11,7 +11,7 @@ content-type: application/json
 ###
 
 # @name CreateANewUser
-POST {{baseUrl}}/signup
+POST {{baseUrl}}/register
 content-type: application/json
 
 {
@@ -40,6 +40,13 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name ListInactiveUsers
+GET {{baseUrl}}/users-inactive?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name GetUserDataLoggeIn
 GET {{baseUrl}}/me
 content-type: application/json
@@ -61,7 +68,7 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name ListAllWorkspaces
-GET {{baseUrl}}/workspace
+GET {{baseUrl}}/workspace?page=1&limit=10
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -165,7 +172,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "email": "admin@email.com",
+    "email": "joao@email.com",
     "role": "MEMBER"
 }
 
@@ -173,7 +180,7 @@ Authorization: Bearer {{authToken}}
 
 # @name ListAllMembersWorkspace
 @paramsWorkspaceIdListMembers = 
-GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member?page=1&limit=10
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

@@ -4,7 +4,7 @@
 
 - Usuários só podem acessar transações dos workspaces para os quais têm permissão.
 - Não é permitido editar transações anteriores ao mês corrente (atual).
-- Só o dono ou administrador de um workspace poderá convidar outros usuários.
+- Só o dono/criador de um workspace poderá convidar outros usuários.
 - Só pode haver uma categoria por transação.
 - Um usuário pode pertencer a vários workspaces, e um workspace pode ter vários usuários.
 - Membros de um workspace não poderá remover o acesso do proprietário e nem alterar sua permissão.
