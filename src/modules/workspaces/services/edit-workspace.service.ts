@@ -15,7 +15,7 @@ export class EditWorkspaceService {
       await this.workspaceRepository.alreadyExistsById(workspaceId)
     if (!workspaceIsExists) throw new Error('Workspace not found.')
 
-    const workspace = await this.workspaceRepository.update(
+    const workspace = await this.workspaceRepository.edit(
       workspaceId,
       userId,
       data
