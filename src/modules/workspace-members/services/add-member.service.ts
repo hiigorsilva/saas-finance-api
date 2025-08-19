@@ -1,7 +1,7 @@
 import type { UserRepository } from '../../users/repositories/user.repository'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { IWorkspaceMember } from '../interfaces/workspace-member.interface'
-import type { WorkspaceMembersRepository } from '../repositories/workspace-members.repository'
+import type { WorkspaceMemberRepository } from '../repositories/workspace-members.repository'
 
 type AddMemberProps = {
   workspaceId: string
@@ -12,7 +12,7 @@ type AddMemberProps = {
 
 export class WorkspaceMemberService {
   constructor(
-    private workspaceMemberRepository: WorkspaceMembersRepository,
+    private workspaceMemberRepository: WorkspaceMemberRepository,
     private workspaceRepository: WorkspaceRepository,
     private userRepository: UserRepository
   ) {}

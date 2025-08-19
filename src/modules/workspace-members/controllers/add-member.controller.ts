@@ -12,7 +12,7 @@ import {
 } from '../schemas/add-member.schema'
 import type { WorkspaceMemberService } from '../services/add-member.service'
 
-export class AddMemberToWorkspaceController {
+export class AddMemberController {
   constructor(private workspaceMemberService: WorkspaceMemberService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {

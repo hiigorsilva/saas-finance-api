@@ -11,7 +11,7 @@ export const addMemberBodySchema = z.object({
   role: z.enum(['ADMIN', 'MEMBER', 'OWNER', 'VIEWER']),
 })
 
-export const addMemberToWorkspaceSchema: RouteShorthandOptions = {
+export const addMemberSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Add a member to a workspace',
