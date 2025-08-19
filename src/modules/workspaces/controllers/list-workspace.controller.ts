@@ -6,7 +6,7 @@ import {
   unauthorized,
 } from '../../../shared/utils/http'
 import { parseResponse } from '../../../shared/utils/parse-response'
-import { listWorkspaceParamsSchema } from '../schemas/list-workspace.schema'
+import { listWorkspaceQuerySchema } from '../schemas/list-workspace.schema'
 import type { ListWorkspaceService } from '../services/list-workspace.service'
 
 export class ListWorkspaceController {
@@ -14,11 +14,10 @@ export class ListWorkspaceController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { userId, params } = request
+      const { userId, query } = request
       if (!userId) return unauthorized({ error: 'Unauthorized' })
 
-      const { success, data, error } =
-        listWorkspaceParamsSchema.safeParse(params)
+      const { success, data, error } = listWorkspaceQuerySchema.safeParse(query)
       if (!success) return badRequest({ error: error.issues })
 
       const { page, limit } = data

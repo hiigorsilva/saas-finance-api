@@ -2,7 +2,7 @@ import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
 
-export const listWorkspaceParamsSchema = z.object({
+export const listWorkspaceQuerySchema = z.object({
   page: z.coerce.number().positive().default(1),
   limit: z.coerce.number().positive().default(10),
 })
@@ -12,7 +12,7 @@ export const listWorkspaceSchema: RouteShorthandOptions = {
   schema: {
     summary: 'List all workspaces',
     consumes: ['application/json'],
-    params: listWorkspaceParamsSchema,
+    querystring: listWorkspaceQuerySchema,
     tags: ['Workspace'],
     security: [{ bearerAuth: [] }],
     response: {
