@@ -1,22 +1,22 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { privateRoute } from '../../middlewares/private-route'
+import { privateRoute } from '../../../middlewares/private-route'
 
-export const findTransactionByIdParamsSchema = z.object({
+export const getTransactionByIdParamsSchema = z.object({
   workspaceId: z.string(),
   transactionId: z.string(),
 })
 
-export const findTransactionByIdSchema: RouteShorthandOptions = {
+export const getTransactionByIdSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Find a transaction by id',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
-    params: findTransactionByIdParamsSchema,
+    params: getTransactionByIdParamsSchema,
     response: {
       200: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
         body: z.object({
           data: z.object({
             id: z.string(),
