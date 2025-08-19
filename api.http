@@ -121,6 +121,7 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+// TODO: Refatorar a rota de listagem de transações
 # @name ListAllTransactions
 @paramsWorkspaceIdList = 
 GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction?page=1&limit=10
