@@ -10,6 +10,7 @@ import { createWorkspaceRoute } from '../modules/workspaces/routes/create-worksp
 import { editWorkspaceRoute } from '../modules/workspaces/routes/edit-workspace.route'
 import { getWorkspaceByIdRoute } from '../modules/workspaces/routes/get-workspace-by-id.route'
 import { listWorkspaceRoute } from '../modules/workspaces/routes/list-workspace.route'
+import { removeWorkspaceRoute } from '../modules/workspaces/routes/remove-workspace.route'
 
 export const registerRoutes = (app: FastifyInstance) => {
   app.register(healthRoute, { prefix: '/api' })
@@ -24,6 +25,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(listWorkspaceRoute, { prefix: '/api' })
   app.register(getWorkspaceByIdRoute, { prefix: '/api' })
   app.register(editWorkspaceRoute, { prefix: '/api' })
+  app.register(removeWorkspaceRoute, { prefix: '/api' })
 
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
 }

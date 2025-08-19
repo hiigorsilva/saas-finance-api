@@ -32,7 +32,7 @@ export interface IWorkspaceRepository {
 
   findWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
 
-  delete(workspaceId: string, userId: string): Promise<{ status: string }>
+  remove(workspaceId: string, userId: string): Promise<{ status: string }>
 
   edit(
     workspaceId: string,

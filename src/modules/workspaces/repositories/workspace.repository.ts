@@ -122,7 +122,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return workspace ?? null
   }
 
-  async delete(
+  async remove(
     workspaceId: string,
     userId: string
   ): Promise<{ status: string }> {
@@ -137,7 +137,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return { status: 'Workspace deleted successfully.' }
   }
 
-  async update(
+  async edit(
     workspaceId: string,
     userId: string,
     data: CreateWorkspaceDTO
