@@ -2,10 +2,10 @@ import { and, count, desc, eq, isNotNull, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import type {
-  IPaginationOutput,
   IUser,
   IUserRepository,
 } from '../../../interfaces/users/user.interface'
+import type { IPaginationOutput } from '../../../shared/types/response'
 import type { RegisterUserDTO } from '../../auth/dto/register.dto'
 import type { IUserId, IUserOutput } from '../dto/user.dto'
 

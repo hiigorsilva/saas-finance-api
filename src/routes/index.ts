@@ -7,17 +7,21 @@ import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
 import { addMemberToWorkspaceRoute } from '../modules/workspace-members/routes/add-member.route'
 import { createWorkspaceRoute } from '../modules/workspaces/routes/create-workspace.route'
-import { transactionRoute } from './transaction/transaction-route'
+import { getWorkspaceByIdRoute } from '../modules/workspaces/routes/get-workspace-by-id.route'
+import { listWorkspaceRoute } from '../modules/workspaces/routes/list-workspace.route'
 
 export const registerRoutes = (app: FastifyInstance) => {
   app.register(healthRoute, { prefix: '/api' })
   app.register(registerRoute, { prefix: '/api' })
   app.register(signinRoute, { prefix: '/api' })
+
   app.register(meRoute, { prefix: '/api' })
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
-  app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
-  app.register(createWorkspaceRoute, { prefix: '/api' })
 
-  app.register(transactionRoute, { prefix: '/api' })
+  app.register(createWorkspaceRoute, { prefix: '/api' })
+  app.register(listWorkspaceRoute, { prefix: '/api' })
+  app.register(getWorkspaceByIdRoute, { prefix: '/api' })
+
+  app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
 }
