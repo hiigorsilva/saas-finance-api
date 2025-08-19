@@ -6,6 +6,7 @@ import { createTransactionRoute } from '../modules/transactions/routes/create-tr
 import { editTransactionRoute } from '../modules/transactions/routes/edit-transaction.route'
 import { getTransactionRoute } from '../modules/transactions/routes/get-transaction.route'
 import { listTransactionRoute } from '../modules/transactions/routes/list-transaction.route'
+import { removeTransactionRoute } from '../modules/transactions/routes/remove-transaction.route'
 import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-user.route'
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
@@ -35,6 +36,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(listTransactionRoute, { prefix: '/api' })
   app.register(getTransactionRoute, { prefix: '/api' })
   app.register(editTransactionRoute, { prefix: '/api' })
+  app.register(removeTransactionRoute, { prefix: '/api' })
 
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
 }

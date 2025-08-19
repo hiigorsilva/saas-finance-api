@@ -1,28 +1,28 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { privateRoute } from '../../middlewares/private-route'
+import { privateRoute } from '../../../middlewares/private-route'
 
-export const deleteTransactionParamsResponseSchema = z.object({
+export const removeTransactionParamsSchema = z.object({
   workspaceId: z.string(),
   transactionId: z.string(),
 })
 
-export const deleteTransaction: RouteShorthandOptions = {
+export const removeTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Delete a transaction by id',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
-    params: deleteTransactionParamsResponseSchema,
+    params: removeTransactionParamsSchema,
     response: {
       200: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
         body: z.object({
-          status: z.string(),
+          data: z.string(),
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
         body: z.object({
           error: z.string(),
         }),
