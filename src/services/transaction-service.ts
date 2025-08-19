@@ -13,25 +13,6 @@ export class TransactionService {
     private workspaceRepository: WorkspaceRepository
   ) {}
 
-  async create(
-    workspaceId: string,
-    userId: string,
-    data: CreateTransactionDto
-  ) {
-    const workspaceIsExists = await this.workspaceRepository.alreadyExistsById(
-      workspaceId,
-      userId
-    )
-    if (!workspaceIsExists) throw new Error('Workspace not found.')
-
-    const transaction = await this.transactionRepository.create(
-      workspaceId,
-      userId,
-      data
-    )
-    return transaction
-  }
-
   async list(userId: string, workspaceId: string, page: number, limit: number) {
     const transactions = await this.transactionRepository.list(
       userId,
