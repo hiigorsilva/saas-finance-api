@@ -121,7 +121,6 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-// TODO: Refatorar a rota de listagem de transações
 # @name ListAllTransactions
 @paramsWorkspaceIdList = 
 GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction?page=1&limit=10
@@ -173,7 +172,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "email": "admin@email.com",
+    "email": "joao@email.com",
     "role": "MEMBER"
 }
 
@@ -181,7 +180,7 @@ Authorization: Bearer {{authToken}}
 
 # @name ListAllMembersWorkspace
 @paramsWorkspaceIdListMembers = 
-GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member?page=1&limit=10
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
