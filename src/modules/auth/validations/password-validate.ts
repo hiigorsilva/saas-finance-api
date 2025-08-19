@@ -1,5 +1,5 @@
 import { compare, hashSync } from 'bcryptjs'
-import type { IUser } from '../../../interfaces/users/user.interface'
+import type { IUser } from '../../users/interfaces/user.interface'
 import type { SignInUserDTO } from '../dto/signin.dto'
 
 export const validatePassword = async (

@@ -1,12 +1,12 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { signAccessTokenFor } from '../../../lib/jwt'
-import { signupBodySchema } from '../../../schemas/auth/signup-schema'
 import {
   badRequest,
   created,
   internalServerError,
 } from '../../../shared/utils/http'
 import { parseResponse } from '../../../shared/utils/parse-response'
+import { registerBodySchema } from '../schemas/register.schema'
 import type { RegisterService } from '../services/register.service'
 
 export class RegisterController {
@@ -16,9 +16,9 @@ export class RegisterController {
     try {
       const { body } = request
 
-      const { success, data, error } = signupBodySchema.safeParse(body)
+      const { success, data, error } = registerBodySchema.safeParse(body)
       if (!success) {
-        return badRequest({ error: error.issues.map(issue => issue.message) })
+        return badRequest({ error: error.issues })
       }
 
       const newUser = await this.registerService.execute(data)
