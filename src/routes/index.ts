@@ -3,6 +3,7 @@ import { registerRoute } from '../modules/auth/routes/register.route'
 import { signinRoute } from '../modules/auth/routes/signin.route'
 import { healthRoute } from '../modules/healths/routes/health.route'
 import { createTransactionRoute } from '../modules/transactions/routes/create-transaction.route'
+import { listTransactionRoute } from '../modules/transactions/routes/list-transaction.route'
 import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-user.route'
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
@@ -29,6 +30,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(removeWorkspaceRoute, { prefix: '/api' })
 
   app.register(createTransactionRoute, { prefix: '/api' })
+  app.register(listTransactionRoute, { prefix: '/api' })
 
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
 }
