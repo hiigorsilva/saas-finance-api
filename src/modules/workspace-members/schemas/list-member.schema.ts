@@ -1,9 +1,14 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { privateRoute } from '../../middlewares/private-route'
+import { privateRoute } from '../../../middlewares/private-route'
 
 export const listMembersParamsSchema = z.object({
   workspaceId: z.string(),
+})
+
+export const listMembersQuerySchema = z.object({
+  page: z.coerce.number().positive().default(1),
+  limit: z.coerce.number().positive().max(100).default(10),
 })
 
 export const listMembersSchema: RouteShorthandOptions = {
@@ -14,9 +19,10 @@ export const listMembersSchema: RouteShorthandOptions = {
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],
     params: listMembersParamsSchema,
+    querystring: listMembersQuerySchema,
     response: {
       200: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
         body: z.object({
           data: z.array(
             z.object({
@@ -27,10 +33,14 @@ export const listMembersSchema: RouteShorthandOptions = {
               joinedAt: z.date(),
             })
           ),
+          totalCount: z.number(),
+          totalPages: z.number(),
+          currentPage: z.number(),
+          limit: z.number(),
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
         body: z.object({
           error: z.string(),
         }),

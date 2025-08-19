@@ -47,6 +47,7 @@ export class TransactionRepository implements ITransactionRepository {
           )
         )
         .then(row => Number(row[0].count ?? 0)),
+
       db.query.transactionsTable.findMany({
         columns: {
           deletedAt: false,

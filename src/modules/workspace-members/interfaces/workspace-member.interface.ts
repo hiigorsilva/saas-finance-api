@@ -1,3 +1,4 @@
+import type { IPaginationOutput } from '../../../shared/types/response'
 import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
 
 export interface IWorkspaceMember {
@@ -17,7 +18,11 @@ export interface IWorkspaceMemberRepository {
 
   isMember(workspaceId: string, memberId: string): Promise<boolean>
 
-  listMembers(workspaceId: string): Promise<IWorkspaceMember[]>
+  listMembers(
+    workspaceId: string,
+    page?: number,
+    limit?: number
+  ): Promise<IPaginationOutput<IWorkspaceMember>>
 
   removeMember(
     workspaceId: string,
