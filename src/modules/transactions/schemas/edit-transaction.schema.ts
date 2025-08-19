@@ -26,7 +26,7 @@ export const editTransactionBodySchema = z.object({
   currentInstallment: z.number().optional(),
 })
 
-export const updateTransaction: RouteShorthandOptions = {
+export const editTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Update a transaction data',
