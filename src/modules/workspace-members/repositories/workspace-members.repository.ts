@@ -3,6 +3,7 @@ import { db } from '../../../db/connection'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
+import type { ChangeRoleMemberDTO } from '../dto/change-role-member.dto'
 import type {
   IWorkspaceMember,
   IWorkspaceMemberRepository,
@@ -14,6 +15,17 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       where: and(
         eq(workspaceMembersTable.workspaceId, workspaceId),
         eq(workspaceMembersTable.userId, memberId)
+      ),
+    })
+    return !!member
+  }
+
+  async isOwner(workspaceId: string, memberId: string): Promise<boolean> {
+    const member = await db.query.workspaceMembersTable.findFirst({
+      where: and(
+        eq(workspaceMembersTable.workspaceId, workspaceId),
+        eq(workspaceMembersTable.userId, memberId),
+        eq(workspaceMembersTable.role, 'OWNER')
       ),
     })
     return !!member
@@ -103,7 +115,7 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
   async changeMemberRole(
     workspaceId: string,
     memberId: string,
-    newRole: IWorkspaceMember['role']
+    newRole: ChangeRoleMemberDTO
   ): Promise<{ status: string }> {
     await db
       .update(workspaceMembersTable)

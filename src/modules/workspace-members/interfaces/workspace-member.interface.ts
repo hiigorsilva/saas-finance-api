@@ -1,5 +1,6 @@
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
+import type { ChangeRoleMemberDTO } from '../dto/change-role-member.dto'
 
 export interface IWorkspaceMember {
   id: string
@@ -18,6 +19,8 @@ export interface IWorkspaceMemberRepository {
 
   isMember(workspaceId: string, memberId: string): Promise<boolean>
 
+  isOwner(workspaceId: string, memberId: string): Promise<boolean>
+
   listMembers(
     workspaceId: string,
     page?: number,
@@ -32,6 +35,6 @@ export interface IWorkspaceMemberRepository {
   changeMemberRole(
     workspaceId: string,
     memberId: string,
-    newRole: IWorkspaceMember['role']
+    newRole: ChangeRoleMemberDTO
   ): Promise<{ status: string }>
 }
