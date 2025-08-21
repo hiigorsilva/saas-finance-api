@@ -6,6 +6,7 @@ import {
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const createTransactionParamsSchema = z.object({
   workspaceId: z.string(),
@@ -26,7 +27,7 @@ export const createTransactionBodySchema = z.object({
 })
 
 export const createTransactionSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Create a new transaction',
     consumes: ['application/json'],
@@ -36,7 +37,7 @@ export const createTransactionSchema: RouteShorthandOptions = {
     body: createTransactionBodySchema,
     response: {
       201: z.object({
-        statusCode: z.literal(201),
+        statusCode: z.number().default(201),
         body: z.object({
           data: z.object({
             id: z.string(),
@@ -44,7 +45,13 @@ export const createTransactionSchema: RouteShorthandOptions = {
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      403: z.object({
+        statusCode: z.number().default(403),
         body: z.object({
           error: z.string(),
         }),

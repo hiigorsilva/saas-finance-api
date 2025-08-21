@@ -6,6 +6,7 @@ import {
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const editTransactionParamsSchema = z.object({
   workspaceId: z.string(),
@@ -27,7 +28,7 @@ export const editTransactionBodySchema = z.object({
 })
 
 export const editTransactionSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Update a transaction data',
     tags: ['Transaction'],
@@ -44,6 +45,18 @@ export const editTransactionSchema: RouteShorthandOptions = {
             amount: z.string(),
             paymentDate: z.date(),
           }),
+        }),
+      }),
+      400: z.object({
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      403: z.object({
+        statusCode: z.number().default(403),
+        body: z.object({
+          error: z.string(),
         }),
       }),
     },
