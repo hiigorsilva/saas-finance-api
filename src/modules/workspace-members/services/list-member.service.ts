@@ -17,7 +17,7 @@ export class ListMemberService {
       throw new Error('You are not a member of this workspace.')
     }
 
-    const members = await this.workspaceMemberRepository.listMembers(
+    const members = await this.workspaceMemberRepository.listAllMembers(
       workspaceId,
       page,
       limit

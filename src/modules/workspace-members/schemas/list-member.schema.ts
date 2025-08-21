@@ -15,6 +15,7 @@ export const listMembersSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'List members of a workspace',
+    description: '`/api/workspace/{workspaceId}/member`',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],
@@ -27,10 +28,12 @@ export const listMembersSchema: RouteShorthandOptions = {
           data: z.array(
             z.object({
               id: z.string(),
-              workspaceId: z.string(),
-              userId: z.string(),
-              role: z.string(),
-              joinedAt: z.date(),
+              name: z.string(),
+              email: z.string(),
+              role: z.enum(['OWNER', 'ADMIN', 'MEMBER', 'VIEWER']),
+              financialProfile: z.string().nullable(),
+              createdAt: z.date(),
+              updatedAt: z.date(),
             })
           ),
           totalCount: z.number(),

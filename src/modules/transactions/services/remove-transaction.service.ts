@@ -1,4 +1,4 @@
-import type { WorkspaceMembersRepository } from '../../workspace-members/repositories/workspace-members.repository'
+import type { WorkspaceMemberRepository } from '../../workspace-members/repositories/workspace-members.repository'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { TransactionRepository } from '../repositories/transaction.repository'
 
@@ -12,7 +12,7 @@ export class RemoveTransactionService {
   constructor(
     private transactionRepository: TransactionRepository,
     private workspaceRepository: WorkspaceRepository,
-    private workspaceMemberRepository: WorkspaceMembersRepository
+    private workspaceMemberRepository: WorkspaceMemberRepository
   ) {}
 
   async removeTransaction({
