@@ -43,4 +43,9 @@ export interface IWorkspaceMemberRepository {
     memberId: string,
     newRole: ChangeRoleMemberDTO
   ): Promise<{ status: string }>
+
+  getUserRole(
+    workspaceId: string,
+    memberId: string
+  ): Promise<IWorkspaceMember['role'] | null>
 }
