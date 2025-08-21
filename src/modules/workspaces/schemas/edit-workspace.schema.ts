@@ -26,7 +26,7 @@ export const editWorkspaceSchema: RouteShorthandOptions = {
     body: editWorkspaceBodySchema,
     response: {
       200: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
         body: z.object({
           data: z.object({
             id: z.string(),
@@ -40,7 +40,13 @@ export const editWorkspaceSchema: RouteShorthandOptions = {
         }),
       }),
       400: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
+        body: z.object({
+          status: z.string(),
+        }),
+      }),
+      401: z.object({
+        statusCode: z.number().default(401),
         body: z.object({
           status: z.string(),
         }),

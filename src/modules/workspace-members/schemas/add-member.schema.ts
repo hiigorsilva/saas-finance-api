@@ -22,7 +22,7 @@ export const addMemberSchema: RouteShorthandOptions = {
     body: addMemberBodySchema,
     response: {
       201: z.object({
-        statusCode: z.literal(201),
+        statusCode: z.number().default(201),
         body: z.object({
           data: z.object({
             id: z.string(),
@@ -33,7 +33,13 @@ export const addMemberSchema: RouteShorthandOptions = {
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      401: z.object({
+        statusCode: z.number().default(401),
         body: z.object({
           error: z.string(),
         }),
