@@ -172,7 +172,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "email": "joao@email.com",
+    "email": "test@email.com",
     "role": "MEMBER"
 }
 
@@ -186,8 +186,33 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name GetMemberIdWorkspace
+@paramsWorkspaceIdGetMember = 
+@paramsMemberIdGetMember = 
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdGetMember}}/member/{{paramsMemberIdGetMember}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name RemoveMemberFromWorkspace
 @paramsWorkspaceIdRemoveMember = 
 @paramsMemberIdToRemove = 
 Delete {{baseUrl}}/workspace/{{paramsWorkspaceIdRemoveMember}}/member/{{paramsMemberIdToRemove}}
+content-type: application/json
 Authorization: Bearer {{authToken}}
+
+###
+
+# @name ChangeRoleMemberFromWorkspace
+@paramsWorkspaceIdChangeRole = 
+@paramsMemberIdToChangeRole = 
+PUT {{baseUrl}}/workspace/{{paramsWorkspaceIdChangeRole}}/member/{{paramsMemberIdToChangeRole}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "newRole": "MEMBER"
+}
+
+###
