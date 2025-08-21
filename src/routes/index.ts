@@ -45,6 +45,6 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
   app.register(listMemberWorkspaceRoute, { prefix: '/api' })
   app.register(getMemberFromWorkspaceById, { prefix: '/api' })
-  app.register(removeMemberFromWorkspaceRoute, { prefix: '/api' })
   app.register(changeRoleMemberRoute, { prefix: '/api' })
+  app.register(removeMemberFromWorkspaceRoute, { prefix: '/api' })
 }

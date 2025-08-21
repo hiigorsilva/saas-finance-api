@@ -1,9 +1,11 @@
 import { and, count, desc, eq } from 'drizzle-orm'
 import { db } from '../../../db/connection'
+import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
 import type { ChangeRoleMemberDTO } from '../dto/change-role-member.dto'
+import type { IMembersWithRole } from '../dto/list-member.dto'
 import type {
   IWorkspaceMember,
   IWorkspaceMemberRepository,
@@ -58,11 +60,11 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     return member
   }
 
-  async listMembers(
+  async listAllMembers(
     workspaceId: string,
     page = 1,
     limit = 10
-  ): Promise<IPaginationOutput<IWorkspaceMember>> {
+  ): Promise<IPaginationOutput<IMembersWithRole>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
@@ -74,12 +76,25 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
         .where(and(eq(workspaceMembersTable.workspaceId, workspaceId)))
         .then(row => Number(row[0].count ?? 0)),
 
-      db.query.workspaceMembersTable.findMany({
-        where: eq(workspaceMembersTable.workspaceId, workspaceId),
-        limit: safeLimit,
-        offset: offset,
-        orderBy: desc(workspaceMembersTable.joinedAt),
-      }),
+      db
+        .select({
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+          role: workspaceMembersTable.role,
+          financialProfile: usersTable.financialProfile,
+          createdAt: usersTable.createdAt,
+          updatedAt: usersTable.updatedAt,
+        })
+        .from(usersTable)
+        .leftJoin(
+          workspaceMembersTable,
+          eq(usersTable.id, workspaceMembersTable.userId)
+        )
+        .where(eq(workspaceMembersTable.workspaceId, workspaceId))
+        .limit(safeLimit)
+        .offset(offset)
+        .orderBy(desc(usersTable.name)),
     ])
 
     const totalPages = Math.ceil(totalCount / safeLimit)
@@ -95,6 +110,49 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       currentPage: safePage,
       limit: safeLimit,
     }
+  }
+
+  async getMemberById(
+    workspaceId: string,
+    memberId: string
+  ): Promise<IMembersWithRole> {
+    const [member] = await db
+      .select({
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+        role: workspaceMembersTable.role,
+        financialProfile: usersTable.financialProfile,
+        createdAt: usersTable.createdAt,
+        updatedAt: usersTable.updatedAt,
+      })
+      .from(usersTable)
+      .leftJoin(
+        workspaceMembersTable,
+        eq(usersTable.id, workspaceMembersTable.userId)
+      )
+      .where(
+        and(
+          eq(workspaceMembersTable.workspaceId, workspaceId),
+          eq(workspaceMembersTable.userId, memberId)
+        )
+      )
+
+    // const member = await db.query.workspaceMembersTable.findFirst({
+    //   columns: {
+    //     id: false,
+    //     userId: false,
+    //     workspaceId: false,
+    //     joinedAt: false,
+    //   },
+    //   where: and(
+    //     eq(workspaceMembersTable.workspaceId, workspaceId),
+    //     eq(workspaceMembersTable.userId, memberId)
+    //   ),
+    // })
+    if (!member) throw new Error('Failed to get member role.')
+
+    return member
   }
 
   async removeMember(
