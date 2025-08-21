@@ -28,6 +28,12 @@ export const removeTransactionSchema: RouteShorthandOptions = {
           error: z.string(),
         }),
       }),
+      401: z.object({
+        statusCode: z.number().default(401),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
       403: z.object({
         statusCode: z.number().default(403),
         body: z.object({
