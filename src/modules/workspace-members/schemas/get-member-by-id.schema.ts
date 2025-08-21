@@ -24,6 +24,7 @@ export const getMemberByIdSchema: RouteShorthandOptions = {
             id: z.string(),
             name: z.string(),
             email: z.string(),
+            role: z.enum(['OWNER', 'ADMIN', 'MEMBER', 'VIEWER']),
             financialProfile: z.string().nullable(),
             createdAt: z.date(),
             updatedAt: z.date(),

@@ -28,8 +28,11 @@ export class GetMemberByIdService {
     )
     if (!isMember) throw new Error('You are not a member of this workspace.')
 
-    const getMember = await this.userRepository.findUserById(memberId)
+    const getRoleMember = await this.workspaceMemberRepository.getMemberById(
+      workspaceId,
+      memberId
+    )
 
-    return getMember
+    return getRoleMember
   }
 }
