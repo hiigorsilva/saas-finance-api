@@ -23,8 +23,6 @@ export const privateRoute = async (
     const userId = await validateAccessToken(token)
 
     request.userId = userId
-
-    return userId
   } catch (error) {
     if (error instanceof Error) {
       return reply

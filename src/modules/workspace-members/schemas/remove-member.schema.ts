@@ -1,6 +1,7 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const removeMemberParamsSchema = z.object({
   workspaceId: z.string(),
@@ -8,7 +9,7 @@ export const removeMemberParamsSchema = z.object({
 })
 
 export const removeMemberSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Remove a member from a workspace',
     consumes: ['application/json'],

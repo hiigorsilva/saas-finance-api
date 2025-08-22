@@ -20,6 +20,14 @@ export class RemoveMemberService {
       )
     }
 
+    const isOwner = await this.workspaceMemberRepository.isOwner(
+      workspaceId,
+      memberId
+    )
+    if (isOwner) {
+      throw new Error('The workspace owner cannot be removed.')
+    }
+
     const workspaceAlreadyExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
     if (!workspaceAlreadyExists) {

@@ -1,6 +1,7 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const getTransactionByIdParamsSchema = z.object({
   workspaceId: z.string(),
@@ -8,7 +9,7 @@ export const getTransactionByIdParamsSchema = z.object({
 })
 
 export const getTransactionByIdSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Find a transaction by id',
     tags: ['Transaction'],
@@ -39,7 +40,19 @@ export const getTransactionByIdSchema: RouteShorthandOptions = {
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      401: z.object({
+        statusCode: z.number().default(401),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      403: z.object({
+        statusCode: z.number().default(403),
         body: z.object({
           error: z.string(),
         }),

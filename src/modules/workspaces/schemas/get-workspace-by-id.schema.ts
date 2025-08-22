@@ -15,7 +15,7 @@ export const getWorkspaceByIdSchema: RouteShorthandOptions = {
     params: getWorkspaceByIdParamsSchema,
     response: {
       200: z.object({
-        statusCode: z.literal(200),
+        statusCode: z.number().default(200),
         body: z.object({
           data: z.object({
             id: z.string(),
@@ -29,7 +29,13 @@ export const getWorkspaceByIdSchema: RouteShorthandOptions = {
         }),
       }),
       400: z.object({
-        statusCode: z.literal(400),
+        statusCode: z.number().default(400),
+        body: z.object({
+          error: z.string(),
+        }),
+      }),
+      401: z.object({
+        statusCode: z.number().default(401),
         body: z.object({
           error: z.string(),
         }),

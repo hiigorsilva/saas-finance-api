@@ -189,4 +189,23 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
 
     return { status: 'Member role successfully changed.' }
   }
+
+  async getUserRole(
+    workspaceId: string,
+    memberId: string
+  ): Promise<IWorkspaceMember['role'] | null> {
+    const role = await db.query.workspaceMembersTable.findFirst({
+      columns: {
+        id: false,
+        userId: false,
+        workspaceId: false,
+        joinedAt: false,
+      },
+      where: and(
+        eq(workspaceMembersTable.workspaceId, workspaceId),
+        eq(workspaceMembersTable.userId, memberId)
+      ),
+    })
+    return role?.role ?? null
+  }
 }
