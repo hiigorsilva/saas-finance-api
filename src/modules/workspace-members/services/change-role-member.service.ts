@@ -19,10 +19,6 @@ export class ChangeRoleMemberService {
     memberId,
     newRole,
   }: ChangeRoleMemberProps) {
-    if (newRole === 'OWNER') {
-      throw new Error('Only the workspace creator can have the owner role.')
-    }
-
     const workspaceAlreadyExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
     if (!workspaceAlreadyExists) {

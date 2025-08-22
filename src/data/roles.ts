@@ -11,8 +11,9 @@ export enum Permissions {
   TRANSACTION_UPDATE = 'transaction:update',
   TRANSACTION_DELETE = 'transaction:delete',
 
-  WORKSPACE_INVITE = 'workspace:invite',
-  WORKSPACE_UPDATE_ROLE = 'workspace:update_role',
+  WORKSPACE_INVITE_MEMBER = 'workspace:invite_member',
+  WORKSPACE_UPDATE_MEMBER_ROLE = 'workspace:update_member_role',
+  WORKSPACE_DELETE_MEMBER = 'workspace:delete_member',
 }
 
 export const RolePermissions: Record<Roles, Permissions[]> = {
@@ -21,15 +22,17 @@ export const RolePermissions: Record<Roles, Permissions[]> = {
     Permissions.TRANSACTION_CREATE,
     Permissions.TRANSACTION_UPDATE,
     Permissions.TRANSACTION_DELETE,
-    Permissions.WORKSPACE_INVITE,
-    Permissions.WORKSPACE_UPDATE_ROLE,
+    Permissions.WORKSPACE_INVITE_MEMBER,
+    Permissions.WORKSPACE_UPDATE_MEMBER_ROLE,
+    Permissions.WORKSPACE_DELETE_MEMBER,
   ],
   [Roles.ADMIN]: [
     Permissions.TRANSACTION_VIEW,
     Permissions.TRANSACTION_CREATE,
     Permissions.TRANSACTION_UPDATE,
     Permissions.TRANSACTION_DELETE,
-    Permissions.WORKSPACE_INVITE,
+    Permissions.WORKSPACE_UPDATE_MEMBER_ROLE,
+    Permissions.WORKSPACE_DELETE_MEMBER,
   ],
   [Roles.MEMBER]: [
     Permissions.TRANSACTION_VIEW,

@@ -23,11 +23,14 @@ const getUserRole = async (userId: string, workspaceId: string) => {
   return roleMember
 }
 
-const httpMethodToPermission: Record<string, Permissions> = {
-  GET: Permissions.TRANSACTION_VIEW,
-  POST: Permissions.TRANSACTION_CREATE,
-  PUT: Permissions.TRANSACTION_UPDATE,
-  DELETE: Permissions.TRANSACTION_DELETE,
+const httpMethodToPermission: Record<string, Permissions[]> = {
+  GET: [Permissions.TRANSACTION_VIEW],
+  POST: [Permissions.TRANSACTION_CREATE, Permissions.WORKSPACE_INVITE_MEMBER],
+  PUT: [
+    Permissions.TRANSACTION_UPDATE,
+    Permissions.WORKSPACE_UPDATE_MEMBER_ROLE,
+  ],
+  DELETE: [Permissions.TRANSACTION_DELETE, Permissions.WORKSPACE_DELETE_MEMBER],
 }
 
 export const hasPermission = async (
@@ -49,9 +52,9 @@ export const hasPermission = async (
         .send(parseResponse(badRequest({ error: 'Workspace not found.' })))
     }
 
-    const httpMethod = method.toUpperCase()
+    method.toUpperCase()
 
-    const requiredPermission = httpMethodToPermission[httpMethod]
+    const requiredPermission = httpMethodToPermission[method]
     if (!requiredPermission) {
       return reply
         .status(400)
@@ -70,7 +73,11 @@ export const hasPermission = async (
     }
 
     const userPermission = RolePermissions[roleMember]
-    if (!userPermission.includes(requiredPermission)) {
+    const userHasPermission = requiredPermission.some(permission =>
+      userPermission.includes(permission)
+    )
+
+    if (!userHasPermission) {
       return reply
         .status(400)
         .send(

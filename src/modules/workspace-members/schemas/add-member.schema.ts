@@ -1,6 +1,7 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const addMemberParamsSchema = z.object({
   workspaceId: z.string(),
@@ -12,7 +13,7 @@ export const addMemberBodySchema = z.object({
 })
 
 export const addMemberSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Add a member to a workspace',
     consumes: ['application/json'],

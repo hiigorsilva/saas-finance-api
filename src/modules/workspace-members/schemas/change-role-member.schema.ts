@@ -1,6 +1,7 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import { hasPermission } from '../../../middlewares/user-permission'
 
 export const changeRoleMemberParamsSchema = z.object({
   workspaceId: z.string(),
@@ -12,7 +13,7 @@ export const changeRoleMemberBodySchema = z.object({
 })
 
 export const changeRoleMemberSchema: RouteShorthandOptions = {
-  preHandler: [privateRoute],
+  preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Changes the role of a member.',
     consumes: ['application/json'],
