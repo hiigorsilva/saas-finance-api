@@ -199,7 +199,6 @@ Authorization: Bearer {{authToken}}
 @paramsWorkspaceIdRemoveMember = 
 @paramsMemberIdToRemove = 
 Delete {{baseUrl}}/workspace/{{paramsWorkspaceIdRemoveMember}}/member/{{paramsMemberIdToRemove}}
-content-type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
