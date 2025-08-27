@@ -1,5 +1,5 @@
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
-import type { ITransactionRepository } from '../interfaces/transaction.interface'
+import type { TransactionRepository } from '../repositories/transaction.repository'
 
 type ListTransactionProps = {
   workspaceId: string
@@ -9,7 +9,7 @@ type ListTransactionProps = {
 
 export class ListTransactionService {
   constructor(
-    private transactionRepository: ITransactionRepository,
+    private transactionRepository: TransactionRepository,
     private workspaceRepository: WorkspaceRepository
   ) {}
 
