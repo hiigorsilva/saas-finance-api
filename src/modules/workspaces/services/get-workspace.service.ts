@@ -1,4 +1,4 @@
-import type { WorkspaceMembersRepository } from '../../workspace-members/repositories/workspace-members.repository'
+import type { WorkspaceMemberRepository } from '../../workspace-members/repositories/workspace-members.repository'
 import type { WorkspaceRepository } from '../repositories/workspace.repository'
 
 type GetWorkspaceProps = {
@@ -9,7 +9,7 @@ type GetWorkspaceProps = {
 export class GetWorkspaceService {
   constructor(
     private workspaceRepository: WorkspaceRepository,
-    private workspaceMemberRepository: WorkspaceMembersRepository
+    private workspaceMemberRepository: WorkspaceMemberRepository
   ) {}
 
   async getWorkspaceById({ userId, workspaceId }: GetWorkspaceProps) {
