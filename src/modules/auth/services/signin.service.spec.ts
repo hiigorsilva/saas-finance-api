@@ -11,14 +11,9 @@ const mockUserRepository = {
   listInactiveUsers: vi.fn(),
 }
 
-type SignInUserDTO = {
-  email: string
-  password: string
-}
-
 vi.mock('../validations/password-validate', () => ({
-  validatePassword: (userData: SignInUserDTO) =>
-    Promise.resolve(userData.password === 'valid_password'),
+  validatePassword: (password: string, _: string) =>
+    Promise.resolve(password === 'valid_password'),
 }))
 
 describe('SigninService', () => {
