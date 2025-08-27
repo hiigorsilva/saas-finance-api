@@ -29,7 +29,7 @@ describe('ListUserService', () => {
     it('should throw an error if user is not exists', async () => {
       const { userId, page, limit } = props
       mockUserRepository.isUserExistsById.mockResolvedValue(false)
-      expect(sut.listAllUsers({ userId, page, limit })).rejects.toThrow(
+      await expect(sut.listAllUsers({ userId, page, limit })).rejects.toThrow(
         'User not found'
       )
 
@@ -64,9 +64,9 @@ describe('ListUserService', () => {
         users
       )
       expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(userId)
-      expect(mockUserRepository.listAllUsers(page, limit)).resolves.toEqual(
-        users
-      )
+      await expect(
+        mockUserRepository.listAllUsers(page, limit)
+      ).resolves.toEqual(users)
     })
   })
 
@@ -74,7 +74,7 @@ describe('ListUserService', () => {
     it('should throw an error if user is not exists', async () => {
       const { userId, page, limit } = props
       mockUserRepository.isUserExistsById.mockResolvedValue(false)
-      expect(sut.listAllUsers({ userId, page, limit })).rejects.toThrow(
+      await expect(sut.listAllUsers({ userId, page, limit })).rejects.toThrow(
         'User not found'
       )
 
@@ -109,7 +109,7 @@ describe('ListUserService', () => {
       ).resolves.toBe(users)
 
       expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(userId)
-      expect(
+      await expect(
         mockUserRepository.listInactiveUsers(page, limit)
       ).resolves.toEqual(users)
     })
