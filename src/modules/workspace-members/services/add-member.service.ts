@@ -5,7 +5,6 @@ import type { WorkspaceMemberRepository } from '../repositories/workspace-member
 
 type AddMemberProps = {
   workspaceId: string
-  userId: string
   email: string
   role: IWorkspaceMember['role']
 }
@@ -18,9 +17,6 @@ export class WorkspaceMemberService {
   ) {}
 
   async addMember({ workspaceId, email, role }: AddMemberProps) {
-    // Receber o usuário logado do controller
-    // TODO: Verificar se o usuário logado tem permissão para adicionar membro
-
     const user = await this.userRepository.findUserByEmail(email)
     if (!user) throw new Error('User not exists.')
 

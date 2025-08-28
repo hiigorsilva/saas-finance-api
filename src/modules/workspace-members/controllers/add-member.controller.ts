@@ -35,7 +35,6 @@ export class AddMemberController {
 
       const member = await this.workspaceMemberService.addMember({
         workspaceId,
-        userId,
         email,
         role,
       })
