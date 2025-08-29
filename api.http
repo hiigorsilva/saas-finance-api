@@ -1,0 +1,224 @@
+# Variables
+@baseUrl = http://localhost:3333/api
+@authToken = 
+
+###
+
+# @name HealthCheckFromServer
+GET {{baseUrl}}/health
+content-type: application/json
+
+###
+
+# @name CreateANewUser
+POST {{baseUrl}}/register
+content-type: application/json
+
+{
+    "name": "Higor Silva",
+    "email": "higor@email.com",
+    "password": "12345678"
+}
+
+###
+
+# @name LogInAUser
+POST {{baseUrl}}/signin
+content-type: application/json
+
+{
+    "email": "higor@email.com",
+    "password": "12345678"
+}
+
+###
+
+# @name ListAllUsersExisting
+GET {{baseUrl}}/users?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name ListInactiveUsers
+GET {{baseUrl}}/users-inactive?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name GetUserDataLoggeIn
+GET {{baseUrl}}/me
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name RemoveUser
+@userIdToRemove = 
+DELETE {{baseUrl}}/users/{{userIdToRemove}}
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name CreateANewWorkspace
+POST {{baseUrl}}/workspace
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Buncker",
+    "description": "Controle pessoal",
+    "type": "PRIVATE"
+}
+
+###
+
+# @name ListAllWorkspaces
+GET {{baseUrl}}/workspace?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name GetWorkspaceById
+@getWorkspaceByIdParams = 
+GET {{baseUrl}}/workspace/{{getWorkspaceByIdParams}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name UpdateWorkspaceById
+@updateWorkspaceId = 
+PUT {{baseUrl}}/workspace/{{updateWorkspaceId}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Workspace Editado",
+    "description": "Descrição do workspace Editado",
+    "type": "PRIVATE"
+}
+
+###
+
+# @name DeleteWorkspaceById
+@deleteWorkspaceId = 
+DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name CreateANewTransaction
+@paramsWorkspaceId = 
+POST {{baseUrl}}/{{paramsWorkspaceId}}/transaction
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Teste",
+    "description": "Descrição nova",
+    "type": "EXPENSE",
+    "category": "GROCERIES",
+    "amount": "47.50",
+    "paymentDate": "2010-08-05T16:12:00.422",
+    "isRecurring": false
+}
+
+###
+
+# @name ListAllTransactions
+@paramsWorkspaceIdList = 
+GET {{baseUrl}}/{{paramsWorkspaceIdList}}/transaction?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name DeleteTransactionById
+@paramsWorkspaceIdDelete = 
+@deleteTransactionId = 
+DELETE {{baseUrl}}/{{paramsWorkspaceIdDelete}}/transaction/{{deleteTransactionId}}
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name UpdateTransactionById
+@paramsWorkspaceIdIdUpdate = 
+@paramsTransactionIdUpdate = 
+PUT {{baseUrl}}/{{paramsWorkspaceIdIdUpdate}}/transaction/{{paramsTransactionIdUpdate}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Mudou para o correto",
+    "description": "Esse mesmo",
+    "type": "EXPENSE",
+    "category": "HEALTH",
+    "amount": "08.47",
+    "paymentDate": "2025-08-07T15:44:00.000",
+    "isRecurring": false
+}
+
+###
+
+# @name GetTransactionById
+@paramsGetWorkspaceIdId = 
+@paramsGetTransactionId = 
+GET {{baseUrl}}/{{paramsGetWorkspaceIdId}}/transaction/{{paramsGetTransactionId}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name AddMemberToWorkspace
+@paramsWorkspaceIdAddMember = 
+POST {{baseUrl}}/workspace/{{paramsWorkspaceIdAddMember}}/member
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "test@email.com",
+    "role": "MEMBER"
+}
+
+###
+
+# @name ListAllMembersWorkspace
+@paramsWorkspaceIdListMembers = 
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdListMembers}}/member?page=1&limit=10
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name GetMemberIdWorkspace
+@paramsWorkspaceIdGetMember = 
+@paramsMemberIdGetMember = 
+GET {{baseUrl}}/workspace/{{paramsWorkspaceIdGetMember}}/member/{{paramsMemberIdGetMember}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name RemoveMemberFromWorkspace
+@paramsWorkspaceIdRemoveMember = 
+@paramsMemberIdToRemove = 
+Delete {{baseUrl}}/workspace/{{paramsWorkspaceIdRemoveMember}}/member/{{paramsMemberIdToRemove}}
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name ChangeRoleMemberFromWorkspace
+@paramsWorkspaceIdChangeRole = 
+@paramsMemberIdToChangeRole = 
+PUT {{baseUrl}}/workspace/{{paramsWorkspaceIdChangeRole}}/member/{{paramsMemberIdToChangeRole}}
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "newRole": "MEMBER"
+}
+
+###
