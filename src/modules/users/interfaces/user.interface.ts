@@ -28,4 +28,5 @@ export interface IUserRepository {
     page: number,
     limit: number
   ): Promise<IPaginationOutput<IUserOutput>>
+  remove(userId: string): Promise<{ status: string }>
 }
