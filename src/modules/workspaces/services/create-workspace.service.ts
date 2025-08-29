@@ -1,11 +1,11 @@
-import type { WorkspaceMembersRepository } from '../../workspace-members/repositories/workspace-members.repository'
+import type { WorkspaceMemberRepository } from '../../workspace-members/repositories/workspace-members.repository'
 import type { CreateWorkspaceDTO } from '../dto/workspace.dto'
 import type { WorkspaceRepository } from '../repositories/workspace.repository'
 
 export class CreateWorkspaceService {
   constructor(
     private workspaceRepository: WorkspaceRepository,
-    private workspaceMembersRepository: WorkspaceMembersRepository
+    private workspaceMembersRepository: WorkspaceMemberRepository
   ) {}
 
   async create(data: CreateWorkspaceDTO, userId: string) {

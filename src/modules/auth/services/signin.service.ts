@@ -9,7 +9,10 @@ export class SignInService {
     const user = await this.userRepository.findUserByEmail(userData.email)
     if (!user) throw new Error('Invalid credentials.')
 
-    const isPasswordValid = await validatePassword(userData, user)
+    const isPasswordValid = await validatePassword(
+      userData.password,
+      user.passwordHashed
+    )
     if (!isPasswordValid) throw new Error('Invalid credentials.')
 
     return user

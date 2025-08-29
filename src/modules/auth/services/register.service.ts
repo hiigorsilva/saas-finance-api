@@ -13,7 +13,7 @@ export class RegisterService {
       userData.email
     )
     if (userAlreadyExists) {
-      throw new Error('This email is alredy in use.')
+      throw new Error('This email is already in use.')
     }
 
     const hashedPassword = await hashPassword(userData.password)

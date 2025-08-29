@@ -1,6 +1,6 @@
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { ICreateTransactionDTO } from '../dto/transaction.dto'
-import type { ITransactionRepository } from '../interfaces/transaction.interface'
+import type { TransactionRepository } from '../repositories/transaction.repository'
 
 type CreateTransactionProps = {
   workspaceId: string
@@ -10,7 +10,7 @@ type CreateTransactionProps = {
 
 export class CreateTransactionService {
   constructor(
-    private transactionRepository: ITransactionRepository,
+    private transactionRepository: TransactionRepository,
     private workspaceRepository: WorkspaceRepository
   ) {}
 
