@@ -131,10 +131,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async remove(userId: string): Promise<{ status: string }> {
-    await db.query.usersTable.findFirst({
-      where: eq(usersTable.id, userId),
-    })
-
+    await db.delete(usersTable).where(eq(usersTable.id, userId))
     return { status: 'User successfully deleted.' }
   }
 }
