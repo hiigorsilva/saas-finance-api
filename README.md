@@ -34,6 +34,8 @@ Construída com **Node.js com Fastify e TypeScript**, a aplicação visa simplif
 
 - **Swagger/OpenAPI:** Geração de documentação interativa da API.
 
+- **Vitest:** Biblioteca para realização de testes unitários (TDD).
+
 - **PostgreSQL:** Banco de dados relacional utilizado para armazenamento dos dados.
 
 - **Drizzle ORM:** ORM para facilitar o acesso e manipulação do banco PostgreSQL.
@@ -126,11 +128,6 @@ http://localhost:[PORT]/api/docs
 ## 😉 Melhorias Futuras
 
 - **Registro de transações via WhatsApp:** Poderá criar uma transação em um workspace a partir de mensagens, áudios e fotos de comprovantes.
-
-
-## Contribuição
-
-Contribuições são bem-vindas! Faça um fork do repositório, crie uma branch para sua feature ou correção e envie um pull request.
 
 
 ## Licença
