@@ -54,6 +54,13 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name RemoveUser
+@userIdToRemove = 
+DELETE {{baseUrl}}/users/{{userIdToRemove}}
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name CreateANewWorkspace
 POST {{baseUrl}}/workspace
 content-type: application/json
@@ -82,13 +89,6 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name DeleteWorkspaceById
-@deleteWorkspaceId = 
-DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
-Authorization: Bearer {{authToken}}
-
-###
-
 # @name UpdateWorkspaceById
 @updateWorkspaceId = 
 PUT {{baseUrl}}/workspace/{{updateWorkspaceId}}
@@ -100,6 +100,13 @@ Authorization: Bearer {{authToken}}
     "description": "Descrição do workspace Editado",
     "type": "PRIVATE"
 }
+
+###
+
+# @name DeleteWorkspaceById
+@deleteWorkspaceId = 
+DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
+Authorization: Bearer {{authToken}}
 
 ###
 
