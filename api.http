@@ -54,6 +54,13 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name RemoveUser
+@userIdToRemove = 
+DELETE {{baseUrl}}/users/{{userIdToRemove}}
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name CreateANewWorkspace
 POST {{baseUrl}}/workspace
 content-type: application/json
