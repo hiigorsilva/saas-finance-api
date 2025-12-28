@@ -10,6 +10,9 @@
   },
   "license": "MIT",
   "scripts": {
+    "start:prod": "node --env-file=.env dist/server.js",
+    "start": "tsx --env-file=.env src/server.ts",
+    "build": "tsup src/server.ts dist",
     "dev": "tsx watch --env-file=.env src/server.ts",
     "test": "vitest --passWithNoTests",
     "db:generate": "npx drizzle-kit generate --config=drizzle.config.ts",
