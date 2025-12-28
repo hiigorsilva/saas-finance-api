@@ -4,6 +4,7 @@
 # NODE
 node_modules
 .env
+dist
 
 # CUSTOM FILES
 todo.md
