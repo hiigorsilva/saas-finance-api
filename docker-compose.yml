@@ -1,6 +1,6 @@
 services:
   postgresql:
-    image: bitnami/postgresql:17.5.0
+    image: bitnami/postgresql:latest
     container_name: finance-postgresql
     restart: unless-stopped
     environment:
