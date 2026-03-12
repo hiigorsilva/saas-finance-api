@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { registerRoute } from '../modules/auth/routes/register.route'
 import { signinRoute } from '../modules/auth/routes/signin.route'
+import { getDashboardRoute } from '../modules/dashboard/routes/get-dashboard.route'
 import { healthRoute } from '../modules/healths/routes/health.route'
 import { createTransactionRoute } from '../modules/transactions/routes/create-transaction.route'
 import { editTransactionRoute } from '../modules/transactions/routes/edit-transaction.route'
@@ -43,6 +44,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(getTransactionRoute, { prefix: '/api' })
   app.register(editTransactionRoute, { prefix: '/api' })
   app.register(removeTransactionRoute, { prefix: '/api' })
+  app.register(getDashboardRoute, { prefix: '/api' })
 
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
   app.register(listMemberWorkspaceRoute, { prefix: '/api' })
