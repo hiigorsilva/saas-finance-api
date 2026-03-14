@@ -18,6 +18,15 @@ export const categorySchema = z.enum([
   'OTHER',
 ])
 
+export const paymentMethodSchema = z.enum([
+  'OTHER',
+  'CREDIT_CARD',
+  'DEBIT_CARD',
+  'BANK_SLIP',
+  'PIX',
+  'CASH',
+])
+
 export const recurringIntervalSchema = z.enum([
   'DAILY',
   'WEEKLY',

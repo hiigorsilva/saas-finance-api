@@ -17,6 +17,7 @@ export type CreateTransactionDto = {
 import type z from 'zod'
 import type {
   categorySchema,
+  paymentMethodSchema,
   recurringIntervalSchema,
   typeSchema,
 } from '../../../data/transactions'
@@ -36,3 +37,4 @@ export type IRecurringIntervalTransactionType = z.infer<
   typeof recurringIntervalSchema
 >
 export type ICategoryTransactionType = z.infer<typeof categorySchema>
+export type IPaymentMethodTransactionType = z.infer<typeof paymentMethodSchema>

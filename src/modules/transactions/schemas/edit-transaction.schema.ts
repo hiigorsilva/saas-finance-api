@@ -2,6 +2,7 @@ import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import {
   categorySchema,
+  paymentMethodSchema,
   recurringIntervalSchema,
   typeSchema,
 } from '../../../data/transactions'
@@ -20,6 +21,7 @@ export const editTransactionBodySchema = z.object({
   category: categorySchema,
   amount: z.string(),
   paymentDate: z.coerce.date(),
+  paymentMethod: paymentMethodSchema,
   isRecurring: z.boolean(),
   recurringInterval: recurringIntervalSchema.optional(),
   recurringEndDate: z.coerce.date().optional(),
@@ -44,6 +46,7 @@ export const editTransactionSchema: RouteShorthandOptions = {
             name: z.string(),
             amount: z.string(),
             paymentDate: z.date(),
+            paymentMethod: z.string(),
           }),
         }),
       }),

@@ -3,6 +3,7 @@ import type {
   ICategoryTransactionType,
   ICreateTransactionDTO,
   IEditTransactionDTO,
+  IPaymentMethodTransactionType,
   IRecurringIntervalTransactionType,
   ITransactionDTO,
   ITransactionId,
@@ -19,6 +20,7 @@ export interface ITransaction {
   category: ICategoryTransactionType
   amount: string
   paymentDate: Date
+  paymentMethod: IPaymentMethodTransactionType
   isRecurring: boolean
   recurringInterval: IRecurringIntervalTransactionType | null
   recurringEndDate: Date | null

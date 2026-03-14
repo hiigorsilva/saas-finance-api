@@ -1,7 +1,6 @@
 import fastify from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { registerCors } from './config/plugins/cors'
-import { registerHelmet } from './config/plugins/helmet'
 import { registerRateLimit } from './config/plugins/rate-limit'
 import { registerSerializerAndValidator } from './config/plugins/serialize-validate'
 import { registerSwagger } from './config/plugins/swagger'
@@ -13,7 +12,7 @@ const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 // Register plugins
 registerSerializerAndValidator(app)
-registerHelmet(app)
+// registerHelmet(app)
 registerCors(app)
 registerRateLimit(app)
 registerSwagger(app)

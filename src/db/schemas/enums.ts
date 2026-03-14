@@ -23,13 +23,13 @@ export const transactionTypeEnum = pgEnum('transaction_type', [
   'INVESTMENT',
 ])
 
-export const transactionPaymentMethod = pgEnum('payment_method', [
+export const paymentMethodEnum = pgEnum('payment_method', [
   'CREDIT_CARD',
   'DEBIT_CARD',
-  'BOLETO',
+  'BANK_SLIP',
   'PIX',
   'CASH',
-  'OTHERS',
+  'OTHER',
 ])
 
 export const statusWorkspaceInvitation = pgEnum('status', [

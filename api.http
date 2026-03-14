@@ -172,6 +172,14 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name GetDashboard
+@paramsWorkspaceIdDashboard = 
+GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}/dashboard?month=3&year=2026
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name AddMemberToWorkspace
 @paramsWorkspaceIdAddMember = 
 POST {{baseUrl}}/workspace/{{paramsWorkspaceIdAddMember}}/member

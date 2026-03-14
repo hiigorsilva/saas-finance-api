@@ -8,6 +8,13 @@
       "when": 1755038657655,
       "tag": "0000_overjoyed_scarlet_witch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769893222659,
+      "tag": "0001_hard_silver_centurion",
+      "breakpoints": true
     }
   ]
 }
