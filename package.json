@@ -17,7 +17,7 @@
     "test": "vitest --passWithNoTests",
     "db:generate": "npx drizzle-kit generate --config=drizzle.config.ts",
     "db:migrate": "npx drizzle-kit migrate --config=drizzle.config.ts",
-    "db:push": "npx drizzle-kit push",
+    "db:push": "npx drizzle-kit push --config=drizzle.config.ts",
     "db:studio": "npx drizzle-kit studio",
     "prepare": "husky"
   },

@@ -15,6 +15,13 @@
       "when": 1769893222659,
       "tag": "0001_hard_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773509080502,
+      "tag": "0002_worried_madame_hydra",
+      "breakpoints": true
     }
   ]
 }
