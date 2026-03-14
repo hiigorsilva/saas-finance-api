@@ -110,6 +110,7 @@ export class TransactionRepository implements ITransactionRepository {
         amount: data.amount,
         category: data.category,
         paymentDate: data.paymentDate,
+        paymentMethod: data.paymentMethod,
         isRecurring: data.isRecurring,
         recurringInterval: data.recurringInterval,
         recurringEndDate: data.recurringEndDate,
@@ -137,6 +138,7 @@ export class TransactionRepository implements ITransactionRepository {
         category: data.category,
         amount: data.amount,
         paymentDate: data.paymentDate,
+        paymentMethod: data.paymentMethod,
         isRecurring: data.isRecurring,
         recurringEndDate: data.recurringEndDate,
         recurringInterval: data.recurringInterval,
@@ -156,6 +158,7 @@ export class TransactionRepository implements ITransactionRepository {
         name: transactionsTable.name,
         amount: transactionsTable.amount,
         paymentDate: transactionsTable.paymentDate,
+        paymentMethod: transactionsTable.paymentMethod,
       })
     return transaction
   }

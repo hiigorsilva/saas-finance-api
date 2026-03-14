@@ -9,6 +9,7 @@ import {
 } from 'drizzle-orm/pg-core'
 import {
   categoryEnum,
+  paymentMethodEnum,
   recurringIntervalEnum,
   transactionTypeEnum,
 } from './enums'
@@ -29,6 +30,7 @@ export const transactionsTable = pgTable('transactions', {
   category: categoryEnum('category').notNull(),
   amount: numeric('amount', { precision: 10, scale: 2 }).notNull(),
   paymentDate: timestamp('payment_date').notNull(),
+  paymentMethod: paymentMethodEnum('payment_method').notNull(),
   isRecurring: boolean('is_recurring').default(false).notNull(),
   recurringInterval: recurringIntervalEnum('recurring_interval'),
   recurringEndDate: timestamp('recurring_end_date'),
