@@ -64,11 +64,7 @@ describe('GetTransactionService', async () => {
       amount: '147.20',
       category: 'OTHER',
       paymentDate: new Date(),
-      isRecurring: false,
-      recurringEndDate: null,
-      currentInstallment: null,
-      recurringInterval: null,
-      installmentTotal: null,
+      paymentMethod: 'PIX',
       updatedAt: new Date(),
       createdAt: new Date(),
     }

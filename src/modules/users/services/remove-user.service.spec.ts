@@ -22,31 +22,37 @@ describe('RemoveUserService', async () => {
   })
 
   const inputData = {
-    userId: crypto.randomUUID(),
+    userIdParams: crypto.randomUUID(),
   }
 
   it('should throw an error if user is not found', async () => {
-    const { userId } = inputData
+    const { userIdParams } = inputData
 
     mockUserRepository.isUserExistsById.mockResolvedValue(false)
 
-    await expect(sut.removeUser({ userId })).rejects.toThrow('User not found.')
+    await expect(sut.removeUser({ userIdParams })).rejects.toThrow(
+      'User not found.'
+    )
 
-    expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(userId)
+    expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(
+      userIdParams
+    )
     expect(mockUserRepository.remove).not.toHaveBeenCalled()
   })
 
   it('should remove a user', async () => {
-    const { userId } = inputData
+    const { userIdParams } = inputData
     const response = { status: 'User successfully deleted.' }
 
     mockUserRepository.isUserExistsById.mockResolvedValue(true)
     mockUserRepository.remove.mockResolvedValue(response)
 
-    const result = await sut.removeUser({ userId })
+    const result = await sut.removeUser({ userIdParams })
 
-    expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(userId)
-    expect(mockUserRepository.remove).toHaveBeenCalledWith(userId)
+    expect(mockUserRepository.isUserExistsById).toHaveBeenCalledWith(
+      userIdParams
+    )
+    expect(mockUserRepository.remove).toHaveBeenCalledWith(userIdParams)
     expect(result).toEqual(response.status)
   })
 })

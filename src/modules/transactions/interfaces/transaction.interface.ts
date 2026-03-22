@@ -4,7 +4,6 @@ import type {
   ICreateTransactionDTO,
   IEditTransactionDTO,
   IPaymentMethodTransactionType,
-  IRecurringIntervalTransactionType,
   ITransactionDTO,
   ITransactionId,
   ITransactionType,
@@ -21,11 +20,6 @@ export interface ITransaction {
   amount: string
   paymentDate: Date
   paymentMethod: IPaymentMethodTransactionType
-  isRecurring: boolean
-  recurringInterval: IRecurringIntervalTransactionType | null
-  recurringEndDate: Date | null
-  installmentTotal: number | null
-  currentInstallment: number | null
   createdAt: Date
   updatedAt: Date
 }

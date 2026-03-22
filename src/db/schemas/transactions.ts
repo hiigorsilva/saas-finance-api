@@ -1,18 +1,5 @@
-import {
-  boolean,
-  integer,
-  numeric,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core'
-import {
-  categoryEnum,
-  paymentMethodEnum,
-  recurringIntervalEnum,
-  transactionTypeEnum,
-} from './enums'
+import { numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { categoryEnum, paymentMethodEnum, transactionTypeEnum } from './enums'
 import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
@@ -31,11 +18,6 @@ export const transactionsTable = pgTable('transactions', {
   amount: numeric('amount', { precision: 10, scale: 2 }).notNull(),
   paymentDate: timestamp('payment_date').notNull(),
   paymentMethod: paymentMethodEnum('payment_method').notNull(),
-  isRecurring: boolean('is_recurring').default(false).notNull(),
-  recurringInterval: recurringIntervalEnum('recurring_interval'),
-  recurringEndDate: timestamp('recurring_end_date'),
-  installmentTotal: integer('total_installments'),
-  currentInstallment: integer('current_installment'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   deletedAt: timestamp('deleted_at'),

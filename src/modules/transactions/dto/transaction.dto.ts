@@ -1,24 +1,7 @@
-/*
-export type CreateTransactionDto = {
-  name: string
-  description?: string | undefined
-  type: TypeTransaction
-  category: CategoryTransaction
-  amount: string
-  paymentDate: Date
-  isRecurring: boolean
-  recurringInterval?: RecurringIntervalTransaction | undefined
-  recurringEndDate?: Date | undefined
-  installmentTotal?: number | undefined
-  currentInstallment?: number | undefined
-}
-*/
-
 import type z from 'zod'
 import type {
   categorySchema,
   paymentMethodSchema,
-  recurringIntervalSchema,
   typeSchema,
 } from '../../../data/transactions'
 import type { ITransaction } from '../interfaces/transaction.interface'
@@ -33,8 +16,5 @@ export type ITransactionDTO = Pick<
 >
 export type ITransactionId = Pick<ITransaction, 'id'>
 export type ITransactionType = z.infer<typeof typeSchema>
-export type IRecurringIntervalTransactionType = z.infer<
-  typeof recurringIntervalSchema
->
 export type ICategoryTransactionType = z.infer<typeof categorySchema>
 export type IPaymentMethodTransactionType = z.infer<typeof paymentMethodSchema>

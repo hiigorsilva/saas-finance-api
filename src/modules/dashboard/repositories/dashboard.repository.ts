@@ -111,7 +111,6 @@ export class DashboardRepository implements IDashboardRepository {
         where: and(
           eq(transactionsTable.workspaceId, workspaceId),
           isNull(transactionsTable.deletedAt),
-          eq(transactionsTable.isRecurring, true),
           gte(transactionsTable.paymentDate, weekStartDate),
           lt(transactionsTable.paymentDate, weekEndDate)
         ),
@@ -125,7 +124,6 @@ export class DashboardRepository implements IDashboardRepository {
         where: and(
           eq(transactionsTable.workspaceId, workspaceId),
           isNull(transactionsTable.deletedAt),
-          eq(transactionsTable.isRecurring, true),
           gte(transactionsTable.paymentDate, currentMonthStartDate),
           lt(transactionsTable.paymentDate, currentMonthEndDate),
           lt(transactionsTable.paymentDate, now)
