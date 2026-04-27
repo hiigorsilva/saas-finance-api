@@ -1,6 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
-@authToken = 
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWZkNGNiNC0yMDM5LTQzMjAtYmQ3Ny02MThlODM1YmNmODQiLCJpYXQiOjE3NzczMTUyMjIsImV4cCI6MTc3NzkyMDAyMn0.zsngc-3rn_H3qVRcYRItKl2eSICF64_Th486ZnBedy0
 
 ###
 
@@ -67,7 +67,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Buncker",
+    "name": "Buncker 2",
     "description": "Controle pessoal",
     "type": "PRIVATE"
 }
@@ -106,6 +106,13 @@ Authorization: Bearer {{authToken}}
 # @name DeleteWorkspaceById
 @deleteWorkspaceId = 
 DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
+Authorization: Bearer {{authToken}}
+###
+
+# @name GetDashboard
+@paramsWorkspaceIdDashboard = 75001fb0-9451-42bc-b4c6-01be83dff8cd
+GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}/dashboard?month=3&year=2026
+content-type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
@@ -167,14 +174,6 @@ Authorization: Bearer {{authToken}}
 @paramsGetWorkspaceIdId = 
 @paramsGetTransactionId = 
 GET {{baseUrl}}/{{paramsGetWorkspaceIdId}}/transaction/{{paramsGetTransactionId}}
-content-type: application/json
-Authorization: Bearer {{authToken}}
-
-###
-
-# @name GetDashboard
-@paramsWorkspaceIdDashboard = 
-GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}/dashboard?month=3&year=2026
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

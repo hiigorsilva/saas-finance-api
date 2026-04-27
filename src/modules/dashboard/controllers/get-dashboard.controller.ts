@@ -6,14 +6,14 @@ import {
   unauthorized,
 } from '../../../shared/utils/http'
 import { parseResponse } from '../../../shared/utils/parse-response'
-import type { IDashboardRepository } from '../interfaces/dashboard.interface'
 import {
   getDashboardParamsSchema,
   getDashboardQuerySchema,
 } from '../schemas/get-dashboard.schema'
+import type { GetDashboardService } from '../services/dasboard.service'
 
 export class GetDashboardController {
-  constructor(private dashboardRepository: IDashboardRepository) {}
+  constructor(private getDashboardService: GetDashboardService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     try {
@@ -34,11 +34,13 @@ export class GetDashboardController {
       } = getDashboardQuerySchema.safeParse(query)
       if (!successQuery) return badRequest({ error: errorQuery.issues })
 
-      const dashboardData = await this.dashboardRepository.getDashboard(
-        dataParams.workspaceId,
-        dataQuery.month,
-        dataQuery.year
-      )
+      const data = {
+        workspaceId: dataParams.workspaceId,
+        month: dataQuery.month,
+        year: dataQuery.year,
+      }
+
+      const dashboardData = await this.getDashboardService.getDashboard(data)
 
       const response = ok({ data: dashboardData })
       return reply.status(response.statusCode).send(response)

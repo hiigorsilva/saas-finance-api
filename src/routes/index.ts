@@ -32,6 +32,7 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
   app.register(removeUserRoute, { prefix: '/api' })
+  app.register(getDashboardRoute, { prefix: '/api' })
 
   app.register(createWorkspaceRoute, { prefix: '/api' })
   app.register(listWorkspaceRoute, { prefix: '/api' })
@@ -44,7 +45,6 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(getTransactionRoute, { prefix: '/api' })
   app.register(editTransactionRoute, { prefix: '/api' })
   app.register(removeTransactionRoute, { prefix: '/api' })
-  app.register(getDashboardRoute, { prefix: '/api' })
 
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
   app.register(listMemberWorkspaceRoute, { prefix: '/api' })
