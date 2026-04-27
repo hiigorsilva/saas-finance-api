@@ -64,7 +64,7 @@ export const hasPermission = async (
     const roleMember = await getUserRole(userId, workspaceId)
     if (!roleMember) {
       return reply
-        .status(400)
+        .status(403)
         .send(
           parseResponse(
             forbidden({ error: 'No role found for user in workspace.' })
@@ -79,7 +79,7 @@ export const hasPermission = async (
 
     if (!userHasPermission) {
       return reply
-        .status(400)
+        .status(403)
         .send(
           parseResponse(forbidden({ error: 'User does not have permission.' }))
         )

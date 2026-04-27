@@ -3,7 +3,6 @@ import z from 'zod'
 import {
   categorySchema,
   paymentMethodSchema,
-  recurringIntervalSchema,
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
@@ -21,11 +20,6 @@ export const createTransactionBodySchema = z.object({
   amount: z.string(),
   paymentDate: z.coerce.date(),
   paymentMethod: paymentMethodSchema,
-  isRecurring: z.boolean(),
-  recurringInterval: recurringIntervalSchema.optional(),
-  recurringEndDate: z.coerce.date().optional(),
-  installmentTotal: z.number().optional(),
-  currentInstallment: z.number().optional(),
 })
 
 export const createTransactionSchema: RouteShorthandOptions = {

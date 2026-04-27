@@ -26,10 +26,3 @@ export const paymentMethodSchema = z.enum([
   'PIX',
   'CASH',
 ])
-
-export const recurringIntervalSchema = z.enum([
-  'DAILY',
-  'WEEKLY',
-  'MONTHLY',
-  'YEARLY',
-])

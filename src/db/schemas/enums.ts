@@ -38,13 +38,6 @@ export const statusWorkspaceInvitation = pgEnum('status', [
   'DECLINED',
 ])
 
-export const recurringIntervalEnum = pgEnum('recurring_interval', [
-  'DAILY',
-  'WEEKLY',
-  'MONTHLY',
-  'YEARLY',
-])
-
 export const categoryEnum = pgEnum('category', [
   'HOUSING',
   'PERSONAL_CARE',

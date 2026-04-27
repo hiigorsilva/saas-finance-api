@@ -1,6 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
-@authToken = 
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWZkNGNiNC0yMDM5LTQzMjAtYmQ3Ny02MThlODM1YmNmODQiLCJpYXQiOjE3NzczMTUyMjIsImV4cCI6MTc3NzkyMDAyMn0.zsngc-3rn_H3qVRcYRItKl2eSICF64_Th486ZnBedy0
 
 ###
 
@@ -67,7 +67,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Buncker",
+    "name": "Buncker 2",
     "description": "Controle pessoal",
     "type": "PRIVATE"
 }
@@ -107,6 +107,13 @@ Authorization: Bearer {{authToken}}
 @deleteWorkspaceId = 
 DELETE {{baseUrl}}/workspace/{{deleteWorkspaceId}}
 Authorization: Bearer {{authToken}}
+###
+
+# @name GetDashboard
+@paramsWorkspaceIdDashboard = 75001fb0-9451-42bc-b4c6-01be83dff8cd
+GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}?month=3&year=2026
+content-type: application/json
+Authorization: Bearer {{authToken}}
 
 ###
 
@@ -123,7 +130,7 @@ Authorization: Bearer {{authToken}}
     "category": "GROCERIES",
     "amount": "47.50",
     "paymentDate": "2010-08-05T16:12:00.422",
-    "isRecurring": false
+    "paymentMethod": "PIX"
 }
 
 ###
@@ -158,7 +165,7 @@ Authorization: Bearer {{authToken}}
     "category": "HEALTH",
     "amount": "08.47",
     "paymentDate": "2025-08-07T15:44:00.000",
-    "isRecurring": false
+    "paymentMethod": "PIX"
 }
 
 ###
@@ -167,14 +174,6 @@ Authorization: Bearer {{authToken}}
 @paramsGetWorkspaceIdId = 
 @paramsGetTransactionId = 
 GET {{baseUrl}}/{{paramsGetWorkspaceIdId}}/transaction/{{paramsGetTransactionId}}
-content-type: application/json
-Authorization: Bearer {{authToken}}
-
-###
-
-# @name GetDashboard
-@paramsWorkspaceIdDashboard = 
-GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}/dashboard?month=3&year=2026
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

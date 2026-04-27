@@ -111,11 +111,6 @@ export class TransactionRepository implements ITransactionRepository {
         category: data.category,
         paymentDate: data.paymentDate,
         paymentMethod: data.paymentMethod,
-        isRecurring: data.isRecurring,
-        recurringInterval: data.recurringInterval,
-        recurringEndDate: data.recurringEndDate,
-        installmentTotal: data.installmentTotal,
-        currentInstallment: data.currentInstallment,
       })
       .returning({
         id: transactionsTable.id,
@@ -139,11 +134,6 @@ export class TransactionRepository implements ITransactionRepository {
         amount: data.amount,
         paymentDate: data.paymentDate,
         paymentMethod: data.paymentMethod,
-        isRecurring: data.isRecurring,
-        recurringEndDate: data.recurringEndDate,
-        recurringInterval: data.recurringInterval,
-        currentInstallment: data.currentInstallment,
-        installmentTotal: data.installmentTotal,
         updatedAt: new Date(),
       })
       .where(

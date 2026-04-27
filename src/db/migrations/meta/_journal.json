@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1755038657655,
-      "tag": "0000_overjoyed_scarlet_witch",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1769893222659,
-      "tag": "0001_hard_silver_centurion",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1773509080502,
-      "tag": "0002_worried_madame_hydra",
+      "when": 1777316253531,
+      "tag": "0000_supreme_electro",
       "breakpoints": true
     }
   ]

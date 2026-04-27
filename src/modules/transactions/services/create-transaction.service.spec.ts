@@ -43,11 +43,7 @@ describe('CreateTransactionService', () => {
       amount: '37.90',
       category: 'HOUSING',
       paymentDate: new Date(),
-      isRecurring: false,
-      currentInstallment: undefined,
-      installmentTotal: undefined,
-      recurringEndDate: undefined,
-      recurringInterval: undefined,
+      paymentMethod: 'PIX',
     } as ICreateTransactionDTO,
   }
 
