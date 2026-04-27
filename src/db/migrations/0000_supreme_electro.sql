@@ -1,5 +1,5 @@
 CREATE TYPE "public"."category" AS ENUM('HOUSING', 'PERSONAL_CARE', 'TRANSPORTATION', 'FOOD', 'GROCERIES', 'ENTERTAINMENT', 'FAMILY', 'WORK', 'HEALTH', 'GIFTS', 'SALARY', 'INVESTMENT', 'OTHER');--> statement-breakpoint
-CREATE TYPE "public"."recurring_interval" AS ENUM('DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY');--> statement-breakpoint
+CREATE TYPE "public"."payment_method" AS ENUM('CREDIT_CARD', 'DEBIT_CARD', 'BANK_SLIP', 'PIX', 'CASH', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."role_member_workspace" AS ENUM('OWNER', 'ADMIN', 'MEMBER', 'VIEWER');--> statement-breakpoint
 CREATE TYPE "public"."status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED');--> statement-breakpoint
 CREATE TYPE "public"."transaction_type" AS ENUM('INCOME', 'EXPENSE', 'INVESTMENT');--> statement-breakpoint
@@ -15,11 +15,7 @@ CREATE TABLE "transactions" (
 	"category" "category" NOT NULL,
 	"amount" numeric(10, 2) NOT NULL,
 	"payment_date" timestamp NOT NULL,
-	"is_recurring" boolean DEFAULT false NOT NULL,
-	"recurring_interval" "recurring_interval",
-	"recurring_end_date" timestamp,
-	"total_installments" integer,
-	"current_installment" integer,
+	"payment_method" "payment_method" NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp

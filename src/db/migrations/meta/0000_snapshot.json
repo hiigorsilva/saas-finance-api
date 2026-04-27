@@ -1,5 +1,5 @@
 {
-  "id": "baa92770-4399-480d-8c40-bb145811c729",
+  "id": "0a99844d-aa6b-4b81-8c23-06954075322a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -65,37 +65,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_recurring": {
-          "name": "is_recurring",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "recurring_interval": {
-          "name": "recurring_interval",
-          "type": "recurring_interval",
+        "payment_method": {
+          "name": "payment_method",
+          "type": "payment_method",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
-        },
-        "recurring_end_date": {
-          "name": "recurring_end_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "total_installments": {
-          "name": "total_installments",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "current_installment": {
-          "name": "current_installment",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -510,14 +485,16 @@
         "OTHER"
       ]
     },
-    "public.recurring_interval": {
-      "name": "recurring_interval",
+    "public.payment_method": {
+      "name": "payment_method",
       "schema": "public",
       "values": [
-        "DAILY",
-        "WEEKLY",
-        "MONTHLY",
-        "YEARLY"
+        "CREDIT_CARD",
+        "DEBIT_CARD",
+        "BANK_SLIP",
+        "PIX",
+        "CASH",
+        "OTHER"
       ]
     },
     "public.role_member_workspace": {

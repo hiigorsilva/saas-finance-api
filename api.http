@@ -111,7 +111,7 @@ Authorization: Bearer {{authToken}}
 
 # @name GetDashboard
 @paramsWorkspaceIdDashboard = 75001fb0-9451-42bc-b4c6-01be83dff8cd
-GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}/dashboard?month=3&year=2026
+GET {{baseUrl}}/{{paramsWorkspaceIdDashboard}}?month=3&year=2026
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

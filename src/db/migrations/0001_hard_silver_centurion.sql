@@ -1,1 +1,0 @@
-CREATE TYPE "public"."payment_method" AS ENUM('CREDIT_CARD', 'DEBIT_CARD', 'BOLETO', 'PIX', 'CASH', 'OTHERS');
