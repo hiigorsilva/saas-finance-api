@@ -3,9 +3,13 @@ import type { ITransaction } from '../../transactions/interfaces/transaction.int
 export interface IDashboard {
   resume: {
     totalIncome: number
+    totalIncomePercent: number
     totalExpense: number
+    totalExpensePercent: number
     totalBalance: number
+    totalBalancePercent: number
     totalInvestment: number
+    totalInvestmentPercent: number
   }
   monthlyDistribution: {
     income: number

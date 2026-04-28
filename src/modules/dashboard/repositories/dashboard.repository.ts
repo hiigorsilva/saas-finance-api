@@ -1,6 +1,7 @@
 import { and, desc, eq, gte, isNull, lt, sql } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { transactionsTable } from '../../../db/schemas/transactions'
+import { formatPercentWithoutSymbol } from '../../../shared/utils/helpers'
 import type {
   IDashboard,
   IDashboardRepository,
@@ -137,17 +138,47 @@ export class DashboardRepository implements IDashboardRepository {
       }
     })
 
+    const totalForMonth = totalIncome + totalExpense + totalInvestment
+    const monthlyDistributionFormatted = {
+      totalIncome: formatPercentWithoutSymbol(totalIncome / totalForMonth),
+      totalExpense: formatPercentWithoutSymbol(totalExpense / totalForMonth),
+      totalInvestment: formatPercentWithoutSymbol(
+        totalInvestment / totalForMonth
+      ),
+    }
+
+    const resumePercentages = {
+      totalIncomePercent: formatPercentWithoutSymbol(
+        totalIncome / totalForMonth
+      ),
+      totalExpensePercent: formatPercentWithoutSymbol(
+        totalExpense / totalForMonth
+      ),
+      totalBalancePercent: formatPercentWithoutSymbol(
+        totalBalance / totalForMonth
+      ),
+      totalInvestmentPercent: formatPercentWithoutSymbol(
+        totalInvestment / totalForMonth
+      ),
+    }
+
     return {
       resume: {
         totalIncome,
+        totalIncomePercent: Number(resumePercentages.totalIncomePercent),
         totalExpense,
+        totalExpensePercent: Number(resumePercentages.totalExpensePercent),
         totalBalance,
+        totalBalancePercent: Number(resumePercentages.totalBalancePercent),
         totalInvestment,
+        totalInvestmentPercent: Number(
+          resumePercentages.totalInvestmentPercent
+        ),
       },
       monthlyDistribution: {
-        income: totalIncome,
-        expense: totalExpense,
-        investment: totalInvestment,
+        income: Number(monthlyDistributionFormatted.totalIncome),
+        expense: Number(monthlyDistributionFormatted.totalExpense),
+        investment: Number(monthlyDistributionFormatted.totalInvestment),
       },
       lastTransactions,
       expenseByCategory,

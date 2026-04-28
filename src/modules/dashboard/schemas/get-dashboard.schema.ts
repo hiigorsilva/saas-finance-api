@@ -63,9 +63,13 @@ export const getDashboardSchema: RouteShorthandOptions = {
           data: z.object({
             resume: z.object({
               totalIncome: z.number(),
+              totalIncomePercent: z.number(),
               totalExpense: z.number(),
+              totalExpensePercent: z.number(),
               totalBalance: z.number(),
+              totalBalancePercent: z.number(),
               totalInvestment: z.number(),
+              totalInvestmentPercent: z.number(),
             }),
             monthlyDistribution: z.object({
               income: z.number(),
