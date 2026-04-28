@@ -147,6 +147,7 @@ export class TransactionRepository implements ITransactionRepository {
         id: transactionsTable.id,
         name: transactionsTable.name,
         amount: transactionsTable.amount,
+        status: transactionsTable.status,
         paymentDate: transactionsTable.paymentDate,
         paymentMethod: transactionsTable.paymentMethod,
       })

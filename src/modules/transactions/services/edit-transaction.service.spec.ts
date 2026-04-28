@@ -40,7 +40,7 @@ describe('CreateTransactionService', () => {
       name: 'Editando o nome da transação',
       description: 'Editando a transação',
       type: 'INCOME',
-      amount: '50.27',
+      amount: 50.27,
       category: 'FAMILY',
       paymentDate: new Date(),
       paymentMethod: 'PIX',

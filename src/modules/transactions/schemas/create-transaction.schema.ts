@@ -17,7 +17,7 @@ export const createTransactionBodySchema = z.object({
   description: z.string().trim().optional(),
   type: typeSchema,
   category: categorySchema,
-  amount: z.string(),
+  amount: z.coerce.number(),
   paymentDate: z.coerce.date(),
   paymentMethod: paymentMethodSchema,
 })

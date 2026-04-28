@@ -15,11 +15,11 @@ export interface IDashboard {
   lastTransactions: Array<ITransaction>
   expenseByCategory: Array<{
     name: string
-    expense: string
-    totalExpense: string
+    expense: number
+    totalExpense: number
     progress: number
   }>
-  weeklyPayment: Array<ITransaction>
+  monthlyPayments: Array<ITransaction>
   latePayments: Array<ITransaction>
 }
 

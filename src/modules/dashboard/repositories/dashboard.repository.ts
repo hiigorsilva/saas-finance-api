@@ -6,6 +6,18 @@ import type {
   IDashboardRepository,
 } from '../interfaces/dashboard.interface'
 
+const toNumber = (value: number | string | null | undefined) => {
+  if (typeof value === 'number') return value
+
+  const parsed = Number(value ?? 0)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+const toMoney = (value: number | string | null | undefined) => {
+  const normalized = toNumber(value)
+  return Math.round((normalized + Number.EPSILON) * 100) / 100
+}
+
 const toMonthRange = (month: string, year: string) => {
   const monthAsNumber = Number.parseInt(month, 10)
   const yearAsNumber = Number.parseInt(year, 10)
@@ -26,26 +38,8 @@ const toMonthRange = (month: string, year: string) => {
     throw new Error('Invalid year. Use a valid 4-digit year.')
   }
 
-  const startDate = new Date(yearAsNumber, monthAsNumber - 1, 1)
-  const endDate = new Date(yearAsNumber, monthAsNumber, 1)
-
-  return { startDate, endDate }
-}
-
-const toCurrentWeekRange = (now: Date) => {
-  const startDate = new Date(now)
-  startDate.setDate(now.getDate() - now.getDay())
-  startDate.setHours(0, 0, 0, 0)
-
-  const endDate = new Date(startDate)
-  endDate.setDate(startDate.getDate() + 7)
-
-  return { startDate, endDate }
-}
-
-const toCurrentMonthRange = (now: Date) => {
-  const startDate = new Date(now.getFullYear(), now.getMonth(), 1)
-  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const startDate = new Date(Date.UTC(yearAsNumber, monthAsNumber - 1, 1))
+  const endDate = new Date(Date.UTC(yearAsNumber, monthAsNumber, 1))
 
   return { startDate, endDate }
 }
@@ -58,10 +52,6 @@ export class DashboardRepository implements IDashboardRepository {
   ): Promise<IDashboard> {
     const now = new Date()
     const { startDate, endDate } = toMonthRange(month, year)
-    const { startDate: weekStartDate, endDate: weekEndDate } =
-      toCurrentWeekRange(now)
-    const { startDate: currentMonthStartDate, endDate: currentMonthEndDate } =
-      toCurrentMonthRange(now)
 
     const monthlyBaseWhere = and(
       eq(transactionsTable.workspaceId, workspaceId),
@@ -74,14 +64,14 @@ export class DashboardRepository implements IDashboardRepository {
       resumeRows,
       lastTransactions,
       expenseByCategoryRows,
-      weeklyPayment,
+      monthlyPayments,
       latePayments,
     ] = await Promise.all([
       db
         .select({
-          totalIncome: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'INCOME' then ${transactionsTable.amount} else 0 end), 0)::float8`,
-          totalExpense: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'EXPENSE' then ${transactionsTable.amount} else 0 end), 0)::float8`,
-          totalInvestment: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'INVESTMENT' then ${transactionsTable.amount} else 0 end), 0)::float8`,
+          totalIncome: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'INCOME' then ${transactionsTable.amount} else 0 end), 0)`,
+          totalExpense: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'EXPENSE' then ${transactionsTable.amount} else 0 end), 0)`,
+          totalInvestment: sql<number>`coalesce(sum(case when ${transactionsTable.type} = 'INVESTMENT' then ${transactionsTable.amount} else 0 end), 0)`,
         })
         .from(transactionsTable)
         .where(monthlyBaseWhere),
@@ -98,7 +88,7 @@ export class DashboardRepository implements IDashboardRepository {
       db
         .select({
           name: transactionsTable.category,
-          expense: sql<string>`coalesce(sum(${transactionsTable.amount}), 0)::text`,
+          expense: sql<number>`coalesce(sum(${transactionsTable.amount}), 0)`,
         })
         .from(transactionsTable)
         .where(and(monthlyBaseWhere, eq(transactionsTable.type, 'EXPENSE')))
@@ -108,12 +98,7 @@ export class DashboardRepository implements IDashboardRepository {
         columns: {
           deletedAt: false,
         },
-        where: and(
-          eq(transactionsTable.workspaceId, workspaceId),
-          isNull(transactionsTable.deletedAt),
-          gte(transactionsTable.paymentDate, weekStartDate),
-          lt(transactionsTable.paymentDate, weekEndDate)
-        ),
+        where: and(monthlyBaseWhere, eq(transactionsTable.type, 'EXPENSE')),
         orderBy: desc(transactionsTable.paymentDate),
       }),
 
@@ -124,8 +109,8 @@ export class DashboardRepository implements IDashboardRepository {
         where: and(
           eq(transactionsTable.workspaceId, workspaceId),
           isNull(transactionsTable.deletedAt),
-          gte(transactionsTable.paymentDate, currentMonthStartDate),
-          lt(transactionsTable.paymentDate, currentMonthEndDate),
+          eq(transactionsTable.type, 'EXPENSE'),
+          eq(transactionsTable.status, 'PENDING'),
           lt(transactionsTable.paymentDate, now)
         ),
         orderBy: desc(transactionsTable.paymentDate),
@@ -134,24 +119,20 @@ export class DashboardRepository implements IDashboardRepository {
 
     const resumeRow = resumeRows[0]
 
-    const totalIncome = Number((resumeRow?.totalIncome ?? 0).toFixed(2))
-    const totalExpense = Number((resumeRow?.totalExpense ?? 0).toFixed(2))
-    const totalInvestment = Number((resumeRow?.totalInvestment ?? 0).toFixed(2))
-    const totalBalance = Number(
-      (totalIncome - totalExpense - totalInvestment).toFixed(2)
-    )
+    const totalIncome = toMoney(resumeRow?.totalIncome)
+    const totalExpense = toMoney(resumeRow?.totalExpense)
+    const totalInvestment = toMoney(resumeRow?.totalInvestment)
+    const totalBalance = toMoney(totalIncome - totalExpense - totalInvestment)
 
     const expenseByCategory = expenseByCategoryRows.map(expense => {
-      const expenseValue = Number.parseFloat(expense.expense)
+      const expenseValue = toMoney(expense.expense)
       const progress =
-        totalExpense > 0
-          ? Number(((expenseValue / totalExpense) * 100).toFixed(2))
-          : 0
+        totalExpense > 0 ? toMoney((expenseValue / totalExpense) * 100) : 0
 
       return {
         name: expense.name,
-        expense: expense.expense,
-        totalExpense: totalExpense.toFixed(2),
+        expense: expenseValue,
+        totalExpense,
         progress,
       }
     })
@@ -170,7 +151,7 @@ export class DashboardRepository implements IDashboardRepository {
       },
       lastTransactions,
       expenseByCategory,
-      weeklyPayment,
+      monthlyPayments,
       latePayments,
     }
   }

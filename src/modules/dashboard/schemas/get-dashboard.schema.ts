@@ -3,6 +3,7 @@ import z from 'zod'
 import {
   categorySchema,
   paymentMethodSchema,
+  transactionStatusSchema,
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
@@ -27,7 +28,8 @@ const dashboardTransactionSchema = z.object({
   description: z.string().nullable(),
   type: typeSchema,
   category: categorySchema,
-  amount: z.string(),
+  amount: z.number(),
+  status: transactionStatusSchema,
   paymentDate: z.date(),
   paymentMethod: paymentMethodSchema,
   createdAt: z.date(),
@@ -74,12 +76,12 @@ export const getDashboardSchema: RouteShorthandOptions = {
             expenseByCategory: z.array(
               z.object({
                 name: categorySchema,
-                expense: z.string(),
-                totalExpense: z.string(),
+                expense: z.number(),
+                totalExpense: z.number(),
                 progress: z.number(),
               })
             ),
-            weeklyPayment: z.array(dashboardTransactionSchema),
+            monthlyPayments: z.array(dashboardTransactionSchema),
             latePayments: z.array(dashboardTransactionSchema),
           }),
         }),
