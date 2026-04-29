@@ -11,20 +11,30 @@ export interface IDashboard {
     totalInvestment: number
     totalInvestmentPercent: number
   }
+
+  metrics: {
+    savingsRate: number
+    burnRate: number
+    projectedBalance: number
+    expenseRatio: number
+    expenseChange: number
+    incomeChange: number
+  }
+
   monthlyDistribution: {
     income: number
     expense: number
     investment: number
   }
+
   lastTransactions: Array<ITransaction>
+
   expenseByCategory: Array<{
     name: string
     expense: number
     totalExpense: number
     progress: number
   }>
-  monthlyPayments: Array<ITransaction>
-  latePayments: Array<ITransaction>
 }
 
 export interface IDashboardRepository {

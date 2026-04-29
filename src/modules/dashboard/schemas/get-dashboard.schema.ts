@@ -71,6 +71,14 @@ export const getDashboardSchema: RouteShorthandOptions = {
               totalInvestment: z.number(),
               totalInvestmentPercent: z.number(),
             }),
+            metrics: z.object({
+              savingsRate: z.number(),
+              burnRate: z.number(),
+              projectedBalance: z.number(),
+              expenseRatio: z.number(),
+              expenseChange: z.number(),
+              incomeChange: z.number(),
+            }),
             monthlyDistribution: z.object({
               income: z.number(),
               expense: z.number(),
@@ -85,8 +93,6 @@ export const getDashboardSchema: RouteShorthandOptions = {
                 progress: z.number(),
               })
             ),
-            monthlyPayments: z.array(dashboardTransactionSchema),
-            latePayments: z.array(dashboardTransactionSchema),
           }),
         }),
       }),
