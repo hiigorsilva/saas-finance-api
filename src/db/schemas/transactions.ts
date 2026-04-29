@@ -25,7 +25,7 @@ export const transactionsTable = pgTable('transactions', {
     scale: 2,
     mode: 'number',
   }).notNull(),
-  status: transactionStatusEnum('status').default('PENDING').notNull(),
+  status: transactionStatusEnum('status').default('PAID').notNull(),
   paymentDate: timestamp('payment_date').notNull(),
   paymentMethod: paymentMethodEnum('payment_method').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
