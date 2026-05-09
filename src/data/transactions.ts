@@ -26,3 +26,5 @@ export const paymentMethodSchema = z.enum([
   'PIX',
   'CASH',
 ])
+
+export const transactionStatusSchema = z.enum(['PENDING', 'PAID'])

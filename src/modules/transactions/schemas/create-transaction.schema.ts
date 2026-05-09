@@ -3,6 +3,7 @@ import z from 'zod'
 import {
   categorySchema,
   paymentMethodSchema,
+  transactionStatusSchema,
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
@@ -17,7 +18,8 @@ export const createTransactionBodySchema = z.object({
   description: z.string().trim().optional(),
   type: typeSchema,
   category: categorySchema,
-  amount: z.string(),
+  amount: z.coerce.number(),
+  status: transactionStatusSchema.default('PAID'),
   paymentDate: z.coerce.date(),
   paymentMethod: paymentMethodSchema,
 })

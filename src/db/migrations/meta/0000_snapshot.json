@@ -1,5 +1,5 @@
 {
-  "id": "0a99844d-aa6b-4b81-8c23-06954075322a",
+  "id": "6faf4bb6-1364-4a5a-9948-89edc1f49443",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -58,6 +58,14 @@
           "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "transaction_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
         },
         "payment_date": {
           "name": "payment_date",
@@ -514,6 +522,14 @@
         "PENDING",
         "ACCEPTED",
         "DECLINED"
+      ]
+    },
+    "public.transaction_status": {
+      "name": "transaction_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "PAID"
       ]
     },
     "public.transaction_type": {

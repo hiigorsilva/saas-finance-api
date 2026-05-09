@@ -2,6 +2,7 @@ CREATE TYPE "public"."category" AS ENUM('HOUSING', 'PERSONAL_CARE', 'TRANSPORTAT
 CREATE TYPE "public"."payment_method" AS ENUM('CREDIT_CARD', 'DEBIT_CARD', 'BANK_SLIP', 'PIX', 'CASH', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."role_member_workspace" AS ENUM('OWNER', 'ADMIN', 'MEMBER', 'VIEWER');--> statement-breakpoint
 CREATE TYPE "public"."status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED');--> statement-breakpoint
+CREATE TYPE "public"."transaction_status" AS ENUM('PENDING', 'PAID');--> statement-breakpoint
 CREATE TYPE "public"."transaction_type" AS ENUM('INCOME', 'EXPENSE', 'INVESTMENT');--> statement-breakpoint
 CREATE TYPE "public"."type_workspace" AS ENUM('PRIVATE', 'SHARED');--> statement-breakpoint
 CREATE TYPE "public"."financial_profile" AS ENUM('DEBTOR', 'SPENDER', 'DETACHED', 'SAVER', 'INVESTOR');--> statement-breakpoint
@@ -14,6 +15,7 @@ CREATE TABLE "transactions" (
 	"type" "transaction_type" NOT NULL,
 	"category" "category" NOT NULL,
 	"amount" numeric(10, 2) NOT NULL,
+	"status" "transaction_status" DEFAULT 'PENDING' NOT NULL,
 	"payment_date" timestamp NOT NULL,
 	"payment_method" "payment_method" NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,

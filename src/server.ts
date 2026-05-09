@@ -7,6 +7,8 @@ import { registerSwagger } from './config/plugins/swagger'
 import { registerServerStart } from './config/start'
 import { AppError } from './errors/app-error'
 import { registerRoutes } from './routes'
+import { badRequest } from './shared/utils/http'
+import { parseResponse } from './shared/utils/parse-response'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -18,19 +20,27 @@ registerRateLimit(app)
 registerSwagger(app)
 
 app.setErrorHandler((error, _request, reply) => {
-  if (error instanceof AppError) {
-    return reply.status(error.statusCode).send({
-      statusCode: error.statusCode,
-      message: error.message,
-      stack: error.stack,
-    })
+  if ('validation' in error) {
+    return reply
+      .status(400)
+      .send(parseResponse(badRequest({ error: error.message })))
   }
 
-  return reply.status(500).send({
-    statusCode: 500,
-    message: 'Internal server error',
-    stack: error.stack,
-  })
+  if (error instanceof AppError) {
+    return reply.status(error.statusCode).send(
+      parseResponse({
+        statusCode: error.statusCode,
+        body: { error: error.message },
+      })
+    )
+  }
+
+  return reply.status(500).send(
+    parseResponse({
+      statusCode: 500,
+      body: { error: 'Internal server error' },
+    })
+  )
 })
 
 // Register routes

@@ -1,5 +1,10 @@
 import { numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { categoryEnum, paymentMethodEnum, transactionTypeEnum } from './enums'
+import {
+  categoryEnum,
+  paymentMethodEnum,
+  transactionStatusEnum,
+  transactionTypeEnum,
+} from './enums'
 import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
@@ -15,7 +20,12 @@ export const transactionsTable = pgTable('transactions', {
   description: text('description'),
   type: transactionTypeEnum('type').notNull(),
   category: categoryEnum('category').notNull(),
-  amount: numeric('amount', { precision: 10, scale: 2 }).notNull(),
+  amount: numeric('amount', {
+    precision: 10,
+    scale: 2,
+    mode: 'number',
+  }).notNull(),
+  status: transactionStatusEnum('status').default('PAID').notNull(),
   paymentDate: timestamp('payment_date').notNull(),
   paymentMethod: paymentMethodEnum('payment_method').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),

@@ -18,21 +18,30 @@ export class GetDashboardController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { userId, params, query } = request
-      if (!userId) return unauthorized({ error: 'Unauthorized.' })
+      if (!userId) {
+        const response = unauthorized({ error: 'Unauthorized.' })
+        return reply.status(response.statusCode).send(parseResponse(response))
+      }
 
       const {
         success: successParams,
         data: dataParams,
         error: errorParams,
       } = getDashboardParamsSchema.safeParse(params)
-      if (!successParams) return badRequest({ error: errorParams.issues })
+      if (!successParams) {
+        const response = badRequest({ error: errorParams.issues })
+        return reply.status(response.statusCode).send(parseResponse(response))
+      }
 
       const {
         success: successQuery,
         data: dataQuery,
         error: errorQuery,
       } = getDashboardQuerySchema.safeParse(query)
-      if (!successQuery) return badRequest({ error: errorQuery.issues })
+      if (!successQuery) {
+        const response = badRequest({ error: errorQuery.issues })
+        return reply.status(response.statusCode).send(parseResponse(response))
+      }
 
       const data = {
         workspaceId: dataParams.workspaceId,
@@ -43,7 +52,7 @@ export class GetDashboardController {
       const dashboardData = await this.getDashboardService.getDashboard(data)
 
       const response = ok({ data: dashboardData })
-      return reply.status(response.statusCode).send(response)
+      return reply.status(response.statusCode).send(parseResponse(response))
     } catch (error) {
       if (error instanceof Error) {
         return reply

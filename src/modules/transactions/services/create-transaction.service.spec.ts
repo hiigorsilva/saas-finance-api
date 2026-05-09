@@ -40,7 +40,7 @@ describe('CreateTransactionService', () => {
       name: 'Gasto X',
       description: 'Descrição da transação',
       type: 'EXPENSE',
-      amount: '37.90',
+      amount: 37.9,
       category: 'HOUSING',
       paymentDate: new Date(),
       paymentMethod: 'PIX',
