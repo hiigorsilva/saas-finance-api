@@ -2,6 +2,10 @@ import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const removeMemberParamsSchema = z.object({
   workspaceId: z.string(),
@@ -17,12 +21,11 @@ export const removeMemberSchema: RouteShorthandOptions = {
     tags: ['Workspace Members'],
     params: removeMemberParamsSchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.string(),
-        }),
-      }),
+      200: dataResponseSchema(z.string()),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

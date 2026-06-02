@@ -1,11 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  badRequest,
-  created,
-  internalServerError,
-  unauthorized,
-} from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { AppError } from '../../../errors/app-error'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import { createWorkspaceBodySchema } from '../schemas/create-workspace.schema'
 import type { CreateWorkspaceService } from '../services/create-workspace.service'
 
@@ -13,28 +9,14 @@ export class CreateWorkspaceController {
   constructor(private createWorkspaceService: CreateWorkspaceService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { userId, body } = request
-      if (!userId) return unauthorized({ error: 'Unauthorized' })
+    const { userId, body } = request
+    if (!userId) throw new AppError('Unauthorized.', 401)
 
-      const { success, data, error } = createWorkspaceBodySchema.safeParse(body)
-      if (!success) return badRequest({ error: error.issues })
+    const { success, data, error } = createWorkspaceBodySchema.safeParse(body)
+    if (!success) throw new AppError(getValidationMessage(error), 400)
 
-      const workspace = await this.createWorkspaceService.create(data, userId)
-      const response = created({ data: workspace })
+    const workspace = await this.createWorkspaceService.create(data, userId)
 
-      return reply.status(response.statusCode).send(response)
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
-    }
+    return reply.status(201).send(dataResponse(workspace))
   }
 }

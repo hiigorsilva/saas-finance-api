@@ -1,11 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  badRequest,
-  internalServerError,
-  ok,
-  unauthorized,
-} from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { AppError } from '../../../errors/app-error'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import {
   getDashboardParamsSchema,
   getDashboardQuerySchema,
@@ -16,54 +12,32 @@ export class GetDashboardController {
   constructor(private getDashboardService: GetDashboardService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { userId, params, query } = request
-      if (!userId) {
-        const response = unauthorized({ error: 'Unauthorized.' })
-        return reply.status(response.statusCode).send(parseResponse(response))
-      }
+    const { userId, params, query } = request
+    if (!userId) throw new AppError('Unauthorized.', 401)
 
-      const {
-        success: successParams,
-        data: dataParams,
-        error: errorParams,
-      } = getDashboardParamsSchema.safeParse(params)
-      if (!successParams) {
-        const response = badRequest({ error: errorParams.issues })
-        return reply.status(response.statusCode).send(parseResponse(response))
-      }
+    const {
+      success: successParams,
+      data: dataParams,
+      error: errorParams,
+    } = getDashboardParamsSchema.safeParse(params)
+    if (!successParams)
+      throw new AppError(getValidationMessage(errorParams), 400)
 
-      const {
-        success: successQuery,
-        data: dataQuery,
-        error: errorQuery,
-      } = getDashboardQuerySchema.safeParse(query)
-      if (!successQuery) {
-        const response = badRequest({ error: errorQuery.issues })
-        return reply.status(response.statusCode).send(parseResponse(response))
-      }
+    const {
+      success: successQuery,
+      data: dataQuery,
+      error: errorQuery,
+    } = getDashboardQuerySchema.safeParse(query)
+    if (!successQuery) throw new AppError(getValidationMessage(errorQuery), 400)
 
-      const data = {
-        workspaceId: dataParams.workspaceId,
-        month: dataQuery.month,
-        year: dataQuery.year,
-      }
-
-      const dashboardData = await this.getDashboardService.getDashboard(data)
-
-      const response = ok({ data: dashboardData })
-      return reply.status(response.statusCode).send(parseResponse(response))
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
+    const data = {
+      workspaceId: dataParams.workspaceId,
+      month: dataQuery.month,
+      year: dataQuery.year,
     }
+
+    const dashboardData = await this.getDashboardService.getDashboard(data)
+
+    return reply.status(200).send(dataResponse(dashboardData))
   }
 }

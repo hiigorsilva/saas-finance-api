@@ -8,6 +8,10 @@ import {
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const getDashboardParamsSchema = z.object({
   workspaceId: z.string(),
@@ -36,16 +40,40 @@ const dashboardTransactionSchema = z.object({
   updatedAt: z.date(),
 })
 
-const badRequestErrorSchema = z.union([
-  z.string(),
-  z.array(
+const dashboardSchema = z.object({
+  resume: z.object({
+    totalIncome: z.number(),
+    totalIncomePercent: z.number(),
+    totalExpense: z.number(),
+    totalExpensePercent: z.number(),
+    totalBalance: z.number(),
+    totalBalancePercent: z.number(),
+    totalInvestment: z.number(),
+    totalInvestmentPercent: z.number(),
+  }),
+  metrics: z.object({
+    savingsRate: z.number(),
+    burnRate: z.number(),
+    projectedBalance: z.number(),
+    expenseRatio: z.number(),
+    expenseChange: z.number(),
+    incomeChange: z.number(),
+  }),
+  monthlyDistribution: z.object({
+    income: z.number(),
+    expense: z.number(),
+    investment: z.number(),
+  }),
+  lastTransactions: z.array(dashboardTransactionSchema),
+  expenseByCategory: z.array(
     z.object({
-      code: z.string(),
-      path: z.array(z.union([z.string(), z.number()])),
-      message: z.string(),
+      name: categorySchema,
+      expense: z.number(),
+      totalExpense: z.number(),
+      progress: z.number(),
     })
   ),
-])
+})
 
 export const getDashboardSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
@@ -57,69 +85,12 @@ export const getDashboardSchema: RouteShorthandOptions = {
     params: getDashboardParamsSchema,
     querystring: getDashboardQuerySchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.object({
-            resume: z.object({
-              totalIncome: z.number(),
-              totalIncomePercent: z.number(),
-              totalExpense: z.number(),
-              totalExpensePercent: z.number(),
-              totalBalance: z.number(),
-              totalBalancePercent: z.number(),
-              totalInvestment: z.number(),
-              totalInvestmentPercent: z.number(),
-            }),
-            metrics: z.object({
-              savingsRate: z.number(),
-              burnRate: z.number(),
-              projectedBalance: z.number(),
-              expenseRatio: z.number(),
-              expenseChange: z.number(),
-              incomeChange: z.number(),
-            }),
-            monthlyDistribution: z.object({
-              income: z.number(),
-              expense: z.number(),
-              investment: z.number(),
-            }),
-            lastTransactions: z.array(dashboardTransactionSchema),
-            expenseByCategory: z.array(
-              z.object({
-                name: categorySchema,
-                expense: z.number(),
-                totalExpense: z.number(),
-                progress: z.number(),
-              })
-            ),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: badRequestErrorSchema,
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      403: z.object({
-        statusCode: z.number().default(403),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      500: z.object({
-        statusCode: z.number().default(500),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      200: dataResponseSchema(dashboardSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
+      500: errorResponseSchema,
     },
   },
 }

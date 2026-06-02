@@ -1,3 +1,4 @@
+import { AppError } from '../../../errors/app-error'
 import type { WorkspaceMemberRepository } from '../../workspace-members/repositories/workspace-members.repository'
 import type { CreateWorkspaceDTO } from '../dto/workspace.dto'
 import type { WorkspaceRepository } from '../repositories/workspace.repository'
@@ -14,7 +15,7 @@ export class CreateWorkspaceService {
       userId
     )
     if (alreadyExists) {
-      throw new Error('Workspace name already exists')
+      throw new AppError('Workspace name already exists', 409)
     }
 
     const workspace = await this.workspaceRepository.save(data, userId)
@@ -26,7 +27,7 @@ export class CreateWorkspaceService {
         'OWNER'
       )
     if (!addMemberToWorkspace)
-      throw new Error('Error adding member to workspace')
+      throw new AppError('Error adding member to workspace', 500)
 
     return workspace
   }

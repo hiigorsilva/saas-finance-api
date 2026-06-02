@@ -5,3 +5,16 @@ export interface IPaginationOutput<T> {
   currentPage: number
   limit: number
 }
+
+export type ApiResponse<T> = {
+  data: T
+}
+
+export type ApiPaginatedResponse<T> = {
+  data: T[]
+  props: Omit<IPaginationOutput<T>, 'data'>
+}
+
+export type ApiErrorResponse = {
+  message: string
+}

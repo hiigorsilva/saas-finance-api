@@ -2,6 +2,7 @@ import { and, count, desc, eq } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
+import { AppError } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type { IAddMemberToWorkspaceOutput } from '../dto/add-member.dto'
 import type { ChangeRoleMemberDTO } from '../dto/change-role-member.dto'
@@ -54,7 +55,7 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       })
 
     if (!member) {
-      throw new Error('Failed to add member to workspace')
+      throw new AppError('Failed to add member to workspace', 500)
     }
 
     return member
@@ -100,7 +101,7 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     const totalPages = Math.ceil(totalCount / safeLimit)
     const safeTotalPages = Math.max(1, totalPages)
     if (safePage > safeTotalPages) {
-      throw new Error('Page out of range. Please enter a valid page.')
+      throw new AppError('Page out of range. Please enter a valid page.', 400)
     }
 
     return {
@@ -150,7 +151,7 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     //     eq(workspaceMembersTable.userId, memberId)
     //   ),
     // })
-    if (!member) throw new Error('Failed to get member role.')
+    if (!member) throw new AppError('Failed to get member role.', 404)
 
     return member
   }

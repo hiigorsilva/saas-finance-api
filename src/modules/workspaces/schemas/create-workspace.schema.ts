@@ -1,6 +1,10 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const createWorkspaceBodySchema = z.object({
   name: z.string().min(2).trim(),
@@ -17,20 +21,10 @@ export const createWorkspaceSchema: RouteShorthandOptions = {
     tags: ['Workspace'],
     body: createWorkspaceBodySchema,
     response: {
-      201: z.object({
-        statusCode: z.number().default(201),
-        body: z.object({
-          data: z.object({
-            id: z.string(),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      201: dataResponseSchema(z.object({ id: z.string() })),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      409: errorResponseSchema,
     },
   },
 }

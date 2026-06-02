@@ -3,8 +3,3 @@ declare module 'fastify' {
     userId: string | null
   }
 }
-
-export type HttpResponse = {
-  statusCode: number
-  body?: Record<string, any>
-}

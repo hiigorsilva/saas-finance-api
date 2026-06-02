@@ -1,7 +1,8 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { AppError } from '../../../errors/app-error'
 import { signAccessTokenFor } from '../../../lib/jwt'
-import { badRequest, internalServerError, ok } from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import { signinBodySchema } from '../schemas/signin.schema'
 import type { SignInService } from '../services/signin.service'
 
@@ -9,28 +10,14 @@ export class SignInController {
   constructor(private signinService: SignInService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { body } = request
+    const { body } = request
 
-      const { success, data, error } = signinBodySchema.safeParse(body)
-      if (!success) return badRequest({ error: error.issues })
+    const { success, data, error } = signinBodySchema.safeParse(body)
+    if (!success) throw new AppError(getValidationMessage(error), 400)
 
-      const user = await this.signinService.execute(data)
-      const accessToken = await signAccessTokenFor(user.id)
-      const response = ok({ accessToken })
+    const user = await this.signinService.execute(data)
+    const accessToken = await signAccessTokenFor(user.id)
 
-      return reply.status(response.statusCode).send(response)
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
-    }
+    return reply.status(200).send(dataResponse({ accessToken }))
   }
 }

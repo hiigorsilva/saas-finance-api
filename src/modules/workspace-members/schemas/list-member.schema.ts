@@ -1,6 +1,10 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import {
+  errorResponseSchema,
+  paginatedResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const listMembersParamsSchema = z.object({
   workspaceId: z.string(),
@@ -9,6 +13,16 @@ export const listMembersParamsSchema = z.object({
 export const listMembersQuerySchema = z.object({
   page: z.coerce.number().positive().default(1),
   limit: z.coerce.number().positive().max(100).default(10),
+})
+
+const memberSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  role: z.enum(['OWNER', 'ADMIN', 'MEMBER', 'VIEWER']),
+  financialProfile: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 export const listMembersSchema: RouteShorthandOptions = {
@@ -22,32 +36,10 @@ export const listMembersSchema: RouteShorthandOptions = {
     params: listMembersParamsSchema,
     querystring: listMembersQuerySchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.array(
-            z.object({
-              id: z.string(),
-              name: z.string(),
-              email: z.string(),
-              role: z.enum(['OWNER', 'ADMIN', 'MEMBER', 'VIEWER']),
-              financialProfile: z.string().nullable(),
-              createdAt: z.date(),
-              updatedAt: z.date(),
-            })
-          ),
-          totalCount: z.number(),
-          totalPages: z.number(),
-          currentPage: z.number(),
-          limit: z.number(),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      200: paginatedResponseSchema(memberSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
     },
   },
 }

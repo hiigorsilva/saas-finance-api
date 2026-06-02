@@ -1,3 +1,4 @@
+import { AppError } from '../../../errors/app-error'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { ChangeRoleMemberDTO } from '../dto/change-role-member.dto'
 import type { WorkspaceMemberRepository } from '../repositories/workspace-members.repository'
@@ -22,22 +23,25 @@ export class ChangeRoleMemberService {
     const workspaceAlreadyExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
     if (!workspaceAlreadyExists) {
-      throw new Error('Workspace not found.')
+      throw new AppError('Workspace not found.', 404)
     }
 
     const isMember = await this.workspaceMemberRepository.isMember(
       workspaceId,
       memberId
     )
-    if (!isMember) throw new Error('User is not a member of this workspace.')
+    if (!isMember) {
+      throw new AppError('User is not a member of this workspace.', 404)
+    }
 
     const isOwner = await this.workspaceMemberRepository.isOwner(
       workspaceId,
       memberId
     )
     if (isOwner) {
-      throw new Error(
-        'You cannot change the role of the workspace owner as they are the original creator.'
+      throw new AppError(
+        'You cannot change the role of the workspace owner as they are the original creator.',
+        403
       )
     }
 

@@ -1,15 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { Permissions, RolePermissions } from '../data/roles'
+import { AppError } from '../errors/app-error'
 import { WorkspaceMemberRepository } from '../modules/workspace-members/repositories/workspace-members.repository'
 import { GetUserRoleService } from '../modules/workspace-members/services/get-user-role.service'
 import { WorkspaceRepository } from '../modules/workspaces/repositories/workspace.repository'
-import {
-  badRequest,
-  forbidden,
-  internalServerError,
-  unauthorized,
-} from '../shared/utils/http'
-import { parseResponse } from '../shared/utils/parse-response'
 
 const workspaceMemberRepository = new WorkspaceMemberRepository()
 const workspaceRepository = new WorkspaceRepository()
@@ -35,65 +29,30 @@ const httpMethodToPermission: Record<string, Permissions[]> = {
 
 export const hasPermission = async (
   request: FastifyRequest,
-  reply: FastifyReply
+  _reply: FastifyReply
 ) => {
-  try {
-    const { userId, params, method } = request
-    if (!userId) {
-      return reply
-        .status(401)
-        .send(parseResponse(unauthorized({ error: 'Unauthorized.' })))
-    }
+  const { userId, params, method } = request
+  if (!userId) throw new AppError('Unauthorized.', 401)
 
-    const { workspaceId } = params as { workspaceId: string }
-    if (!workspaceId) {
-      return reply
-        .status(400)
-        .send(parseResponse(badRequest({ error: 'Workspace not found.' })))
-    }
+  const { workspaceId } = params as { workspaceId: string }
+  if (!workspaceId) throw new AppError('Workspace not found.', 404)
 
-    method.toUpperCase()
+  method.toUpperCase()
 
-    const requiredPermission = httpMethodToPermission[method]
-    if (!requiredPermission) {
-      return reply
-        .status(400)
-        .send(parseResponse(badRequest({ error: 'Method not allowed.' })))
-    }
+  const requiredPermission = httpMethodToPermission[method]
+  if (!requiredPermission) throw new AppError('Method not allowed.', 405)
 
-    const roleMember = await getUserRole(userId, workspaceId)
-    if (!roleMember) {
-      return reply
-        .status(403)
-        .send(
-          parseResponse(
-            forbidden({ error: 'No role found for user in workspace.' })
-          )
-        )
-    }
+  const roleMember = await getUserRole(userId, workspaceId)
+  if (!roleMember) {
+    throw new AppError('No role found for user in workspace.', 403)
+  }
 
-    const userPermission = RolePermissions[roleMember]
-    const userHasPermission = requiredPermission.some(permission =>
-      userPermission.includes(permission)
-    )
+  const userPermission = RolePermissions[roleMember]
+  const userHasPermission = requiredPermission.some(permission =>
+    userPermission.includes(permission)
+  )
 
-    if (!userHasPermission) {
-      return reply
-        .status(403)
-        .send(
-          parseResponse(forbidden({ error: 'User does not have permission.' }))
-        )
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      return reply
-        .status(400)
-        .send(parseResponse(badRequest({ error: error.message })))
-    }
-    return reply
-      .status(500)
-      .send(
-        parseResponse(internalServerError({ error: 'Internal server error' }))
-      )
+  if (!userHasPermission) {
+    throw new AppError('User does not have permission.', 403)
   }
 }

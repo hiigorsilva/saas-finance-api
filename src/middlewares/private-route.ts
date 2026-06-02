@@ -1,38 +1,17 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
+import { AppError } from '../errors/app-error'
 import { validateAccessToken } from '../lib/jwt'
-import {
-  badRequest,
-  internalServerError,
-  unauthorized,
-} from '../shared/utils/http'
-import { parseResponse } from '../shared/utils/parse-response'
 
 export const privateRoute = async (
   request: FastifyRequest,
-  reply: FastifyReply
+  _reply: FastifyReply
 ) => {
-  try {
-    const { authorization } = request.headers
-    if (!authorization) {
-      return reply
-        .status(401)
-        .send(parseResponse(unauthorized({ error: 'Unauthorized' })))
-    }
+  const { authorization } = request.headers
+  if (!authorization) throw new AppError('Unauthorized.', 401)
 
-    const [_, token] = authorization.split(' ')
-    const userId = await validateAccessToken(token)
+  const [_, token] = authorization.split(' ')
+  if (!token) throw new AppError('Unauthorized.', 401)
 
-    request.userId = userId
-  } catch (error) {
-    if (error instanceof Error) {
-      return reply
-        .status(400)
-        .send(parseResponse(badRequest({ error: error.message })))
-    }
-    return reply
-      .status(500)
-      .send(
-        parseResponse(internalServerError({ error: 'Internal server error' }))
-      )
-  }
+  const userId = await validateAccessToken(token)
+  request.userId = userId
 }

@@ -1,6 +1,10 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
 import { privateRoute } from '../../../middlewares/private-route'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const editWorkspaceParamsSchema = z.object({
   workspaceId: z.string(),
@@ -15,6 +19,16 @@ export const editWorkspaceBodySchema = z.object({
   type: z.enum(['PRIVATE', 'SHARED']),
 })
 
+const workspaceSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  type: z.string(),
+  ownerId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
 export const editWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
@@ -25,32 +39,10 @@ export const editWorkspaceSchema: RouteShorthandOptions = {
     params: editWorkspaceParamsSchema,
     body: editWorkspaceBodySchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.object({
-            id: z.string(),
-            name: z.string(),
-            description: z.string().nullable(),
-            type: z.string(),
-            ownerId: z.string(),
-            createdAt: z.date(),
-            updatedAt: z.date(),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          status: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          status: z.string(),
-        }),
-      }),
+      200: dataResponseSchema(workspaceSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

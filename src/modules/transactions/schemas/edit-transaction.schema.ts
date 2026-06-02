@@ -8,6 +8,10 @@ import {
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const editTransactionParamsSchema = z.object({
   workspaceId: z.string(),
@@ -24,6 +28,15 @@ export const editTransactionBodySchema = z.object({
   paymentMethod: paymentMethodSchema,
 })
 
+const editedTransactionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  amount: z.number(),
+  status: transactionStatusSchema,
+  paymentDate: z.date(),
+  paymentMethod: z.string(),
+})
+
 export const editTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
@@ -33,37 +46,11 @@ export const editTransactionSchema: RouteShorthandOptions = {
     params: editTransactionParamsSchema,
     body: editTransactionBodySchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.object({
-            id: z.string(),
-            name: z.string(),
-            amount: z.number(),
-            status: transactionStatusSchema,
-            paymentDate: z.date(),
-            paymentMethod: z.string(),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      403: z.object({
-        statusCode: z.number().default(403),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      200: dataResponseSchema(editedTransactionSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

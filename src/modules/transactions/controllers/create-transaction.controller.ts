@@ -1,11 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  badRequest,
-  created,
-  internalServerError,
-  unauthorized,
-} from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { AppError } from '../../../errors/app-error'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import {
   createTransactionBodySchema,
   createTransactionParamsSchema,
@@ -16,42 +12,28 @@ export class CreateTransactionController {
   constructor(private createTransactionService: CreateTransactionService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { userId, body, params } = request
-      if (!userId) return unauthorized({ error: 'Unauthorized.' })
+    const { userId, body, params } = request
+    if (!userId) throw new AppError('Unauthorized.', 401)
 
-      const { success, data, error } =
-        createTransactionBodySchema.safeParse(body)
-      if (!success) return badRequest({ error: error.issues })
+    const { success, data, error } = createTransactionBodySchema.safeParse(body)
+    if (!success) throw new AppError(getValidationMessage(error), 400)
 
-      const {
-        success: successParams,
-        data: dataParams,
-        error: errorParams,
-      } = createTransactionParamsSchema.safeParse(params)
-      if (!successParams) return badRequest({ error: errorParams.issues })
+    const {
+      success: successParams,
+      data: dataParams,
+      error: errorParams,
+    } = createTransactionParamsSchema.safeParse(params)
+    if (!successParams)
+      throw new AppError(getValidationMessage(errorParams), 400)
 
-      const { workspaceId } = dataParams
+    const { workspaceId } = dataParams
 
-      const transaction = await this.createTransactionService.create({
-        workspaceId,
-        userId,
-        data,
-      })
+    const transaction = await this.createTransactionService.create({
+      workspaceId,
+      userId,
+      data,
+    })
 
-      const response = created({ data: transaction })
-      return reply.status(response.statusCode).send(parseResponse(response))
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
-    }
+    return reply.status(201).send(dataResponse(transaction))
   }
 }

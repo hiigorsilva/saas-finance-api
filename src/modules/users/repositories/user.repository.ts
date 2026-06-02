@@ -1,6 +1,7 @@
 import { and, count, desc, eq, isNotNull, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
+import { AppError } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type { RegisterUserDTO } from '../../auth/dto/register.dto'
 import type { IUserId, IUserOutput } from '../dto/user.dto'
@@ -79,7 +80,7 @@ export class UserRepository implements IUserRepository {
     const totalPages = Math.ceil(totalCount / safeLimit)
     const safeTotalPages = Math.max(1, totalPages)
     if (safePage > safeTotalPages) {
-      throw new Error('Page out of range. Please enter a valid page.')
+      throw new AppError('Page out of range. Please enter a valid page.', 400)
     }
 
     return {
@@ -118,7 +119,7 @@ export class UserRepository implements IUserRepository {
     const totalPages = Math.ceil(totalCount / safeLimit)
     const safeTotalPages = Math.max(1, totalPages)
     if (safePage > safeTotalPages) {
-      throw new Error('Page out of range. Please enter a valid page.')
+      throw new AppError('Page out of range. Please enter a valid page.', 400)
     }
 
     return {

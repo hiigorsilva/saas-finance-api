@@ -1,5 +1,9 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const healthSchema: RouteShorthandOptions = {
   schema: {
@@ -7,16 +11,8 @@ export const healthSchema: RouteShorthandOptions = {
     consumes: ['application/json'],
     tags: ['Health'],
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          status: z.string(),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        error: z.string(),
-      }),
+      200: dataResponseSchema(z.object({ status: z.string() })),
+      400: errorResponseSchema,
     },
   },
 }
