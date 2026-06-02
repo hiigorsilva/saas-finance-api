@@ -1,4 +1,4 @@
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { WorkspaceMemberRepository } from '../../workspace-members/repositories/workspace-members.repository'
 import type { WorkspaceRepository } from '../repositories/workspace.repository'
 
@@ -19,12 +19,21 @@ export class GetWorkspaceService {
       userId
     )
     if (!isMember) {
-      throw new AppError('You are not a member of this workspace.', 403)
+      throw new AppError(
+        'You are not a member of this workspace.',
+        403,
+        ErrorCodes.USER_NOT_WORKSPACE_MEMBER
+      )
     }
 
     const workspaceIsExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
-    if (!workspaceIsExists) throw new AppError('Workspace not found.', 404)
+    if (!workspaceIsExists)
+      throw new AppError(
+        'Workspace not found.',
+        404,
+        ErrorCodes.WORKSPACE_NOT_FOUND
+      )
 
     const workspace =
       await this.workspaceRepository.findWorkspaceById(workspaceId)

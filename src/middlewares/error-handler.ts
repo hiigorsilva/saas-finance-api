@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { ZodError } from 'zod'
-import { AppError } from '../errors/app-error'
+import { AppError, ErrorCodes } from '../errors/app-error'
 
 type ValidationErrorItem = {
   message?: string
@@ -28,6 +28,7 @@ export const registerErrorHandler = (app: FastifyInstance) => {
     if (error instanceof AppError) {
       return reply.status(error.statusCode).send({
         message: error.message,
+        code: error.code,
       })
     }
 
@@ -39,6 +40,7 @@ export const registerErrorHandler = (app: FastifyInstance) => {
       const firstIssue = error.issues.at(0)
       return reply.status(400).send({
         message: firstIssue?.message ?? 'Dados da requisição inválidos',
+        code: ErrorCodes.VALIDATION_ERROR,
       })
     }
 
@@ -52,11 +54,15 @@ export const registerErrorHandler = (app: FastifyInstance) => {
             safeError.message ??
             'Dados da requisição inválidos'
         ),
+        code: ErrorCodes.VALIDATION_ERROR,
       })
     }
 
     if (safeError.code === 'FST_ERR_BAD_STATUS_CODE') {
-      return reply.status(500).send({ message: 'Internal server error' })
+      return reply.status(500).send({
+        message: 'Internal server error',
+        code: ErrorCodes.INTERNAL_SERVER_ERROR,
+      })
     }
 
     const statusCode =
@@ -65,9 +71,13 @@ export const registerErrorHandler = (app: FastifyInstance) => {
     if (statusCode >= 400 && statusCode < 500) {
       return reply.status(statusCode).send({
         message: safeError.message || 'Erro desconhecido na requisição',
+        code: safeError.code || ErrorCodes.UNKNOWN_ERROR,
       })
     }
 
-    return reply.status(500).send({ message: 'Internal server error' })
+    return reply.status(500).send({
+      message: 'Internal server error',
+      code: ErrorCodes.INTERNAL_SERVER_ERROR,
+    })
   })
 }

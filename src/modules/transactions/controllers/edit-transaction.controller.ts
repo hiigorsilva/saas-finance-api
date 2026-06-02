@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { dataResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
 import {
@@ -13,7 +13,8 @@ export class EditTransactionController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const { userId, body, params } = request
-    if (!userId) throw new AppError('Unauthorized.', 401)
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
     const {
       success: successParams,
@@ -21,10 +22,19 @@ export class EditTransactionController {
       error: errorParams,
     } = editTransactionParamsSchema.safeParse(params)
     if (!successParams)
-      throw new AppError(getValidationMessage(errorParams), 400)
+      throw new AppError(
+        getValidationMessage(errorParams),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const { success, data, error } = editTransactionBodySchema.safeParse(body)
-    if (!success) throw new AppError(getValidationMessage(error), 400)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const { workspaceId, transactionId } = dataParams
 

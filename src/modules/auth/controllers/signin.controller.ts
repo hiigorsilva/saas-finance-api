@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { signAccessTokenFor } from '../../../lib/jwt'
 import { dataResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
@@ -13,7 +13,12 @@ export class SignInController {
     const { body } = request
 
     const { success, data, error } = signinBodySchema.safeParse(body)
-    if (!success) throw new AppError(getValidationMessage(error), 400)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const user = await this.signinService.execute(data)
     const accessToken = await signAccessTokenFor(user.id)

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { paginatedResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
 import { listWorkspaceQuerySchema } from '../schemas/list-workspace.schema'
@@ -10,10 +10,16 @@ export class ListWorkspaceController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const { userId, query } = request
-    if (!userId) throw new AppError('Unauthorized.', 401)
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
     const { success, data, error } = listWorkspaceQuerySchema.safeParse(query)
-    if (!success) throw new AppError(getValidationMessage(error), 400)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const { page, limit } = data
 

@@ -7,7 +7,10 @@ import {
 
 export const signinBodySchema = z.object({
   email: z.string().trim(),
-  password: z.string().min(8).trim(),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .trim(),
 })
 
 export const signinSchema: RouteShorthandOptions = {

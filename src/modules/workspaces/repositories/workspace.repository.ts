@@ -1,7 +1,7 @@
 import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { workspacesTable } from '../../../db/schemas/workspaces'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type {
   CreateWorkspaceDTO,
@@ -45,7 +45,12 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       })
       .returning({ id: workspacesTable.id })
 
-    if (!workspace) throw new AppError('Error creating workspace', 500)
+    if (!workspace)
+      throw new AppError(
+        'Error creating workspace',
+        500,
+        ErrorCodes.WORKSPACE_CREATION_FAILED
+      )
 
     return workspace
   }
@@ -98,7 +103,11 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     const totalPages = Math.ceil(totalCount / safeLimit)
     const safeTotalPages = Math.max(1, totalPages)
     if (safePage > safeTotalPages) {
-      throw new AppError('Page out of range. Please enter a valid page.', 400)
+      throw new AppError(
+        'Page out of range. Please enter a valid page.',
+        400,
+        ErrorCodes.PAGE_OUT_OF_RANGE
+      )
     }
 
     return {

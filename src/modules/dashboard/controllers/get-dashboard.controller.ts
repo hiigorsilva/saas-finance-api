@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { dataResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
 import {
@@ -13,7 +13,8 @@ export class GetDashboardController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const { userId, params, query } = request
-    if (!userId) throw new AppError('Unauthorized.', 401)
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
     const {
       success: successParams,
@@ -21,14 +22,23 @@ export class GetDashboardController {
       error: errorParams,
     } = getDashboardParamsSchema.safeParse(params)
     if (!successParams)
-      throw new AppError(getValidationMessage(errorParams), 400)
+      throw new AppError(
+        getValidationMessage(errorParams),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const {
       success: successQuery,
       data: dataQuery,
       error: errorQuery,
     } = getDashboardQuerySchema.safeParse(query)
-    if (!successQuery) throw new AppError(getValidationMessage(errorQuery), 400)
+    if (!successQuery)
+      throw new AppError(
+        getValidationMessage(errorQuery),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const data = {
       workspaceId: dataParams.workspaceId,

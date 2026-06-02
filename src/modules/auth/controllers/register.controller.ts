@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { signAccessTokenFor } from '../../../lib/jwt'
 import { dataResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
@@ -13,7 +13,12 @@ export class RegisterController {
     const { body } = request
 
     const { success, data, error } = registerBodySchema.safeParse(body)
-    if (!success) throw new AppError(getValidationMessage(error), 400)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const newUser = await this.registerService.execute(data)
     const accessToken = await signAccessTokenFor(newUser.id)

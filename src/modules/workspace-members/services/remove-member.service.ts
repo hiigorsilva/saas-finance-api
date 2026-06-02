@@ -1,4 +1,4 @@
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { WorkspaceMemberRepository } from '../repositories/workspace-members.repository'
 
@@ -18,7 +18,8 @@ export class RemoveMemberService {
     if (userId === memberId) {
       throw new AppError(
         'The user cannot remove themselves from the workspace. Instead, delete the workspace.',
-        403
+        403,
+        ErrorCodes.USER_CANNOT_REMOVE_SELF_FROM_WORKSPACE
       )
     }
 
@@ -27,13 +28,21 @@ export class RemoveMemberService {
       memberId
     )
     if (isOwner) {
-      throw new AppError('The workspace owner cannot be removed.', 403)
+      throw new AppError(
+        'The workspace owner cannot be removed.',
+        403,
+        ErrorCodes.WORKSPACE_OWNER_CANNOT_BE_REMOVED
+      )
     }
 
     const workspaceAlreadyExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
     if (!workspaceAlreadyExists) {
-      throw new AppError('Workspace not found.', 404)
+      throw new AppError(
+        'Workspace not found.',
+        404,
+        ErrorCodes.WORKSPACE_NOT_FOUND
+      )
     }
 
     const isMember = await this.workspaceMemberRepository.isMember(
@@ -41,7 +50,11 @@ export class RemoveMemberService {
       memberId
     )
     if (!isMember) {
-      throw new AppError('User is not a member of this workspace.', 404)
+      throw new AppError(
+        'User is not a member of this workspace.',
+        404,
+        ErrorCodes.WORKSPACE_MEMBER_NOT_FOUND
+      )
     }
 
     const removedMember = await this.workspaceMemberRepository.removeMember(

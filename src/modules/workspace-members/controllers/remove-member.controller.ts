@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { dataResponse } from '../../../shared/utils/http'
 import { getValidationMessage } from '../../../shared/utils/validation'
 import { removeMemberParamsSchema } from '../schemas/remove-member.schema'
@@ -10,10 +10,16 @@ export class RemoveMemberController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const { userId, params } = request
-    if (!userId) throw new AppError('Unauthorized.', 401)
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
     const { success, data, error } = removeMemberParamsSchema.safeParse(params)
-    if (!success) throw new AppError(getValidationMessage(error), 400)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
     const { workspaceId, memberId } = data
 

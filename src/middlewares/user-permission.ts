@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { Permissions, RolePermissions } from '../data/roles'
-import { AppError } from '../errors/app-error'
+import { AppError, ErrorCodes } from '../errors/app-error'
 import { WorkspaceMemberRepository } from '../modules/workspace-members/repositories/workspace-members.repository'
 import { GetUserRoleService } from '../modules/workspace-members/services/get-user-role.service'
 import { WorkspaceRepository } from '../modules/workspaces/repositories/workspace.repository'
@@ -32,19 +32,33 @@ export const hasPermission = async (
   _reply: FastifyReply
 ) => {
   const { userId, params, method } = request
-  if (!userId) throw new AppError('Unauthorized.', 401)
+  if (!userId) throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
   const { workspaceId } = params as { workspaceId: string }
-  if (!workspaceId) throw new AppError('Workspace not found.', 404)
+  if (!workspaceId)
+    throw new AppError(
+      'Workspace not found.',
+      404,
+      ErrorCodes.WORKSPACE_NOT_FOUND
+    )
 
   method.toUpperCase()
 
   const requiredPermission = httpMethodToPermission[method]
-  if (!requiredPermission) throw new AppError('Method not allowed.', 405)
+  if (!requiredPermission)
+    throw new AppError(
+      'Method not allowed.',
+      405,
+      ErrorCodes.METHOD_NOT_ALLOWED
+    )
 
   const roleMember = await getUserRole(userId, workspaceId)
   if (!roleMember) {
-    throw new AppError('No role found for user in workspace.', 403)
+    throw new AppError(
+      'No role found for user in workspace.',
+      403,
+      ErrorCodes.USER_NOT_WORKSPACE_MEMBER
+    )
   }
 
   const userPermission = RolePermissions[roleMember]
@@ -53,6 +67,10 @@ export const hasPermission = async (
   )
 
   if (!userHasPermission) {
-    throw new AppError('User does not have permission.', 403)
+    throw new AppError(
+      'User does not have permission.',
+      403,
+      ErrorCodes.FORBIDDEN
+    )
   }
 }

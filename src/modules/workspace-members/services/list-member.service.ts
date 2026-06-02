@@ -1,4 +1,4 @@
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { WorkspaceMemberRepository } from '../repositories/workspace-members.repository'
 
 type ListMemberProps = {
@@ -15,7 +15,11 @@ export class ListMemberService {
     const workspaceAlreadyExists =
       await this.workspaceMemberRepository.isMember(workspaceId, userId)
     if (!workspaceAlreadyExists) {
-      throw new AppError('You are not a member of this workspace.', 403)
+      throw new AppError(
+        'You are not a member of this workspace.',
+        403,
+        ErrorCodes.USER_NOT_WORKSPACE_MEMBER
+      )
     }
 
     const members = await this.workspaceMemberRepository.listAllMembers(

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import { dataResponse } from '../../../shared/utils/http'
 import type { MeService } from '../services/me.service'
 
@@ -8,7 +8,8 @@ export class MeController {
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
     const { userId } = request
-    if (!userId) throw new AppError('Unauthorized.', 401)
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
     const user = await this.meService.getUserData(userId)
 

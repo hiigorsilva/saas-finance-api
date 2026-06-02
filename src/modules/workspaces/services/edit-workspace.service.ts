@@ -1,4 +1,4 @@
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { UpdateWorkspaceDTO } from '../dto/workspace.dto'
 import type { WorkspaceRepository } from '../repositories/workspace.repository'
 
@@ -14,7 +14,12 @@ export class EditWorkspaceService {
   async edit({ userId, workspaceId, data }: EditWorkspaceProps) {
     const workspaceIsExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
-    if (!workspaceIsExists) throw new AppError('Workspace not found.', 404)
+    if (!workspaceIsExists)
+      throw new AppError(
+        'Workspace not found.',
+        404,
+        ErrorCodes.WORKSPACE_NOT_FOUND
+      )
 
     const workspace = await this.workspaceRepository.edit(
       workspaceId,

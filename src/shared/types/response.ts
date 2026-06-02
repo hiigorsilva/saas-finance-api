@@ -17,4 +17,5 @@ export type ApiPaginatedResponse<T> = {
 
 export type ApiErrorResponse = {
   message: string
+  code: string
 }

@@ -1,7 +1,7 @@
 import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { transactionsTable } from '../../../db/schemas/transactions'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type {
   ICreateTransactionDTO,
@@ -66,7 +66,11 @@ export class TransactionRepository implements ITransactionRepository {
     const totalPages = Math.ceil(totalCount / safeLimit)
     const safeTotalPages = Math.max(1, totalPages)
     if (safePage > safeTotalPages) {
-      throw new AppError('Page out of range. Please enter a valid page.', 400)
+      throw new AppError(
+        'Page out of range. Please enter a valid page.',
+        400,
+        ErrorCodes.PAGE_OUT_OF_RANGE
+      )
     }
 
     return {

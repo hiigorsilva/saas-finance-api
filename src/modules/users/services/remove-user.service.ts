@@ -1,4 +1,4 @@
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { UserRepository } from '../repositories/user.repository'
 
 type RemoveUserProps = {
@@ -11,10 +11,12 @@ export class RemoveUserService {
   async removeUser({ userIdParams }: RemoveUserProps) {
     const isUserExists =
       await this.userRepository.isUserExistsById(userIdParams)
-    if (!isUserExists) throw new AppError('User not found.', 404)
+    if (!isUserExists)
+      throw new AppError('User not found.', 404, ErrorCodes.USER_NOT_FOUND)
 
     const user = await this.userRepository.remove(userIdParams)
-    if (!user) throw new AppError('User not found.', 404)
+    if (!user)
+      throw new AppError('User not found.', 404, ErrorCodes.USER_NOT_FOUND)
 
     return user.status
   }

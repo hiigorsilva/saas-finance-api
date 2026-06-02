@@ -12,7 +12,7 @@ Use this documentation to authenticate users, manage workspaces, invite workspac
 Response conventions:
 - Success responses return { data }.
 - Paginated responses return { data, props }, where props contains totalCount, totalPages, currentPage, and limit.
-- Error responses return { message }. The HTTP status code is exposed by the response status itself.
+- Error responses return { message, code }. The HTTP status code is exposed by the response status itself, while code is stable for frontend translation.
 
 Authentication:
 - Protected routes require a Bearer JWT in the Authorization header.

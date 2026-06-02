@@ -1,7 +1,7 @@
 import { and, desc, eq, gte, isNull, lt, sql } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { transactionsTable } from '../../../db/schemas/transactions'
-import { AppError } from '../../../errors/app-error'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type {
   IDashboard,
   IDashboardRepository,
@@ -23,11 +23,11 @@ const toMonthRange = (month: string, year: string) => {
   const yearValue = Number(year)
 
   if (!Number.isFinite(monthValue) || monthValue < 1 || monthValue > 12) {
-    throw new AppError('Invalid month', 400)
+    throw new AppError('Invalid month', 400, ErrorCodes.INVALID_MONTH)
   }
 
   if (!Number.isFinite(yearValue)) {
-    throw new AppError('Invalid year', 400)
+    throw new AppError('Invalid year', 400, ErrorCodes.INVALID_YEAR)
   }
 
   const startDate = new Date(Date.UTC(yearValue, monthValue - 1, 1))
