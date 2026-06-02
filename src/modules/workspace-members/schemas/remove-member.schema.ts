@@ -16,6 +16,8 @@ export const removeMemberSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Remove a member from a workspace',
+    description:
+      'Removes a member from a workspace. The workspace owner cannot be removed, and users cannot remove themselves through this endpoint.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],

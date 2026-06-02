@@ -24,6 +24,8 @@ export const listInactiveUserSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'List all inactive users',
+    description:
+      'Returns soft-deleted users in a paginated response. Pagination metadata is returned in props.',
     querystring: listInactiveUserParamsSchema,
     tags: ['User'],
     security: [{ bearerAuth: [] }],

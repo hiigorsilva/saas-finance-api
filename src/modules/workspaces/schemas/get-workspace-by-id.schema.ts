@@ -23,7 +23,9 @@ const workspaceSchema = z.object({
 export const getWorkspaceByIdSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Find a workspace by id',
+    summary: 'Get a workspace by id',
+    description:
+      'Returns workspace details when the authenticated user belongs to the requested workspace.',
     tags: ['Workspace'],
     security: [{ bearerAuth: [] }],
     params: getWorkspaceByIdParamsSchema,

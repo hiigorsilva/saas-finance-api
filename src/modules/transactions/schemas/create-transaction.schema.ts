@@ -32,6 +32,8 @@ export const createTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Create a new transaction',
+    description:
+      'Creates an INCOME, EXPENSE, or INVESTMENT transaction inside a workspace. Requires transaction create permission for the workspace.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Transaction'],

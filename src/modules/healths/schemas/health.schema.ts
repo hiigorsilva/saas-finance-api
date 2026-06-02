@@ -7,7 +7,9 @@ import {
 
 export const healthSchema: RouteShorthandOptions = {
   schema: {
-    summary: 'Health Check Route',
+    summary: 'Check API health',
+    description:
+      'Returns a lightweight status payload. Use this endpoint for uptime checks, load balancers, and quick local validation.',
     consumes: ['application/json'],
     tags: ['Health'],
     response: {

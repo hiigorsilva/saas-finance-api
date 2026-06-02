@@ -40,7 +40,9 @@ const editedTransactionSchema = z.object({
 export const editTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'Update a transaction data',
+    summary: 'Update a transaction',
+    description:
+      'Updates transaction details such as name, category, amount, payment date, and payment method. Requires transaction update permission.',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
     params: editTransactionParamsSchema,

@@ -22,6 +22,8 @@ export const listWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'List all workspaces',
+    description:
+      'Lists workspaces available to the authenticated user. Results are paginated and ordered by creation date.',
     consumes: ['application/json'],
     querystring: listWorkspaceQuerySchema,
     tags: ['Workspace'],

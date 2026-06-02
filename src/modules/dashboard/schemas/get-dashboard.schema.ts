@@ -79,6 +79,8 @@ export const getDashboardSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Get dashboard data',
+    description:
+      'Returns monthly financial aggregates for a workspace, including income, expenses, investments, savings metrics, category distribution, and latest transactions. Month accepts 1-12 and year must have 4 digits.',
     consumes: ['application/json'],
     tags: ['Dashboard'],
     security: [{ bearerAuth: [] }],

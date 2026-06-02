@@ -24,8 +24,9 @@ const memberSchema = z.object({
 export const getMemberByIdSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'List members of a workspace',
-    description: '`/api/workspace/{workspaceId}/member/{memberId}`',
+    summary: 'Get a workspace member by id',
+    description:
+      'Returns a single workspace member with role and profile data. Use memberId as the user id inside the workspace.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],

@@ -15,7 +15,9 @@ export const createWorkspaceBodySchema = z.object({
 export const createWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Create a new wokspace',
+    summary: 'Create a workspace',
+    description:
+      'Creates a PRIVATE or SHARED workspace owned by the authenticated user. The owner is automatically added as an OWNER member.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace'],

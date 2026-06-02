@@ -13,7 +13,9 @@ export const removeUserParamsSchema = z.object({
 export const removeUserSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Remove user',
+    summary: 'Remove a user',
+    description:
+      'Soft-deletes a user by id and returns a confirmation message. Requires a valid Bearer token.',
     tags: ['User'],
     security: [{ bearerAuth: [] }],
     consumes: ['application/json'],

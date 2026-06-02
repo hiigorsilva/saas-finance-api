@@ -13,6 +13,8 @@ export const signinBodySchema = z.object({
 export const signinSchema: RouteShorthandOptions = {
   schema: {
     summary: 'Sign in a user',
+    description:
+      'Authenticates a user with email and password and returns a Bearer token for protected routes.',
     consumes: ['application/json'],
     tags: ['Authentication'],
     body: signinBodySchema,

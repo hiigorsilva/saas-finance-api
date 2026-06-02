@@ -14,6 +14,8 @@ export const removeWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'Delete a workspace',
+    description:
+      'Soft-deletes a workspace by id and returns a confirmation message. Use with care because transactions remain scoped to this workspace.',
     tags: ['Workspace'],
     security: [{ bearerAuth: [] }],
     params: removeWorkspaceParamsSchema,

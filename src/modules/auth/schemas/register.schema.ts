@@ -17,6 +17,8 @@ export const registerBodySchema = z.object({
 export const registerSchema: RouteShorthandOptions = {
   schema: {
     summary: 'Create a new user',
+    description:
+      'Creates a user account and returns an access token. The email must be unique and the password must have at least 8 characters.',
     consumes: ['application/json'],
     tags: ['Authentication'],
     body: registerBodySchema,

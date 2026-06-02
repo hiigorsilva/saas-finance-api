@@ -18,7 +18,9 @@ const userSchema = z.object({
 export const meSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Get data user logged',
+    summary: 'Get authenticated user profile',
+    description:
+      'Returns the profile of the user identified by the Bearer token. Use it to hydrate the current session on the client.',
     tags: ['User'],
     security: [{ bearerAuth: [] }],
     consumes: ['application/json'],

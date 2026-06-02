@@ -16,6 +16,8 @@ export const removeTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Delete a transaction by id',
+    description:
+      'Soft-deletes a transaction from a workspace and returns a confirmation message. Requires transaction delete permission.',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
     params: removeTransactionParamsSchema,

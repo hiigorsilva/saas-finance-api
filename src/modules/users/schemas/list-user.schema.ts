@@ -24,6 +24,8 @@ export const listUserSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'List all users',
+    description:
+      'Returns active users in a paginated response. Pagination metadata is returned in props.',
     querystring: listUserParamsSchema,
     tags: ['User'],
     security: [{ bearerAuth: [] }],

@@ -29,7 +29,8 @@ export const listMembersSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
     summary: 'List members of a workspace',
-    description: '`/api/workspace/{workspaceId}/member`',
+    description:
+      'Lists members of a workspace with their roles and financial profile. The authenticated user must belong to the workspace.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],

@@ -31,7 +31,9 @@ const transactionSchema = z.object({
 export const getTransactionByIdSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'Find a transaction by id',
+    summary: 'Get a transaction by id',
+    description:
+      'Returns a single transaction from a workspace. The authenticated user must have transaction view permission.',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
     params: getTransactionByIdParamsSchema,

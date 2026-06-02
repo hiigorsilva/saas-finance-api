@@ -32,7 +32,9 @@ const workspaceSchema = z.object({
 export const editWorkspaceSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Edit a workspace by id',
+    summary: 'Update a workspace',
+    description:
+      'Updates workspace name, description, and type. The workspace must exist and be accessible to the authenticated user.',
     consumes: ['application/json'],
     tags: ['Workspace'],
     security: [{ bearerAuth: [] }],

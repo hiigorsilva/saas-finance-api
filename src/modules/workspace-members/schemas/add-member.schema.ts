@@ -27,6 +27,8 @@ export const addMemberSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Add a member to a workspace',
+    description:
+      'Adds an existing user to a SHARED workspace by email. PRIVATE workspaces do not accept members. Requires workspace invite permission.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],

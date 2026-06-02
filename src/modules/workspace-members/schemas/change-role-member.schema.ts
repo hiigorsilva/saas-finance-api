@@ -19,7 +19,9 @@ export const changeRoleMemberBodySchema = z.object({
 export const changeRoleMemberSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'Changes the role of a member.',
+    summary: 'Change a workspace member role',
+    description:
+      'Changes a member role to ADMIN, MEMBER, or VIEWER. The original workspace OWNER role cannot be changed.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],

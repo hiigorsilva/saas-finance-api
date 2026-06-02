@@ -35,7 +35,9 @@ const transactionSchema = z.object({
 export const listTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'List all transactinos',
+    summary: 'List workspace transactions',
+    description:
+      'Lists transactions for a workspace in a paginated response. Requires transaction view permission.',
     consumes: ['application/json'],
     tags: ['Transaction'],
     querystring: listTransactionQuerySchema,
