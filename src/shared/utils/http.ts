@@ -1,57 +1,17 @@
-import type { HttpResponse } from '../types/http'
+import type {
+  ApiPaginatedResponse,
+  ApiResponse,
+  IPaginationOutput,
+} from '../types/response'
 
-export function ok(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 200,
-    body,
-  }
-}
+export const dataResponse = <T>(data: T): ApiResponse<T> => ({
+  data,
+})
 
-export function created(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 201,
-    body,
-  }
-}
-
-export function badRequest(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 400,
-    body,
-  }
-}
-
-export function unauthorized(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 401,
-    body,
-  }
-}
-
-export function forbidden(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 403,
-    body,
-  }
-}
-
-export function notFound(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 404,
-    body,
-  }
-}
-
-export function conflict(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 409,
-    body,
-  }
-}
-
-export function internalServerError(body?: Record<string, any>): HttpResponse {
-  return {
-    statusCode: 500,
-    body,
-  }
-}
+export const paginatedResponse = <T>({
+  data,
+  ...props
+}: IPaginationOutput<T>): ApiPaginatedResponse<T> => ({
+  data,
+  props,
+})

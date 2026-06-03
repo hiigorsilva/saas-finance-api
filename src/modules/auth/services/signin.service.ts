@@ -1,3 +1,4 @@
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { UserRepository } from '../../users/repositories/user.repository'
 import type { SignInUserDTO } from '../dto/signin.dto'
 import { validatePassword } from '../validations/password-validate'
@@ -7,13 +8,23 @@ export class SignInService {
 
   async execute(userData: SignInUserDTO) {
     const user = await this.userRepository.findUserByEmail(userData.email)
-    if (!user) throw new Error('Invalid credentials.')
+    if (!user)
+      throw new AppError(
+        'Invalid credentials.',
+        401,
+        ErrorCodes.INVALID_CREDENTIALS
+      )
 
     const isPasswordValid = await validatePassword(
       userData.password,
       user.passwordHashed
     )
-    if (!isPasswordValid) throw new Error('Invalid credentials.')
+    if (!isPasswordValid)
+      throw new AppError(
+        'Invalid credentials.',
+        401,
+        ErrorCodes.INVALID_CREDENTIALS
+      )
 
     return user
   }

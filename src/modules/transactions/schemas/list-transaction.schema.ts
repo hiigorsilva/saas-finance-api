@@ -3,6 +3,10 @@ import z from 'zod'
 import { transactionStatusSchema } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  errorResponseSchema,
+  paginatedResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const listTransactionParamsSchema = z.object({
   workspaceId: z.string(),
@@ -13,59 +17,38 @@ export const listTransactionQuerySchema = z.object({
   limit: z.coerce.number().positive().max(100).default(10),
 })
 
+const transactionSchema = z.object({
+  id: z.string(),
+  workspaceId: z.string(),
+  createdByUserId: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  type: z.string(),
+  category: z.string(),
+  amount: z.number(),
+  status: transactionStatusSchema,
+  paymentDate: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
 export const listTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'List all transactinos',
+    summary: 'List workspace transactions',
+    description:
+      'Lists transactions for a workspace in a paginated response. Requires transaction view permission.',
     consumes: ['application/json'],
     tags: ['Transaction'],
     querystring: listTransactionQuerySchema,
     params: listTransactionParamsSchema,
     security: [{ bearerAuth: [] }],
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.array(
-            z.object({
-              id: z.string(),
-              workspaceId: z.string(),
-              createdByUserId: z.string(),
-              name: z.string(),
-              description: z.string().nullable(),
-              type: z.string(),
-              category: z.string(),
-              amount: z.number(),
-              status: transactionStatusSchema,
-              paymentDate: z.date(),
-              createdAt: z.date(),
-              updatedAt: z.date(),
-            })
-          ),
-          totalCount: z.number(),
-          totalPages: z.number(),
-          currentPage: z.number(),
-          limit: z.number(),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      403: z.object({
-        statusCode: z.number().default(403),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      200: paginatedResponseSchema(transactionSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

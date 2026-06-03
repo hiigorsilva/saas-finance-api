@@ -1,12 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  badRequest,
-  internalServerError,
-  ok,
-  unauthorized,
-} from '../../../shared/utils/http'
-
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import { removeUserParamsSchema } from '../schemas/remove-user.schema'
 import type { RemoveUserService } from '../services/remove-user.service'
 
@@ -14,34 +9,22 @@ export class RemoveUserController {
   constructor(private removeUserService: RemoveUserService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { userId, params } = request
-      if (!userId) return unauthorized({ error: 'Unauthorized.' })
+    const { userId, params } = request
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
-      const { success, data, error } = removeUserParamsSchema.safeParse(params)
-      if (!success) {
-        return badRequest({
-          error: error.issues.map(issue => issue.message).join(', '),
-        })
-      }
+    const { success, data, error } = removeUserParamsSchema.safeParse(params)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
-      const { userId: userIdParams } = data
+    const { userId: userIdParams } = data
 
-      const user = await this.removeUserService.removeUser({ userIdParams })
-      const response = ok({ data: user })
+    const user = await this.removeUserService.removeUser({ userIdParams })
 
-      return reply.status(response.statusCode).send(response)
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
-    }
+    return reply.status(200).send(dataResponse(user))
   }
 }

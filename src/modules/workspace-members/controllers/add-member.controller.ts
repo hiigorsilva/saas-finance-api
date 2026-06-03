@@ -1,11 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  badRequest,
-  created,
-  internalServerError,
-  unauthorized,
-} from '../../../shared/utils/http'
-import { parseResponse } from '../../../shared/utils/parse-response'
+import { AppError, ErrorCodes } from '../../../errors/app-error'
+import { dataResponse } from '../../../shared/utils/http'
+import { getValidationMessage } from '../../../shared/utils/validation'
 import {
   addMemberBodySchema,
   addMemberParamsSchema,
@@ -16,42 +12,39 @@ export class AddMemberController {
   constructor(private workspaceMemberService: WorkspaceMemberService) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { userId, body, params } = request
-      if (!userId) return unauthorized({ error: 'Unauthorized.' })
+    const { userId, body, params } = request
+    if (!userId)
+      throw new AppError('Unauthorized.', 401, ErrorCodes.UNAUTHORIZED)
 
-      const {
-        success: successParams,
-        data: dataParams,
-        error: errorParams,
-      } = addMemberParamsSchema.safeParse(params)
-      if (!successParams) return badRequest({ error: errorParams.message })
+    const {
+      success: successParams,
+      data: dataParams,
+      error: errorParams,
+    } = addMemberParamsSchema.safeParse(params)
+    if (!successParams)
+      throw new AppError(
+        getValidationMessage(errorParams),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
-      const { success, data, error } = addMemberBodySchema.safeParse(body)
-      if (!success) return badRequest({ error: error.message })
+    const { success, data, error } = addMemberBodySchema.safeParse(body)
+    if (!success)
+      throw new AppError(
+        getValidationMessage(error),
+        400,
+        ErrorCodes.VALIDATION_ERROR
+      )
 
-      const { workspaceId } = dataParams
-      const { email, role } = data
+    const { workspaceId } = dataParams
+    const { email, role } = data
 
-      const member = await this.workspaceMemberService.addMember({
-        workspaceId,
-        email,
-        role,
-      })
+    const member = await this.workspaceMemberService.addMember({
+      workspaceId,
+      email,
+      role,
+    })
 
-      const response = created({ data: member })
-      return reply.status(response.statusCode).send(response)
-    } catch (error) {
-      if (error instanceof Error) {
-        return reply
-          .status(400)
-          .send(parseResponse(badRequest({ error: error.message })))
-      }
-      return reply
-        .status(500)
-        .send(
-          parseResponse(internalServerError({ error: 'Internal server error' }))
-        )
-    }
+    return reply.status(201).send(dataResponse(member))
   }
 }

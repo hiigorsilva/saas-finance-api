@@ -8,6 +8,10 @@ import {
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const createTransactionParamsSchema = z.object({
   workspaceId: z.string(),
@@ -28,38 +32,19 @@ export const createTransactionSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
     summary: 'Create a new transaction',
+    description:
+      'Creates an INCOME, EXPENSE, or INVESTMENT transaction inside a workspace. Requires transaction create permission for the workspace.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Transaction'],
     params: createTransactionParamsSchema,
     body: createTransactionBodySchema,
     response: {
-      201: z.object({
-        statusCode: z.number().default(201),
-        body: z.object({
-          data: z.object({
-            id: z.string(),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      403: z.object({
-        statusCode: z.number().default(403),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      201: dataResponseSchema(z.object({ id: z.string() })),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

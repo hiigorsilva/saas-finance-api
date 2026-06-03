@@ -3,57 +3,46 @@ import z from 'zod'
 import { transactionStatusSchema } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const getTransactionByIdParamsSchema = z.object({
   workspaceId: z.string(),
   transactionId: z.string(),
 })
 
+const transactionSchema = z.object({
+  id: z.string(),
+  workspaceId: z.string(),
+  createdByUserId: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  type: z.string(),
+  category: z.string(),
+  amount: z.number(),
+  status: transactionStatusSchema,
+  paymentDate: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
 export const getTransactionByIdSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'Find a transaction by id',
+    summary: 'Get a transaction by id',
+    description:
+      'Returns a single transaction from a workspace. The authenticated user must have transaction view permission.',
     tags: ['Transaction'],
     security: [{ bearerAuth: [] }],
     params: getTransactionByIdParamsSchema,
     response: {
-      200: z.object({
-        statusCode: z.number().default(200),
-        body: z.object({
-          data: z.object({
-            id: z.string(),
-            workspaceId: z.string(),
-            createdByUserId: z.string(),
-            name: z.string(),
-            description: z.string(),
-            type: z.string(),
-            category: z.string(),
-            amount: z.number(),
-            status: transactionStatusSchema,
-            paymentDate: z.date(),
-            createdAt: z.date(),
-            updatedAt: z.date(),
-          }),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      403: z.object({
-        statusCode: z.number().default(403),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      200: dataResponseSchema(transactionSchema),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      403: errorResponseSchema,
+      404: errorResponseSchema,
     },
   },
 }

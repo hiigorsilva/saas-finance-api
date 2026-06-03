@@ -1,5 +1,9 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
+import {
+  dataResponseSchema,
+  errorResponseSchema,
+} from '../../../shared/schemas/response.schema'
 
 export const registerBodySchema = z.object({
   name: z.string().trim(),
@@ -13,28 +17,16 @@ export const registerBodySchema = z.object({
 export const registerSchema: RouteShorthandOptions = {
   schema: {
     summary: 'Create a new user',
+    description:
+      'Creates a user account and returns an access token. The email must be unique and the password must have at least 8 characters.',
     consumes: ['application/json'],
     tags: ['Authentication'],
     body: registerBodySchema,
     response: {
-      201: z.object({
-        statusCode: z.number().default(201),
-        body: z.object({
-          accessToken: z.string(),
-        }),
-      }),
-      400: z.object({
-        statusCode: z.number().default(400),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
-      401: z.object({
-        statusCode: z.number().default(401),
-        body: z.object({
-          error: z.string(),
-        }),
-      }),
+      201: dataResponseSchema(z.object({ accessToken: z.string() })),
+      400: errorResponseSchema,
+      401: errorResponseSchema,
+      409: errorResponseSchema,
     },
   },
 }

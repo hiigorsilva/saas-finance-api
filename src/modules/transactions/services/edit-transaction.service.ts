@@ -1,3 +1,4 @@
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { WorkspaceRepository } from '../../workspaces/repositories/workspace.repository'
 import type { IEditTransactionDTO } from '../dto/transaction.dto'
 import type { TransactionRepository } from '../repositories/transaction.repository'
@@ -21,14 +22,24 @@ export class EditTransactionService {
   }: EditTransactionProps) {
     const alreadyExists =
       await this.workspaceRepository.alreadyExistsById(workspaceId)
-    if (!alreadyExists) throw new Error('Workspace not found.')
+    if (!alreadyExists)
+      throw new AppError(
+        'Workspace not found.',
+        404,
+        ErrorCodes.WORKSPACE_NOT_FOUND
+      )
 
     const transactionIsExists =
       await this.transactionRepository.alreadyExistsById(
         workspaceId,
         transactionId
       )
-    if (!transactionIsExists) throw new Error('Transaction not found.')
+    if (!transactionIsExists)
+      throw new AppError(
+        'Transaction not found.',
+        404,
+        ErrorCodes.TRANSACTION_NOT_FOUND
+      )
 
     const transaction = await this.transactionRepository.edit(
       workspaceId,

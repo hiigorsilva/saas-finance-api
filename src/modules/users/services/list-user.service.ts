@@ -1,3 +1,4 @@
+import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { UserRepository } from '../repositories/user.repository'
 
 type ListUserProps = {
@@ -11,7 +12,8 @@ export class ListUserService {
 
   async listAllUsers({ userId, page, limit }: ListUserProps) {
     const isUserExists = await this.userRepository.isUserExistsById(userId)
-    if (!isUserExists) throw new Error('User not found')
+    if (!isUserExists)
+      throw new AppError('User not found', 404, ErrorCodes.USER_NOT_FOUND)
 
     const users = await this.userRepository.listAllUsers(page, limit)
     return users
@@ -19,7 +21,8 @@ export class ListUserService {
 
   async listInactiveUsers({ userId, page, limit }: ListUserProps) {
     const isUserExists = await this.userRepository.isUserExistsById(userId)
-    if (!isUserExists) throw new Error('User not found')
+    if (!isUserExists)
+      throw new AppError('User not found', 404, ErrorCodes.USER_NOT_FOUND)
 
     const users = await this.userRepository.listInactiveUsers(page, limit)
     return users
