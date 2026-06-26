@@ -9,6 +9,7 @@ const mockUserRepository = {
   findUserById: vi.fn(),
   listAllUsers: vi.fn(),
   listInactiveUsers: vi.fn(),
+  remove: vi.fn(),
 }
 
 const props = {

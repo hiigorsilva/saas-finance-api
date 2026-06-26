@@ -17,6 +17,7 @@ const mockWorkspaceRepository = {
   alreadyExistsByName: vi.fn(),
   edit: vi.fn(),
   findWorkspaceById: vi.fn(),
+  findWorkspaceBySlug: vi.fn(),
   isPrivateWorkspace: vi.fn(),
   list: vi.fn(),
   remove: vi.fn(),
@@ -61,13 +62,12 @@ describe('ListTransactionService', async () => {
       data: [
         {
           id: 'transaction_id',
-          createdByUserId: 'user_creator_id',
+          ownerId: 'user_creator_id',
           workspaceId: 'workspace_id',
           name: 'Nome da transação',
           description: 'Descrição da transação',
           type: 'INCOME',
-          amount: 147.2,
-          status: 'PENDING',
+          amount: '147.2',
           category: 'OTHER',
           paymentDate: new Date(),
           paymentMethod: 'PIX',

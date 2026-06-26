@@ -13,9 +13,13 @@ export const listWorkspaceQuerySchema = z.object({
 
 const workspaceListItemSchema = z.object({
   id: z.string(),
+  ownerId: z.string(),
   name: z.string(),
+  slug: z.string(),
   description: z.string().nullable(),
   type: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 export const listWorkspaceSchema: RouteShorthandOptions = {

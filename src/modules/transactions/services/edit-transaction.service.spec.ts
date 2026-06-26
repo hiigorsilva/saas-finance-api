@@ -16,13 +16,14 @@ const mockWorkspaceRepository = {
   alreadyExistsByName: vi.fn(),
   edit: vi.fn(),
   findWorkspaceById: vi.fn(),
+  findWorkspaceBySlug: vi.fn(),
   isPrivateWorkspace: vi.fn(),
   list: vi.fn(),
   remove: vi.fn(),
   save: vi.fn(),
 }
 
-describe('CreateTransactionService', () => {
+describe('EditTransactionService', () => {
   let sut: EditTransactionService
 
   beforeEach(() => {
@@ -40,7 +41,7 @@ describe('CreateTransactionService', () => {
       name: 'Editando o nome da transação',
       description: 'Editando a transação',
       type: 'INCOME',
-      amount: 50.27,
+      amount: '50.27',
       category: 'FAMILY',
       paymentDate: new Date(),
       paymentMethod: 'PIX',

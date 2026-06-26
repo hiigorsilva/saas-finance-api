@@ -1,7 +1,6 @@
 # Variables
 @baseUrl = http://localhost:3333/api
 @authToken = 
-
 ###
 
 # @name HealthCheckFromServer
@@ -67,7 +66,7 @@ content-type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "name": "Buncker 2",
+    "name": "Teste Workspace Viagem",
     "description": "Controle pessoal",
     "type": "PRIVATE"
 }
@@ -75,7 +74,7 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name ListAllWorkspaces
-GET {{baseUrl}}/workspace?page=1&limit=10
+GET {{baseUrl}}/workspace?page=1&limit=50
 content-type: application/json
 Authorization: Bearer {{authToken}}
 

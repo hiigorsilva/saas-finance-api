@@ -19,6 +19,7 @@ const mockWorkspaceRepository = {
   alreadyExistsByName: vi.fn(),
   edit: vi.fn(),
   findWorkspaceById: vi.fn(),
+  findWorkspaceBySlug: vi.fn(),
   isPrivateWorkspace: vi.fn(),
   list: vi.fn(),
   remove: vi.fn(),
@@ -33,6 +34,7 @@ const mockUserRepository = {
   listAllUsers: vi.fn(),
   listInactiveUsers: vi.fn(),
   save: vi.fn(),
+  remove: vi.fn(),
 }
 
 const inputData = {

@@ -3,7 +3,6 @@ import z from 'zod'
 import {
   categorySchema,
   paymentMethodSchema,
-  transactionStatusSchema,
   typeSchema,
 } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
@@ -33,7 +32,6 @@ const dashboardTransactionSchema = z.object({
   type: typeSchema,
   category: categorySchema,
   amount: z.number(),
-  status: transactionStatusSchema,
   paymentDate: z.date(),
   paymentMethod: paymentMethodSchema,
   createdAt: z.date(),

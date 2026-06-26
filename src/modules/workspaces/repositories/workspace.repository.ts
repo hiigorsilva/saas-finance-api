@@ -3,6 +3,7 @@ import { db } from '../../../db/connection'
 import { workspacesTable } from '../../../db/schemas/workspaces'
 import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
+import { generateSlug } from '../../../shared/utils/helpers'
 import type {
   CreateWorkspaceDTO,
   IWorkspaceId,
@@ -40,6 +41,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .values({
         ownerId: userId,
         name: data.name,
+        slug: generateSlug(data.name),
         description: data.description,
         type: data.type,
       })
@@ -69,7 +71,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async list(
     userId: string,
     page = 1,
-    limit = 10
+    limit = 50
   ): Promise<IPaginationOutput<IWorkspaceOutput>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
@@ -84,10 +86,6 @@ export class WorkspaceRepository implements IWorkspaceRepository {
 
       db.query.workspacesTable.findMany({
         columns: {
-          id: true,
-          name: true,
-          description: true,
-          type: true,
           deletedAt: false,
         },
         where: and(
@@ -132,6 +130,19 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return workspace ?? null
   }
 
+  async findWorkspaceBySlug(slug: string): Promise<IWorkspace | null> {
+    const workspace = await db.query.workspacesTable.findFirst({
+      columns: {
+        deletedAt: false,
+      },
+      where: and(
+        eq(workspacesTable.slug, slug),
+        isNull(workspacesTable.deletedAt)
+      ),
+    })
+    return workspace ?? null
+  }
+
   async remove(
     workspaceId: string,
     userId: string
@@ -156,6 +167,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .update(workspacesTable)
       .set({
         name: data.name,
+        slug: generateSlug(data.name),
         description: data.description,
         type: data.type,
         updatedAt: new Date(),
@@ -169,6 +181,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .returning({
         id: workspacesTable.id,
         name: workspacesTable.name,
+        slug: workspacesTable.slug,
         description: workspacesTable.description,
         type: workspacesTable.type,
         ownerId: workspacesTable.ownerId,

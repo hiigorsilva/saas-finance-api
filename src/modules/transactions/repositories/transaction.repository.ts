@@ -108,7 +108,7 @@ export class TransactionRepository implements ITransactionRepository {
       .insert(transactionsTable)
       .values({
         workspaceId: workspaceId,
-        createdByUserId: userId,
+        ownerId: userId,
         name: data.name,
         description: data.description,
         type: data.type,
@@ -152,7 +152,6 @@ export class TransactionRepository implements ITransactionRepository {
         id: transactionsTable.id,
         name: transactionsTable.name,
         amount: transactionsTable.amount,
-        status: transactionsTable.status,
         paymentDate: transactionsTable.paymentDate,
         paymentMethod: transactionsTable.paymentMethod,
       })

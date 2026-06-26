@@ -8,6 +8,7 @@ import type {
 export interface IWorkspace {
   id: string
   name: string
+  slug: string
   description: string | null
   type: 'PRIVATE' | 'SHARED'
   ownerId: string
@@ -31,6 +32,8 @@ export interface IWorkspaceRepository {
   ): Promise<IPaginationOutput<IWorkspaceOutput>>
 
   findWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
+
+  findWorkspaceBySlug(slug: string): Promise<IWorkspace | null>
 
   remove(workspaceId: string, userId: string): Promise<{ status: string }>
 
