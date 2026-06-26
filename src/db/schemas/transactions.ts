@@ -1,31 +1,21 @@
-import { numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import {
-  categoryEnum,
-  paymentMethodEnum,
-  transactionStatusEnum,
-  transactionTypeEnum,
-} from './enums'
+import { decimal, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { categoryEnum, paymentMethodEnum, transactionTypeEnum } from './enums'
 import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
 export const transactionsTable = pgTable('transactions', {
-  id: uuid('id').defaultRandom().primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey().notNull(),
   workspaceId: uuid('workspace_id')
     .notNull()
     .references(() => workspacesTable.id, { onDelete: 'cascade' }),
-  createdByUserId: uuid('created_by_user_id')
+  ownerId: uuid('owner_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  description: text('description'),
+  name: varchar('name').notNull(),
+  description: varchar('description'),
   type: transactionTypeEnum('type').notNull(),
   category: categoryEnum('category').notNull(),
-  amount: numeric('amount', {
-    precision: 10,
-    scale: 2,
-    mode: 'number',
-  }).notNull(),
-  status: transactionStatusEnum('status').default('PAID').notNull(),
+  amount: decimal({ precision: 10, scale: 2 }).notNull(),
   paymentDate: timestamp('payment_date').notNull(),
   paymentMethod: paymentMethodEnum('payment_method').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
