@@ -5,32 +5,10 @@ import {
   dataResponseSchema,
   errorResponseSchema,
 } from '../../../shared/schemas/response.schema'
+import { workspaceDetailsSchema } from '../utils/schemas/workspace-details.schema'
 
 export const getWorkspaceBySlugParamsSchema = z.object({
   slug: z.string(),
-})
-
-const workspaceSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string().nullable(),
-  type: z.enum(['PRIVATE', 'SHARED']),
-  ownerId: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  totalMembers: z.number(),
-  ownerName: z.string(),
-  members: z.array(
-    z.object({
-      id: z.string(),
-      userId: z.string(),
-      workspaceId: z.string(),
-      role: z.enum(['OWNER', 'ADMIN', 'MEMBER']),
-      joinedAt: z.date(),
-      userName: z.string(),
-      userEmail: z.string(),
-    })
-  ),
 })
 
 export const getWorkspaceBySlugSchema: RouteShorthandOptions = {
@@ -43,7 +21,7 @@ export const getWorkspaceBySlugSchema: RouteShorthandOptions = {
     security: [{ bearerAuth: [] }],
     params: getWorkspaceBySlugParamsSchema,
     response: {
-      200: dataResponseSchema(workspaceSchema),
+      200: dataResponseSchema(workspaceDetailsSchema),
       400: errorResponseSchema,
       401: errorResponseSchema,
       403: errorResponseSchema,

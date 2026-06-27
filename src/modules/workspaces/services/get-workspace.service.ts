@@ -26,17 +26,14 @@ export class GetWorkspaceService {
       )
     }
 
-    const workspaceIsExists =
-      await this.workspaceRepository.alreadyExistsById(workspaceId)
-    if (!workspaceIsExists)
+    const workspace =
+      await this.workspaceRepository.findWorkspaceById(workspaceId)
+    if (!workspace)
       throw new AppError(
         'Workspace not found.',
         404,
         ErrorCodes.WORKSPACE_NOT_FOUND
       )
-
-    const workspace =
-      await this.workspaceRepository.findWorkspaceById(workspaceId)
 
     return workspace
   }
