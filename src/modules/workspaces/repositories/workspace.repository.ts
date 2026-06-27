@@ -288,7 +288,6 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .update(workspacesTable)
       .set({
         name: data.name,
-        slug: generateSlug(data.name),
         description: data.description,
         type: data.type,
         updatedAt: new Date(),
