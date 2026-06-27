@@ -20,32 +20,39 @@ import { removeMemberFromWorkspaceRoute } from '../modules/workspace-members/rou
 import { createWorkspaceRoute } from '../modules/workspaces/routes/create-workspace.route'
 import { editWorkspaceRoute } from '../modules/workspaces/routes/edit-workspace.route'
 import { getWorkspaceByIdRoute } from '../modules/workspaces/routes/get-workspace-by-id.route'
+import { getWorkspaceBySlugRoute } from '../modules/workspaces/routes/get-workspace-by-slug.route'
 import { listWorkspaceRoute } from '../modules/workspaces/routes/list-workspace.route'
 import { removeWorkspaceRoute } from '../modules/workspaces/routes/remove-workspace.route'
 
 export const registerRoutes = (app: FastifyInstance) => {
+  // AUTH ROUTES
   app.register(healthRoute, { prefix: '/api' })
   app.register(registerRoute, { prefix: '/api' })
   app.register(signinRoute, { prefix: '/api' })
 
+  // USER ROUTES
   app.register(meRoute, { prefix: '/api' })
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
   app.register(removeUserRoute, { prefix: '/api' })
   app.register(getDashboardRoute, { prefix: '/api' })
 
+  // WORKSPACE ROUTES
   app.register(createWorkspaceRoute, { prefix: '/api' })
   app.register(listWorkspaceRoute, { prefix: '/api' })
   app.register(getWorkspaceByIdRoute, { prefix: '/api' })
+  app.register(getWorkspaceBySlugRoute, { prefix: '/api' })
   app.register(editWorkspaceRoute, { prefix: '/api' })
   app.register(removeWorkspaceRoute, { prefix: '/api' })
 
+  // TRANSACTION ROUTES
   app.register(createTransactionRoute, { prefix: '/api' })
   app.register(listTransactionRoute, { prefix: '/api' })
   app.register(getTransactionRoute, { prefix: '/api' })
   app.register(editTransactionRoute, { prefix: '/api' })
   app.register(removeTransactionRoute, { prefix: '/api' })
 
+  // WORKSPACE MEMBERS ROUTES
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
   app.register(listMemberWorkspaceRoute, { prefix: '/api' })
   app.register(getMemberFromWorkspaceById, { prefix: '/api' })

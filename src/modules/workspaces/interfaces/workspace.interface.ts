@@ -16,6 +16,20 @@ export interface IWorkspace {
   updatedAt: Date
 }
 
+export interface IWorkspaceDetails extends IWorkspace {
+  ownerName: string
+  totalMembers: number
+  members: Array<{
+    id: string
+    userId: string
+    workspaceId: string
+    role: 'OWNER' | 'ADMIN' | 'MEMBER' | 'VIEWER'
+    joinedAt: Date
+    userName: string
+    userEmail: string
+  }>
+}
+
 export interface IWorkspaceRepository {
   save(data: CreateWorkspaceDTO, userId: string): Promise<IWorkspaceId>
 
@@ -33,7 +47,7 @@ export interface IWorkspaceRepository {
 
   findWorkspaceById(workspaceId: string): Promise<IWorkspace | null>
 
-  findWorkspaceBySlug(slug: string): Promise<IWorkspace | null>
+  findWorkspaceBySlug(slug: string): Promise<IWorkspaceDetails | null>
 
   remove(workspaceId: string, userId: string): Promise<{ status: string }>
 
