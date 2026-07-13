@@ -12,6 +12,10 @@ import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-use
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
 import { removeUserRoute } from '../modules/users/routes/remove-user.route'
+import { acceptWorkspaceInviteRoute } from '../modules/workspace-invites/routes/accept-workspace-invite.route'
+import { declineWorkspaceInviteRoute } from '../modules/workspace-invites/routes/decline-workspace-invite.route'
+import { listWorkspaceInviteRoute } from '../modules/workspace-invites/routes/list-workspace-invite.route'
+import { sendWorkspaceInviteRoute } from '../modules/workspace-invites/routes/send-workspace-invite.route'
 import { addMemberToWorkspaceRoute } from '../modules/workspace-members/routes/add-member.route'
 import { changeRoleMemberRoute } from '../modules/workspace-members/routes/change-role-member.route'
 import { getMemberFromWorkspaceById } from '../modules/workspace-members/routes/get-member-by-id.route'
@@ -58,4 +62,10 @@ export const registerRoutes = (app: FastifyInstance) => {
   app.register(getMemberFromWorkspaceById, { prefix: '/api' })
   app.register(changeRoleMemberRoute, { prefix: '/api' })
   app.register(removeMemberFromWorkspaceRoute, { prefix: '/api' })
+
+  // WORKSPACE INVITES ROUTES
+  app.register(sendWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(listWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(acceptWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(declineWorkspaceInviteRoute, { prefix: '/api' })
 }
