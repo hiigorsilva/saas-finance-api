@@ -1,4 +1,4 @@
-import { and, count, desc, eq, isNull } from 'drizzle-orm'
+import { and, count, desc, eq, inArray, isNull, or } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
@@ -79,21 +79,31 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
 
+    const memberWorkspaceIds = db
+      .select({ workspaceId: workspaceMembersTable.workspaceId })
+      .from(workspaceMembersTable)
+      .where(eq(workspaceMembersTable.userId, userId))
+
+    const whereClause = and(
+      isNull(workspacesTable.deletedAt),
+      or(
+        eq(workspacesTable.ownerId, userId),
+        inArray(workspacesTable.id, memberWorkspaceIds)
+      )
+    )
+
     const [totalCount, workspaces] = await Promise.all([
       db
         .select({ count: count() })
         .from(workspacesTable)
-        .where(isNull(workspacesTable.deletedAt))
+        .where(whereClause)
         .then(row => Number(row[0].count ?? 0)),
 
       db.query.workspacesTable.findMany({
         columns: {
           deletedAt: false,
         },
-        where: and(
-          eq(workspacesTable.ownerId, userId),
-          isNull(workspacesTable.deletedAt)
-        ),
+        where: whereClause,
         limit: safeLimit,
         offset: offset,
         orderBy: desc(workspacesTable.createdAt),
