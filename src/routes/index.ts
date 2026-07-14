@@ -12,6 +12,10 @@ import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-use
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
 import { removeUserRoute } from '../modules/users/routes/remove-user.route'
+import { acceptWorkspaceInviteRoute } from '../modules/workspace-invites/routes/accept-workspace-invite.route'
+import { declineWorkspaceInviteRoute } from '../modules/workspace-invites/routes/decline-workspace-invite.route'
+import { listWorkspaceInviteRoute } from '../modules/workspace-invites/routes/list-workspace-invite.route'
+import { sendWorkspaceInviteRoute } from '../modules/workspace-invites/routes/send-workspace-invite.route'
 import { addMemberToWorkspaceRoute } from '../modules/workspace-members/routes/add-member.route'
 import { changeRoleMemberRoute } from '../modules/workspace-members/routes/change-role-member.route'
 import { getMemberFromWorkspaceById } from '../modules/workspace-members/routes/get-member-by-id.route'
@@ -20,35 +24,48 @@ import { removeMemberFromWorkspaceRoute } from '../modules/workspace-members/rou
 import { createWorkspaceRoute } from '../modules/workspaces/routes/create-workspace.route'
 import { editWorkspaceRoute } from '../modules/workspaces/routes/edit-workspace.route'
 import { getWorkspaceByIdRoute } from '../modules/workspaces/routes/get-workspace-by-id.route'
+import { getWorkspaceBySlugRoute } from '../modules/workspaces/routes/get-workspace-by-slug.route'
 import { listWorkspaceRoute } from '../modules/workspaces/routes/list-workspace.route'
 import { removeWorkspaceRoute } from '../modules/workspaces/routes/remove-workspace.route'
 
 export const registerRoutes = (app: FastifyInstance) => {
+  // AUTH ROUTES
   app.register(healthRoute, { prefix: '/api' })
   app.register(registerRoute, { prefix: '/api' })
   app.register(signinRoute, { prefix: '/api' })
 
+  // USER ROUTES
   app.register(meRoute, { prefix: '/api' })
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
   app.register(removeUserRoute, { prefix: '/api' })
   app.register(getDashboardRoute, { prefix: '/api' })
 
+  // WORKSPACE ROUTES
   app.register(createWorkspaceRoute, { prefix: '/api' })
   app.register(listWorkspaceRoute, { prefix: '/api' })
   app.register(getWorkspaceByIdRoute, { prefix: '/api' })
+  app.register(getWorkspaceBySlugRoute, { prefix: '/api' })
   app.register(editWorkspaceRoute, { prefix: '/api' })
   app.register(removeWorkspaceRoute, { prefix: '/api' })
 
+  // TRANSACTION ROUTES
   app.register(createTransactionRoute, { prefix: '/api' })
   app.register(listTransactionRoute, { prefix: '/api' })
   app.register(getTransactionRoute, { prefix: '/api' })
   app.register(editTransactionRoute, { prefix: '/api' })
   app.register(removeTransactionRoute, { prefix: '/api' })
 
+  // WORKSPACE MEMBERS ROUTES
   app.register(addMemberToWorkspaceRoute, { prefix: '/api' })
   app.register(listMemberWorkspaceRoute, { prefix: '/api' })
   app.register(getMemberFromWorkspaceById, { prefix: '/api' })
   app.register(changeRoleMemberRoute, { prefix: '/api' })
   app.register(removeMemberFromWorkspaceRoute, { prefix: '/api' })
+
+  // WORKSPACE INVITES ROUTES
+  app.register(sendWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(listWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(acceptWorkspaceInviteRoute, { prefix: '/api' })
+  app.register(declineWorkspaceInviteRoute, { prefix: '/api' })
 }

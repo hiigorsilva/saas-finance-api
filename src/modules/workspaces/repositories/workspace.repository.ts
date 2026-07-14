@@ -1,15 +1,18 @@
-import { and, count, desc, eq, isNull } from 'drizzle-orm'
+import { and, count, desc, eq, inArray, isNull, or } from 'drizzle-orm'
 import { db } from '../../../db/connection'
+import { usersTable } from '../../../db/schemas/users'
+import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
 import { workspacesTable } from '../../../db/schemas/workspaces'
 import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
+import { generateSlug } from '../../../shared/utils/helpers'
 import type {
   CreateWorkspaceDTO,
   IWorkspaceId,
   IWorkspaceOutput,
 } from '../dto/workspace.dto'
 import type {
-  IWorkspace,
+  IWorkspaceDetails,
   IWorkspaceRepository,
 } from '../interfaces/workspace.interface'
 
@@ -40,6 +43,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .values({
         ownerId: userId,
         name: data.name,
+        slug: generateSlug(data.name),
         description: data.description,
         type: data.type,
       })
@@ -69,31 +73,37 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async list(
     userId: string,
     page = 1,
-    limit = 10
+    limit = 50
   ): Promise<IPaginationOutput<IWorkspaceOutput>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
 
+    const memberWorkspaceIds = db
+      .select({ workspaceId: workspaceMembersTable.workspaceId })
+      .from(workspaceMembersTable)
+      .where(eq(workspaceMembersTable.userId, userId))
+
+    const whereClause = and(
+      isNull(workspacesTable.deletedAt),
+      or(
+        eq(workspacesTable.ownerId, userId),
+        inArray(workspacesTable.id, memberWorkspaceIds)
+      )
+    )
+
     const [totalCount, workspaces] = await Promise.all([
       db
         .select({ count: count() })
         .from(workspacesTable)
-        .where(isNull(workspacesTable.deletedAt))
+        .where(whereClause)
         .then(row => Number(row[0].count ?? 0)),
 
       db.query.workspacesTable.findMany({
         columns: {
-          id: true,
-          name: true,
-          description: true,
-          type: true,
           deletedAt: false,
         },
-        where: and(
-          eq(workspacesTable.ownerId, userId),
-          isNull(workspacesTable.deletedAt)
-        ),
+        where: whereClause,
         limit: safeLimit,
         offset: offset,
         orderBy: desc(workspacesTable.createdAt),
@@ -119,17 +129,149 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     }
   }
 
-  async findWorkspaceById(workspaceId: string): Promise<IWorkspace | null> {
-    const workspace = await db.query.workspacesTable.findFirst({
-      columns: {
-        deletedAt: false,
-      },
-      where: and(
-        eq(workspacesTable.id, workspaceId),
-        isNull(workspacesTable.deletedAt)
-      ),
-    })
-    return workspace ?? null
+  async findWorkspaceById(
+    workspaceId: string
+  ): Promise<IWorkspaceDetails | null> {
+    const [workspace, countMembers, members] = await Promise.all([
+      db
+        .select({
+          id: workspacesTable.id,
+          slug: workspacesTable.slug,
+          name: workspacesTable.name,
+          description: workspacesTable.description,
+          type: workspacesTable.type,
+          createdAt: workspacesTable.createdAt,
+          updatedAt: workspacesTable.updatedAt,
+          ownerName: usersTable.name,
+          ownerId: usersTable.id,
+        })
+        .from(workspacesTable)
+        .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
+        .where(
+          and(
+            eq(workspacesTable.id, workspaceId),
+            isNull(workspacesTable.deletedAt)
+          )
+        ),
+
+      db
+        .select({ count: count() })
+        .from(workspaceMembersTable)
+        .innerJoin(
+          workspacesTable,
+          eq(workspaceMembersTable.workspaceId, workspacesTable.id)
+        )
+        .where(
+          and(
+            eq(workspacesTable.id, workspaceId),
+            isNull(workspacesTable.deletedAt)
+          )
+        ),
+
+      db
+        .select({
+          id: workspaceMembersTable.id,
+          userId: workspaceMembersTable.userId,
+          workspaceId: workspaceMembersTable.workspaceId,
+          role: workspaceMembersTable.role,
+          joinedAt: workspaceMembersTable.joinedAt,
+          userName: usersTable.name,
+          userEmail: usersTable.email,
+        })
+        .from(workspacesTable)
+        .innerJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
+        )
+        .innerJoin(usersTable, eq(workspaceMembersTable.userId, usersTable.id))
+        .where(
+          and(
+            eq(workspacesTable.id, workspaceId),
+            isNull(workspacesTable.deletedAt)
+          )
+        )
+        .orderBy(workspaceMembersTable.joinedAt),
+    ])
+
+    if (!workspace || workspace.length === 0) {
+      return null
+    }
+
+    const workspaceData = workspace[0]
+    const totalMembers = countMembers[0].count ?? 0
+
+    return {
+      ...workspaceData,
+      totalMembers,
+      members,
+    }
+  }
+
+  async findWorkspaceBySlug(slug: string): Promise<IWorkspaceDetails | null> {
+    const [workspace, countMembers, members] = await Promise.all([
+      db
+        .select({
+          id: workspacesTable.id,
+          slug: workspacesTable.slug,
+          name: workspacesTable.name,
+          description: workspacesTable.description,
+          type: workspacesTable.type,
+          createdAt: workspacesTable.createdAt,
+          updatedAt: workspacesTable.updatedAt,
+          ownerName: usersTable.name,
+          ownerId: usersTable.id,
+        })
+        .from(workspacesTable)
+        .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
+        .where(
+          and(eq(workspacesTable.slug, slug), isNull(workspacesTable.deletedAt))
+        ),
+
+      db
+        .select({ count: count() })
+        .from(workspaceMembersTable)
+        .innerJoin(
+          workspacesTable,
+          eq(workspaceMembersTable.workspaceId, workspacesTable.id)
+        )
+        .where(
+          and(eq(workspacesTable.slug, slug), isNull(workspacesTable.deletedAt))
+        ),
+
+      db
+        .select({
+          id: workspaceMembersTable.id,
+          userId: workspaceMembersTable.userId,
+          workspaceId: workspaceMembersTable.workspaceId,
+          role: workspaceMembersTable.role,
+          joinedAt: workspaceMembersTable.joinedAt,
+          userName: usersTable.name,
+          userEmail: usersTable.email,
+        })
+        .from(workspacesTable)
+        .innerJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
+        )
+        .innerJoin(usersTable, eq(workspaceMembersTable.userId, usersTable.id))
+        .where(
+          and(eq(workspacesTable.slug, slug), isNull(workspacesTable.deletedAt))
+        )
+        .orderBy(workspaceMembersTable.joinedAt),
+    ])
+
+    if (!workspace || workspace.length === 0) {
+      return null
+    }
+
+    const workspaceData = workspace[0]
+    const totalMembers = countMembers[0].count ?? 0
+
+    return {
+      ...workspaceData,
+      totalMembers,
+      members,
+    }
   }
 
   async remove(
@@ -169,6 +311,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       .returning({
         id: workspacesTable.id,
         name: workspacesTable.name,
+        slug: workspacesTable.slug,
         description: workspacesTable.description,
         type: workspacesTable.type,
         ownerId: workspacesTable.ownerId,

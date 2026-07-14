@@ -15,6 +15,10 @@ export const editWorkspaceBodySchema = z.object({
     .string()
     .min(2, { error: 'Name must have at least 2 characters' })
     .trim(),
+  slug: z
+    .string()
+    .min(2, { error: 'Slug must have at least 2 characters' })
+    .trim(),
   description: z.string().trim().optional(),
   type: z.enum(['PRIVATE', 'SHARED']),
 })
@@ -22,6 +26,7 @@ export const editWorkspaceBodySchema = z.object({
 const workspaceSchema = z.object({
   id: z.string(),
   name: z.string(),
+  slug: z.string(),
   description: z.string().nullable(),
   type: z.string(),
   ownerId: z.string(),

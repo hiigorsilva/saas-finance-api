@@ -4,7 +4,7 @@ import { usersTable } from './users'
 import { workspacesTable } from './workspaces'
 
 export const workspaceInvitationsTable = pgTable('workspace_invitations', {
-  id: uuid('id').defaultRandom().primaryKey(),
+  id: uuid('id').defaultRandom().primaryKey().notNull(),
   workspaceId: uuid('workspace_id')
     .notNull()
     .references(() => workspacesTable.id, { onDelete: 'cascade' }),

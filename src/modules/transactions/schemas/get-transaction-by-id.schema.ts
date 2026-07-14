@@ -1,6 +1,5 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
-import { transactionStatusSchema } from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
 import {
@@ -16,13 +15,12 @@ export const getTransactionByIdParamsSchema = z.object({
 const transactionSchema = z.object({
   id: z.string(),
   workspaceId: z.string(),
-  createdByUserId: z.string(),
+  ownerId: z.string(),
   name: z.string(),
   description: z.string().nullable(),
   type: z.string(),
   category: z.string(),
-  amount: z.number(),
-  status: transactionStatusSchema,
+  amount: z.string(),
   paymentDate: z.date(),
   createdAt: z.date(),
   updatedAt: z.date(),

@@ -7,6 +7,7 @@ const mockWorkspaceRepository = {
   save: vi.fn(),
   alreadyExistsById: vi.fn(),
   findWorkspaceById: vi.fn(),
+  findWorkspaceBySlug: vi.fn(),
   edit: vi.fn(),
   remove: vi.fn(),
   isPrivateWorkspace: vi.fn(),

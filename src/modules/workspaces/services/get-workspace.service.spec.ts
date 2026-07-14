@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { IWorkspace } from '../interfaces/workspace.interface'
+import type { IWorkspaceDetails } from '../interfaces/workspace.interface'
 import { GetWorkspaceService } from './get-workspace.service'
 
 const mockWorkspaceRepository = {
@@ -7,6 +7,7 @@ const mockWorkspaceRepository = {
   alreadyExistsByName: vi.fn(),
   edit: vi.fn(),
   findWorkspaceById: vi.fn(),
+  findWorkspaceBySlug: vi.fn(),
   isPrivateWorkspace: vi.fn(),
   list: vi.fn(),
   remove: vi.fn(),
@@ -57,37 +58,49 @@ describe('GetWorkspaceService', async () => {
     expect(mockWorkspaceRepository.findWorkspaceById).not.toHaveBeenCalled()
   })
 
-  it('should return an error if workspace is not exists', async () => {
+  it('should return an error if workspace does not exist', async () => {
     const { workspaceId, userId } = dataInput
 
     mockWorkspaceMemberRepository.isMember.mockResolvedValue(true)
-    mockWorkspaceRepository.alreadyExistsById.mockResolvedValue(false)
+    mockWorkspaceRepository.findWorkspaceById.mockResolvedValue(null)
 
     await expect(sut.getWorkspaceById({ userId, workspaceId })).rejects.toThrow(
       'Workspace not found.'
     )
 
-    expect(mockWorkspaceRepository.alreadyExistsById).toHaveBeenCalledWith(
+    expect(mockWorkspaceRepository.findWorkspaceById).toHaveBeenCalledWith(
       workspaceId
     )
-    expect(mockWorkspaceRepository.findWorkspaceById).not.toHaveBeenCalled()
   })
 
-  it('should return an error if workspace is not exists', async () => {
+  it('should return workspace details by id', async () => {
     const { workspaceId, userId } = dataInput
 
     const workspaceDetails = {
       id: 'user_id',
       name: 'workspace_name',
+      slug: 'workspace-name',
       description: 'descrição do workspace',
       type: 'SHARED',
       ownerId: 'owner_id',
+      ownerName: 'Owner Name',
+      totalMembers: 1,
+      members: [
+        {
+          id: 'member_id',
+          userId: 'user_id',
+          workspaceId: 'workspace_id',
+          role: 'OWNER',
+          joinedAt: new Date(),
+          userName: 'Owner Name',
+          userEmail: 'owner@email.com',
+        },
+      ],
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as IWorkspace
+    } as IWorkspaceDetails
 
     mockWorkspaceMemberRepository.isMember.mockResolvedValue(true)
-    mockWorkspaceRepository.alreadyExistsById.mockResolvedValue(true)
     mockWorkspaceRepository.findWorkspaceById.mockResolvedValue(
       workspaceDetails
     )
@@ -98,7 +111,7 @@ describe('GetWorkspaceService', async () => {
       workspaceId,
       userId
     )
-    expect(mockWorkspaceRepository.alreadyExistsById).toHaveBeenCalledWith(
+    expect(mockWorkspaceRepository.findWorkspaceById).toHaveBeenCalledWith(
       workspaceId
     )
     expect(result).toEqual(workspaceDetails)

@@ -37,12 +37,12 @@ export class AddMemberController {
       )
 
     const { workspaceId } = dataParams
-    const { email, role } = data
+    const { email } = data
 
     const member = await this.workspaceMemberService.addMember({
       workspaceId,
+      inviterId: userId,
       email,
-      role,
     })
 
     return reply.status(201).send(dataResponse(member))

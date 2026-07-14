@@ -6,20 +6,18 @@ import type {
   IPaymentMethodTransactionType,
   ITransactionDTO,
   ITransactionId,
-  ITransactionStatusType,
   ITransactionType,
 } from '../dto/transaction.dto'
 
 export interface ITransaction {
   id: string
   workspaceId: string
-  createdByUserId: string
+  ownerId: string
   name: string
   description: string | null
   type: ITransactionType
   category: ICategoryTransactionType
-  amount: number
-  status: ITransactionStatusType
+  amount: string
   paymentDate: Date
   paymentMethod: IPaymentMethodTransactionType
   createdAt: Date

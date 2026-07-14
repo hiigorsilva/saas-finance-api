@@ -13,29 +13,25 @@ export const addMemberParamsSchema = z.object({
 
 export const addMemberBodySchema = z.object({
   email: z.email(),
-  role: z.enum(['ADMIN', 'MEMBER', 'OWNER', 'VIEWER']),
 })
 
-const addedMemberSchema = z.object({
+const invitedMemberSchema = z.object({
   id: z.string(),
-  workspaceId: z.string(),
-  userId: z.string(),
-  role: z.string(),
 })
 
 export const addMemberSchema: RouteShorthandOptions = {
   preHandler: [privateRoute, hasPermission],
   schema: {
-    summary: 'Add a member to a workspace',
+    summary: 'Invite a user to a workspace',
     description:
-      'Adds an existing user to a SHARED workspace by email. PRIVATE workspaces do not accept members. Requires workspace invite permission.',
+      'Creates a workspace invite for an existing user by email. The user becomes a MEMBER only after accepting the invite. PRIVATE workspaces do not accept invites.',
     consumes: ['application/json'],
     security: [{ bearerAuth: [] }],
     tags: ['Workspace Members'],
     params: addMemberParamsSchema,
     body: addMemberBodySchema,
     response: {
-      201: dataResponseSchema(addedMemberSchema),
+      201: dataResponseSchema(invitedMemberSchema),
       400: errorResponseSchema,
       401: errorResponseSchema,
       403: errorResponseSchema,

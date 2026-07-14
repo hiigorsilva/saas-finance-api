@@ -10,7 +10,7 @@ export const registerServerStart = async (app: FastifyInstance) => {
       `✅ API Reference available at http://${env.HOST}:${env.PORT}/api/docs`
     )
   } catch (error) {
-    app.log.error('SERVER_START_ERROR', error)
+    console.error('SERVER_START_ERROR:', error)
     process.exit(1)
   }
 }

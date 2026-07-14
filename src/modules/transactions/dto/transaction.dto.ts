@@ -2,7 +2,6 @@ import type z from 'zod'
 import type {
   categorySchema,
   paymentMethodSchema,
-  transactionStatusSchema,
   typeSchema,
 } from '../../../data/transactions'
 import type { ITransaction } from '../interfaces/transaction.interface'
@@ -17,6 +16,5 @@ export type ITransactionDTO = Pick<
 >
 export type ITransactionId = Pick<ITransaction, 'id'>
 export type ITransactionType = z.infer<typeof typeSchema>
-export type ITransactionStatusType = z.infer<typeof transactionStatusSchema>
 export type ICategoryTransactionType = z.infer<typeof categorySchema>
 export type IPaymentMethodTransactionType = z.infer<typeof paymentMethodSchema>
