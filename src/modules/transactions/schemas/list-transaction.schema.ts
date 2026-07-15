@@ -26,6 +26,7 @@ const transactionSchema = z.object({
   category: z.string(),
   amount: z.string(),
   paymentDate: z.date(),
+  paymentMethod: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })
