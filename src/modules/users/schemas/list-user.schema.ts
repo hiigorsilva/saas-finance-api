@@ -16,6 +16,7 @@ const userSchema = z.object({
   name: z.string(),
   email: z.email(),
   financialProfile: z.string().nullable(),
+  birthDate: z.date().nullable(),
   active: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),

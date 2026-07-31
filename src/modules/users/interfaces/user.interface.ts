@@ -9,6 +9,7 @@ export interface IUser {
   email: string
   passwordHashed: string
   financialProfile: TFinancialProfile | null
+  birthDate: string | null
   active: boolean
   createdAt: Date
   updatedAt: Date

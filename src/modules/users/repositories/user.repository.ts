@@ -143,4 +143,37 @@ export class UserRepository implements IUserRepository {
     await db.delete(usersTable).where(eq(usersTable.id, userId))
     return { status: 'User successfully deleted.' }
   }
+
+  async updateUser({
+    userId,
+    name,
+    passwordHashed,
+    birthDate,
+  }: {
+    userId: string
+    name: string
+    passwordHashed: string
+    birthDate: string | null
+  }): Promise<IUserOutput> {
+    const [updatedUser] = await db
+      .update(usersTable)
+      .set({
+        name,
+        passwordHashed,
+        birthDate,
+      })
+      .where(and(eq(usersTable.id, userId), isNull(usersTable.deletedAt)))
+      .returning({
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+        birthDate: usersTable.birthDate,
+        active: usersTable.active,
+        financialProfile: usersTable.financialProfile,
+        createdAt: usersTable.createdAt,
+        updatedAt: usersTable.updatedAt,
+      })
+
+    return updatedUser
+  }
 }

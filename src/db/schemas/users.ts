@@ -8,6 +8,7 @@ export const usersTable = pgTable('users', {
   passwordHashed: varchar('password_hashed').notNull(),
   financialProfile: userProfileEnum('financial_profile'),
   active: boolean('active').default(true).notNull(),
+  birthDate: varchar('birth_date'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   deletedAt: timestamp('deleted_at'),
