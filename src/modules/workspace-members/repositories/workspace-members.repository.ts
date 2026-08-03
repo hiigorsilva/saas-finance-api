@@ -1,4 +1,4 @@
-import { and, count, desc, eq } from 'drizzle-orm'
+import { and, count, desc, eq, or } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
@@ -17,7 +17,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     const member = await db.query.workspaceMembersTable.findFirst({
       where: and(
         eq(workspaceMembersTable.workspaceId, workspaceId),
-        eq(workspaceMembersTable.userId, memberId)
+        or(
+          eq(workspaceMembersTable.userId, memberId),
+          eq(workspaceMembersTable.id, memberId)
+        )
       ),
     })
     return !!member
@@ -27,7 +30,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     const member = await db.query.workspaceMembersTable.findFirst({
       where: and(
         eq(workspaceMembersTable.workspaceId, workspaceId),
-        eq(workspaceMembersTable.userId, memberId),
+        or(
+          eq(workspaceMembersTable.userId, memberId),
+          eq(workspaceMembersTable.id, memberId)
+        ),
         eq(workspaceMembersTable.role, 'OWNER')
       ),
     })
@@ -143,7 +149,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       .where(
         and(
           eq(workspaceMembersTable.workspaceId, workspaceId),
-          eq(workspaceMembersTable.userId, memberId)
+          or(
+            eq(workspaceMembersTable.userId, memberId),
+            eq(workspaceMembersTable.id, memberId)
+          )
         )
       )
 
@@ -178,7 +187,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       .where(
         and(
           eq(workspaceMembersTable.workspaceId, workspaceId),
-          eq(workspaceMembersTable.userId, memberId)
+          or(
+            eq(workspaceMembersTable.userId, memberId),
+            eq(workspaceMembersTable.id, memberId)
+          )
         )
       )
     return { status: 'Member successfully removed.' }
@@ -197,7 +209,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       .where(
         and(
           eq(workspaceMembersTable.workspaceId, workspaceId),
-          eq(workspaceMembersTable.userId, memberId)
+          or(
+            eq(workspaceMembersTable.userId, memberId),
+            eq(workspaceMembersTable.id, memberId)
+          )
         )
       )
 
@@ -217,7 +232,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       },
       where: and(
         eq(workspaceMembersTable.workspaceId, workspaceId),
-        eq(workspaceMembersTable.userId, memberId)
+        or(
+          eq(workspaceMembersTable.userId, memberId),
+          eq(workspaceMembersTable.id, memberId)
+        )
       ),
     })
     return role?.role ?? null

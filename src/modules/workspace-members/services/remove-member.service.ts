@@ -57,6 +57,18 @@ export class RemoveMemberService {
       )
     }
 
+    const member = await this.workspaceMemberRepository.getMemberById(
+      workspaceId,
+      memberId
+    )
+    if (member.id === userId) {
+      throw new AppError(
+        'The user cannot remove themselves from the workspace. Instead, delete the workspace.',
+        403,
+        ErrorCodes.USER_CANNOT_REMOVE_SELF_FROM_WORKSPACE
+      )
+    }
+
     const removedMember = await this.workspaceMemberRepository.removeMember(
       workspaceId,
       memberId

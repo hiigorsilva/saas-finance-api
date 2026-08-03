@@ -124,6 +124,35 @@ describe('RemoveMemberService', async () => {
     expect(mockWorkspaceMemberRepository.removeMember).not.toHaveBeenCalled()
   })
 
+  it('should throw an error if user tries to remove himself using membership id', async () => {
+    const { workspaceId, userId, memberId } = inputData
+
+    mockWorkspaceMemberRepository.isOwner.mockResolvedValue(false)
+    mockWorkspaceRepository.alreadyExistsById.mockResolvedValue(true)
+    mockWorkspaceMemberRepository.isMember.mockResolvedValue(true)
+    mockWorkspaceMemberRepository.getMemberById.mockResolvedValue({
+      id: userId,
+      name: 'Self User',
+      email: 'self@email.com',
+      role: 'MEMBER',
+      financialProfile: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+
+    await expect(
+      sut.removeMember({ workspaceId, userId, memberId })
+    ).rejects.toThrow(
+      'The user cannot remove themselves from the workspace. Instead, delete the workspace.'
+    )
+
+    expect(mockWorkspaceMemberRepository.getMemberById).toHaveBeenCalledWith(
+      workspaceId,
+      memberId
+    )
+    expect(mockWorkspaceMemberRepository.removeMember).not.toHaveBeenCalled()
+  })
+
   it('should remove the member from the workspace', async () => {
     const { workspaceId, userId, memberId } = inputData
     const response = { status: 'Member successfully removed.' }
@@ -131,6 +160,15 @@ describe('RemoveMemberService', async () => {
     mockWorkspaceMemberRepository.isOwner.mockResolvedValue(false)
     mockWorkspaceRepository.alreadyExistsById.mockResolvedValue(true)
     mockWorkspaceMemberRepository.isMember.mockResolvedValue(true)
+    mockWorkspaceMemberRepository.getMemberById.mockResolvedValue({
+      id: 'another_user_id',
+      name: 'Another User',
+      email: 'another@email.com',
+      role: 'MEMBER',
+      financialProfile: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
     mockWorkspaceMemberRepository.removeMember.mockResolvedValue(response)
 
     const result = await sut.removeMember({ workspaceId, userId, memberId })
