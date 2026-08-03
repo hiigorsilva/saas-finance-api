@@ -14,6 +14,7 @@ import type {
 import type {
   IWorkspaceDetails,
   IWorkspaceRepository,
+  IWorkspaceSummary,
 } from '../interfaces/workspace.interface'
 
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -74,7 +75,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     userId: string,
     page = 1,
     limit = 50
-  ): Promise<IPaginationOutput<IWorkspaceOutput>> {
+  ): Promise<IPaginationOutput<IWorkspaceSummary>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
@@ -99,15 +100,40 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         .where(whereClause)
         .then(row => Number(row[0].count ?? 0)),
 
-      db.query.workspacesTable.findMany({
-        columns: {
-          deletedAt: false,
-        },
-        where: whereClause,
-        limit: safeLimit,
-        offset: offset,
-        orderBy: desc(workspacesTable.createdAt),
-      }),
+      db
+        .select({
+          id: workspacesTable.id,
+          slug: workspacesTable.slug,
+          name: workspacesTable.name,
+          description: workspacesTable.description,
+          type: workspacesTable.type,
+          createdAt: workspacesTable.createdAt,
+          updatedAt: workspacesTable.updatedAt,
+          ownerName: usersTable.name,
+          ownerId: usersTable.id,
+          totalMembers: count(workspaceMembersTable.id),
+        })
+        .from(workspacesTable)
+        .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
+        .leftJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
+        )
+        .where(whereClause)
+        .groupBy(
+          workspacesTable.id,
+          workspacesTable.slug,
+          workspacesTable.name,
+          workspacesTable.description,
+          workspacesTable.type,
+          workspacesTable.createdAt,
+          workspacesTable.updatedAt,
+          usersTable.id,
+          usersTable.name
+        )
+        .limit(safeLimit)
+        .offset(offset)
+        .orderBy(desc(workspacesTable.createdAt)),
     ])
 
     const totalPages = Math.ceil(totalCount / safeLimit)
@@ -132,7 +158,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async findWorkspaceById(
     workspaceId: string
   ): Promise<IWorkspaceDetails | null> {
-    const [workspace, countMembers, members] = await Promise.all([
+    const [workspace, members] = await Promise.all([
       db
         .select({
           id: workspacesTable.id,
@@ -144,28 +170,30 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           updatedAt: workspacesTable.updatedAt,
           ownerName: usersTable.name,
           ownerId: usersTable.id,
+          totalMembers: count(workspaceMembersTable.id),
         })
         .from(workspacesTable)
         .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
-        .where(
-          and(
-            eq(workspacesTable.id, workspaceId),
-            isNull(workspacesTable.deletedAt)
-          )
-        ),
-
-      db
-        .select({ count: count() })
-        .from(workspaceMembersTable)
-        .innerJoin(
-          workspacesTable,
-          eq(workspaceMembersTable.workspaceId, workspacesTable.id)
+        .leftJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
         )
         .where(
           and(
             eq(workspacesTable.id, workspaceId),
             isNull(workspacesTable.deletedAt)
           )
+        )
+        .groupBy(
+          workspacesTable.id,
+          workspacesTable.slug,
+          workspacesTable.name,
+          workspacesTable.description,
+          workspacesTable.type,
+          workspacesTable.createdAt,
+          workspacesTable.updatedAt,
+          usersTable.id,
+          usersTable.name
         ),
 
       db
@@ -198,11 +226,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     }
 
     const workspaceData = workspace[0]
-    const totalMembers = countMembers[0].count ?? 0
 
     return {
       ...workspaceData,
-      totalMembers,
       members,
     }
   }

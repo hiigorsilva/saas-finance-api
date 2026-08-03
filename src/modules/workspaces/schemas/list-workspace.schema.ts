@@ -18,6 +18,8 @@ const workspaceListItemSchema = z.object({
   slug: z.string(),
   description: z.string().nullable(),
   type: z.string(),
+  ownerName: z.string(),
+  totalMembers: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

@@ -16,9 +16,12 @@ export interface IWorkspace {
   updatedAt: Date
 }
 
-export interface IWorkspaceDetails extends IWorkspace {
+export interface IWorkspaceSummary extends IWorkspace {
   ownerName: string
   totalMembers: number
+}
+
+export interface IWorkspaceDetails extends IWorkspaceSummary {
   members: Array<{
     id: string
     userId: string
@@ -43,7 +46,7 @@ export interface IWorkspaceRepository {
     userId: string,
     page: number,
     limit: number
-  ): Promise<IPaginationOutput<IWorkspaceOutput>>
+  ): Promise<IPaginationOutput<IWorkspaceSummary>>
 
   findWorkspaceById(workspaceId: string): Promise<IWorkspaceDetails | null>
 
