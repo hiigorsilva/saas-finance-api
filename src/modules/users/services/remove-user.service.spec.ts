@@ -11,6 +11,7 @@ const mockUserRepository = {
   listAllUsers: vi.fn(),
   listInactiveUsers: vi.fn(),
   remove: vi.fn(),
+  updateUser: vi.fn(),
 }
 
 describe('RemoveUserService', async () => {

@@ -10,6 +10,7 @@ const mockUserRepository = {
   listAllUsers: vi.fn(),
   listInactiveUsers: vi.fn(),
   remove: vi.fn(),
+  updateUser: vi.fn(),
 }
 
 vi.mock('../validations/password-validate', () => ({
