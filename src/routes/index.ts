@@ -12,6 +12,7 @@ import { listInactiveUserRoute } from '../modules/users/routes/list-inactive-use
 import { listUserRoute } from '../modules/users/routes/list-user.route'
 import { meRoute } from '../modules/users/routes/me.route'
 import { removeUserRoute } from '../modules/users/routes/remove-user.route'
+import { updateUserRoute } from '../modules/users/routes/update-user.route'
 import { acceptWorkspaceInviteRoute } from '../modules/workspace-invites/routes/accept-workspace-invite.route'
 import { declineWorkspaceInviteRoute } from '../modules/workspace-invites/routes/decline-workspace-invite.route'
 import { listWorkspaceInviteRoute } from '../modules/workspace-invites/routes/list-workspace-invite.route'
@@ -36,6 +37,7 @@ export const registerRoutes = (app: FastifyInstance) => {
 
   // USER ROUTES
   app.register(meRoute, { prefix: '/api' })
+  app.register(updateUserRoute, { prefix: '/api' })
   app.register(listUserRoute, { prefix: '/api' })
   app.register(listInactiveUserRoute, { prefix: '/api' })
   app.register(removeUserRoute, { prefix: '/api' })

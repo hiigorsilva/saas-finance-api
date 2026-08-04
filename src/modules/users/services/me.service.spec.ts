@@ -11,6 +11,7 @@ const mockUserRepository = {
   listAllUsers: vi.fn(),
   listInactiveUsers: vi.fn(),
   remove: vi.fn(),
+  updateUser: vi.fn(),
 }
 
 describe('MeService', () => {
@@ -37,6 +38,8 @@ describe('MeService', () => {
       name: 'John Doe',
       financialProfile: null,
       email: 'john.doe@example.com',
+      active: true,
+      birthDate: '1999-10-23',
       createdAt: new Date(),
       updatedAt: new Date(),
     }

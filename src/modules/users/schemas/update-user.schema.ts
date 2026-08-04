@@ -6,6 +6,18 @@ import {
   errorResponseSchema,
 } from '../../../shared/schemas/response.schema'
 
+export const userUpdateInputSchema = z.object({
+  name: z.string().min(3, 'Name must be at least 3 characters long'),
+  birthDate: z
+    .string()
+    .nullable()
+    .describe('It must be in the format YYYY-MM-DD'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .max(20, 'Password must be at most 20 characters long'),
+})
+
 export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -17,15 +29,16 @@ export const userSchema = z.object({
   updatedAt: z.date(),
 })
 
-export const meSchema: RouteShorthandOptions = {
+export const updateUserSchema: RouteShorthandOptions = {
   preHandler: [privateRoute],
   schema: {
-    summary: 'Get authenticated user profile',
+    summary: 'Update user profile',
     description:
-      'Returns the profile of the user identified by the Bearer token. Use it to hydrate the current session on the client.',
+      "Update the authenticated user's profile information, including name, birth date, and password.",
     tags: ['User'],
     security: [{ bearerAuth: [] }],
     consumes: ['application/json'],
+    body: userUpdateInputSchema,
     response: {
       200: dataResponseSchema(userSchema),
       400: errorResponseSchema,

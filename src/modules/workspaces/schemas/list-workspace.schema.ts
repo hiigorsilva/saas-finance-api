@@ -9,6 +9,7 @@ import {
 export const listWorkspaceQuerySchema = z.object({
   page: z.coerce.number().positive().default(1),
   limit: z.coerce.number().positive().max(100).default(10),
+  searchWorkspace: z.string().trim().optional(),
 })
 
 const workspaceListItemSchema = z.object({
@@ -18,6 +19,8 @@ const workspaceListItemSchema = z.object({
   slug: z.string(),
   description: z.string().nullable(),
   type: z.string(),
+  ownerName: z.string(),
+  totalMembers: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

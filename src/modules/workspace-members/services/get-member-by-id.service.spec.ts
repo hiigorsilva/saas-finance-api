@@ -34,6 +34,7 @@ const mockUserRepository = {
   listInactiveUsers: vi.fn(),
   save: vi.fn(),
   remove: vi.fn(),
+  updateUser: vi.fn(),
 }
 
 const inputData = {

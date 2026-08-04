@@ -1,4 +1,14 @@
-import { and, count, desc, eq, inArray, isNull, or } from 'drizzle-orm'
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  isNull,
+  or,
+  sql,
+} from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
@@ -14,6 +24,7 @@ import type {
 import type {
   IWorkspaceDetails,
   IWorkspaceRepository,
+  IWorkspaceSummary,
 } from '../interfaces/workspace.interface'
 
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -73,24 +84,52 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async list(
     userId: string,
     page = 1,
-    limit = 50
-  ): Promise<IPaginationOutput<IWorkspaceOutput>> {
+    limit = 50,
+    searchWorkspace?: string
+  ): Promise<IPaginationOutput<IWorkspaceSummary>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
+
+    const normalizedSearch = searchWorkspace?.trim()
+    const shouldSearch = !!normalizedSearch && normalizedSearch.length >= 3
+    const startsWithTerm = shouldSearch ? `${normalizedSearch}%` : ''
+    const containsTerm = shouldSearch ? `%${normalizedSearch}%` : ''
 
     const memberWorkspaceIds = db
       .select({ workspaceId: workspaceMembersTable.workspaceId })
       .from(workspaceMembersTable)
       .where(eq(workspaceMembersTable.userId, userId))
 
-    const whereClause = and(
+    const permissionClause = and(
       isNull(workspacesTable.deletedAt),
       or(
         eq(workspacesTable.ownerId, userId),
         inArray(workspacesTable.id, memberWorkspaceIds)
       )
     )
+
+    const whereClause = shouldSearch
+      ? and(
+          permissionClause,
+          or(
+            ilike(workspacesTable.name, containsTerm),
+            ilike(workspacesTable.description, containsTerm)
+          )
+        )
+      : permissionClause
+
+    const orderByClause = shouldSearch
+      ? [
+          sql`case
+            when ${workspacesTable.name} ilike ${startsWithTerm} then 0
+            when ${workspacesTable.name} ilike ${containsTerm} then 1
+            when coalesce(${workspacesTable.description}, '') ilike ${containsTerm} then 2
+            else 3
+          end`,
+          desc(workspacesTable.createdAt),
+        ]
+      : [desc(workspacesTable.createdAt)]
 
     const [totalCount, workspaces] = await Promise.all([
       db
@@ -99,15 +138,40 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         .where(whereClause)
         .then(row => Number(row[0].count ?? 0)),
 
-      db.query.workspacesTable.findMany({
-        columns: {
-          deletedAt: false,
-        },
-        where: whereClause,
-        limit: safeLimit,
-        offset: offset,
-        orderBy: desc(workspacesTable.createdAt),
-      }),
+      db
+        .select({
+          id: workspacesTable.id,
+          slug: workspacesTable.slug,
+          name: workspacesTable.name,
+          description: workspacesTable.description,
+          type: workspacesTable.type,
+          createdAt: workspacesTable.createdAt,
+          updatedAt: workspacesTable.updatedAt,
+          ownerName: usersTable.name,
+          ownerId: usersTable.id,
+          totalMembers: count(workspaceMembersTable.id),
+        })
+        .from(workspacesTable)
+        .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
+        .leftJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
+        )
+        .where(whereClause)
+        .groupBy(
+          workspacesTable.id,
+          workspacesTable.slug,
+          workspacesTable.name,
+          workspacesTable.description,
+          workspacesTable.type,
+          workspacesTable.createdAt,
+          workspacesTable.updatedAt,
+          usersTable.id,
+          usersTable.name
+        )
+        .limit(safeLimit)
+        .offset(offset)
+        .orderBy(...orderByClause),
     ])
 
     const totalPages = Math.ceil(totalCount / safeLimit)
@@ -132,7 +196,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async findWorkspaceById(
     workspaceId: string
   ): Promise<IWorkspaceDetails | null> {
-    const [workspace, countMembers, members] = await Promise.all([
+    const [workspace, members] = await Promise.all([
       db
         .select({
           id: workspacesTable.id,
@@ -144,28 +208,30 @@ export class WorkspaceRepository implements IWorkspaceRepository {
           updatedAt: workspacesTable.updatedAt,
           ownerName: usersTable.name,
           ownerId: usersTable.id,
+          totalMembers: count(workspaceMembersTable.id),
         })
         .from(workspacesTable)
         .innerJoin(usersTable, eq(workspacesTable.ownerId, usersTable.id))
-        .where(
-          and(
-            eq(workspacesTable.id, workspaceId),
-            isNull(workspacesTable.deletedAt)
-          )
-        ),
-
-      db
-        .select({ count: count() })
-        .from(workspaceMembersTable)
-        .innerJoin(
-          workspacesTable,
-          eq(workspaceMembersTable.workspaceId, workspacesTable.id)
+        .leftJoin(
+          workspaceMembersTable,
+          eq(workspacesTable.id, workspaceMembersTable.workspaceId)
         )
         .where(
           and(
             eq(workspacesTable.id, workspaceId),
             isNull(workspacesTable.deletedAt)
           )
+        )
+        .groupBy(
+          workspacesTable.id,
+          workspacesTable.slug,
+          workspacesTable.name,
+          workspacesTable.description,
+          workspacesTable.type,
+          workspacesTable.createdAt,
+          workspacesTable.updatedAt,
+          usersTable.id,
+          usersTable.name
         ),
 
       db
@@ -198,11 +264,9 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     }
 
     const workspaceData = workspace[0]
-    const totalMembers = countMembers[0].count ?? 0
 
     return {
       ...workspaceData,
-      totalMembers,
       members,
     }
   }

@@ -21,12 +21,13 @@ export class ListWorkspaceController {
         ErrorCodes.VALIDATION_ERROR
       )
 
-    const { page, limit } = data
+    const { page, limit, searchWorkspace } = data
 
     const workspaces = await this.listWorkspacesService.list({
       userId,
       page,
       limit,
+      searchWorkspace,
     })
 
     return reply.status(200).send(paginatedResponse(workspaces))

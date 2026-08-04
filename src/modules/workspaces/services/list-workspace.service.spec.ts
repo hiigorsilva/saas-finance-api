@@ -50,7 +50,37 @@ describe('ListWorkspaceService', async () => {
     expect(mockWorkspaceRepository.list).toHaveBeenCalledWith(
       userId,
       page,
-      limit
+      limit,
+      undefined
+    )
+    expect(result).toEqual(workspaces)
+  })
+
+  it('should list workspaces with search term', async () => {
+    const { userId, page, limit } = data
+    const searchWorkspace = 'finance'
+    const workspaces = {
+      data: [],
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: 1,
+      limit: 10,
+    }
+
+    mockWorkspaceRepository.list.mockResolvedValue(workspaces)
+
+    const result = await sut.list({
+      userId,
+      page,
+      limit,
+      searchWorkspace,
+    })
+
+    expect(mockWorkspaceRepository.list).toHaveBeenCalledWith(
+      userId,
+      page,
+      limit,
+      searchWorkspace
     )
     expect(result).toEqual(workspaces)
   })
