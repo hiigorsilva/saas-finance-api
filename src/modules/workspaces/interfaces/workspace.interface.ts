@@ -45,7 +45,8 @@ export interface IWorkspaceRepository {
   list(
     userId: string,
     page: number,
-    limit: number
+    limit: number,
+    searchWorkspace?: string
   ): Promise<IPaginationOutput<IWorkspaceSummary>>
 
   findWorkspaceById(workspaceId: string): Promise<IWorkspaceDetails | null>

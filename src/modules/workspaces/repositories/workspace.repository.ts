@@ -1,4 +1,14 @@
-import { and, count, desc, eq, inArray, isNull, or } from 'drizzle-orm'
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  isNull,
+  or,
+  sql,
+} from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { usersTable } from '../../../db/schemas/users'
 import { workspaceMembersTable } from '../../../db/schemas/workspace-members'
@@ -74,24 +84,52 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async list(
     userId: string,
     page = 1,
-    limit = 50
+    limit = 50,
+    searchWorkspace?: string
   ): Promise<IPaginationOutput<IWorkspaceSummary>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
+
+    const normalizedSearch = searchWorkspace?.trim()
+    const shouldSearch = !!normalizedSearch && normalizedSearch.length >= 3
+    const startsWithTerm = shouldSearch ? `${normalizedSearch}%` : ''
+    const containsTerm = shouldSearch ? `%${normalizedSearch}%` : ''
 
     const memberWorkspaceIds = db
       .select({ workspaceId: workspaceMembersTable.workspaceId })
       .from(workspaceMembersTable)
       .where(eq(workspaceMembersTable.userId, userId))
 
-    const whereClause = and(
+    const permissionClause = and(
       isNull(workspacesTable.deletedAt),
       or(
         eq(workspacesTable.ownerId, userId),
         inArray(workspacesTable.id, memberWorkspaceIds)
       )
     )
+
+    const whereClause = shouldSearch
+      ? and(
+          permissionClause,
+          or(
+            ilike(workspacesTable.name, containsTerm),
+            ilike(workspacesTable.description, containsTerm)
+          )
+        )
+      : permissionClause
+
+    const orderByClause = shouldSearch
+      ? [
+          sql`case
+            when ${workspacesTable.name} ilike ${startsWithTerm} then 0
+            when ${workspacesTable.name} ilike ${containsTerm} then 1
+            when coalesce(${workspacesTable.description}, '') ilike ${containsTerm} then 2
+            else 3
+          end`,
+          desc(workspacesTable.createdAt),
+        ]
+      : [desc(workspacesTable.createdAt)]
 
     const [totalCount, workspaces] = await Promise.all([
       db
@@ -133,7 +171,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         )
         .limit(safeLimit)
         .offset(offset)
-        .orderBy(desc(workspacesTable.createdAt)),
+        .orderBy(...orderByClause),
     ])
 
     const totalPages = Math.ceil(totalCount / safeLimit)
