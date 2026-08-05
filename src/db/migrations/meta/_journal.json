@@ -36,6 +36,13 @@
       "when": 1785775400000,
       "tag": "0004_workspace_search_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786051200000,
+      "tag": "0005_transactions_full_text_search",
+      "breakpoints": true
     }
   ]
 }

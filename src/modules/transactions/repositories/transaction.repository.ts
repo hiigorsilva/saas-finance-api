@@ -1,4 +1,4 @@
-import { and, count, desc, eq, isNull } from 'drizzle-orm'
+import { and, count, desc, eq, isNull, sql } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { transactionsTable } from '../../../db/schemas/transactions'
 import { AppError, ErrorCodes } from '../../../errors/app-error'
@@ -31,32 +31,49 @@ export class TransactionRepository implements ITransactionRepository {
   async list(
     workspaceId: string,
     page = 1,
-    limit = 10
+    limit = 10,
+    search?: string
   ): Promise<IPaginationOutput<ITransaction>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
     const offset = (safePage - 1) * safeLimit
 
+    const normalizedSearch = search?.trim()
+    const hasSearch = !!normalizedSearch
+
+    const baseWhere = and(
+      eq(transactionsTable.workspaceId, workspaceId),
+      isNull(transactionsTable.deletedAt)
+    )
+
+    const ftsWhere = hasSearch
+      ? sql<boolean>`to_tsvector(
+            'simple',
+            concat_ws(
+              ' ',
+              coalesce(${transactionsTable.name}, ''),
+              coalesce(${transactionsTable.description}, ''),
+              coalesce(cast(${transactionsTable.category} as text), ''),
+              coalesce(cast(${transactionsTable.type} as text), ''),
+              coalesce(cast(${transactionsTable.paymentMethod} as text), '')
+            )
+          ) @@ websearch_to_tsquery('simple', ${normalizedSearch})`
+      : undefined
+
+    const whereClause = ftsWhere ? and(baseWhere, ftsWhere) : baseWhere
+
     const [totalCount, transactions] = await Promise.all([
       db
         .select({ count: count() })
         .from(transactionsTable)
-        .where(
-          and(
-            eq(transactionsTable.workspaceId, workspaceId),
-            isNull(transactionsTable.deletedAt)
-          )
-        )
+        .where(whereClause)
         .then(row => Number(row[0].count ?? 0)),
 
       db.query.transactionsTable.findMany({
         columns: {
           deletedAt: false,
         },
-        where: and(
-          eq(transactionsTable.workspaceId, workspaceId),
-          isNull(transactionsTable.deletedAt)
-        ),
+        where: whereClause,
         limit: safeLimit,
         offset: offset,
         orderBy: desc(transactionsTable.paymentDate),
@@ -76,7 +93,7 @@ export class TransactionRepository implements ITransactionRepository {
     return {
       data: transactions,
       totalCount: totalCount,
-      totalPages: totalPages,
+      totalPages: safeTotalPages,
       currentPage: safePage,
       limit: safeLimit,
     }

@@ -14,6 +14,7 @@ export const listTransactionParamsSchema = z.object({
 export const listTransactionQuerySchema = z.object({
   page: z.coerce.number().positive().default(1),
   limit: z.coerce.number().positive().max(100).default(10),
+  search: z.string().trim().optional(),
 })
 
 const transactionSchema = z.object({

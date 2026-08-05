@@ -33,7 +33,8 @@ export interface ITransactionRepository {
   list(
     workspaceId: string,
     page?: number,
-    limit?: number
+    limit?: number,
+    search?: string
   ): Promise<IPaginationOutput<ITransaction>>
 
   findTransactionById(
