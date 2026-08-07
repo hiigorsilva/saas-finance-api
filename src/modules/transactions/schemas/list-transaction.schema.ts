@@ -1,5 +1,10 @@
 import type { RouteShorthandOptions } from 'fastify'
 import z from 'zod'
+import {
+  categorySchema,
+  paymentMethodSchema,
+  typeSchema,
+} from '../../../data/transactions'
 import { privateRoute } from '../../../middlewares/private-route'
 import { hasPermission } from '../../../middlewares/user-permission'
 import {
@@ -15,6 +20,11 @@ export const listTransactionQuerySchema = z.object({
   page: z.coerce.number().positive().default(1),
   limit: z.coerce.number().positive().max(100).default(10),
   search: z.string().trim().optional(),
+  type: typeSchema.optional(),
+  category: categorySchema.optional(),
+  paymentMethod: paymentMethodSchema.optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
 })
 
 const transactionSchema = z.object({

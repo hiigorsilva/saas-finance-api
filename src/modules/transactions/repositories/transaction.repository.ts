@@ -1,13 +1,16 @@
-import { and, count, desc, eq, isNull, sql } from 'drizzle-orm'
+import { and, count, desc, eq, gte, isNull, lte, sql } from 'drizzle-orm'
 import { db } from '../../../db/connection'
 import { transactionsTable } from '../../../db/schemas/transactions'
 import { AppError, ErrorCodes } from '../../../errors/app-error'
 import type { IPaginationOutput } from '../../../shared/types/response'
 import type {
+  ICategoryTransactionType,
   ICreateTransactionDTO,
   IEditTransactionDTO,
+  IPaymentMethodTransactionType,
   ITransactionDTO,
   ITransactionId,
+  ITransactionType,
 } from '../dto/transaction.dto'
 import type {
   ITransaction,
@@ -32,7 +35,12 @@ export class TransactionRepository implements ITransactionRepository {
     workspaceId: string,
     page = 1,
     limit = 10,
-    search?: string
+    search?: string,
+    type?: ITransactionType,
+    category?: ICategoryTransactionType,
+    paymentMethod?: IPaymentMethodTransactionType,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<IPaginationOutput<ITransaction>> {
     const safePage = Math.max(1, page)
     const safeLimit = Math.max(1, Math.min(limit, 100))
@@ -46,6 +54,7 @@ export class TransactionRepository implements ITransactionRepository {
       isNull(transactionsTable.deletedAt)
     )
 
+    // Full-Text-Search
     const ftsWhere = hasSearch
       ? sql<boolean>`to_tsvector(
             'simple',
@@ -60,7 +69,33 @@ export class TransactionRepository implements ITransactionRepository {
           ) @@ websearch_to_tsquery('simple', ${normalizedSearch})`
       : undefined
 
-    const whereClause = ftsWhere ? and(baseWhere, ftsWhere) : baseWhere
+    const typeWhere = type ? eq(transactionsTable.type, type) : undefined
+
+    const categoryWhere = category
+      ? eq(transactionsTable.category, category)
+      : undefined
+
+    const paymentMethodWhere = paymentMethod
+      ? eq(transactionsTable.paymentMethod, paymentMethod)
+      : undefined
+
+    const startDateWhere = startDate
+      ? gte(transactionsTable.paymentDate, startDate)
+      : undefined
+
+    const endDateWhere = endDate
+      ? lte(transactionsTable.paymentDate, endDate)
+      : undefined
+
+    const whereClause = and(
+      baseWhere,
+      ftsWhere,
+      typeWhere,
+      categoryWhere,
+      paymentMethodWhere,
+      startDateWhere,
+      endDateWhere
+    )
 
     const [totalCount, transactions] = await Promise.all([
       db

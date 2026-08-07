@@ -34,7 +34,12 @@ export interface ITransactionRepository {
     workspaceId: string,
     page?: number,
     limit?: number,
-    search?: string
+    search?: string,
+    type?: ITransactionType,
+    category?: ICategoryTransactionType,
+    paymentMethod?: IPaymentMethodTransactionType,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<IPaginationOutput<ITransaction>>
 
   findTransactionById(

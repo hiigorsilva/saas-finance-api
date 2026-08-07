@@ -40,7 +40,16 @@ export class ListTransactionController {
         ErrorCodes.VALIDATION_ERROR
       )
 
-    const { page, limit, search } = dataQuery
+    const {
+      page,
+      limit,
+      search,
+      type,
+      category,
+      paymentMethod,
+      startDate,
+      endDate,
+    } = dataQuery
     const { workspaceId } = dataParams
 
     const transactions = await this.listTransactionService.listAll({
@@ -48,6 +57,11 @@ export class ListTransactionController {
       page,
       limit,
       search,
+      type,
+      category,
+      paymentMethod,
+      startDate,
+      endDate,
     })
 
     return reply.status(200).send(paginatedResponse(transactions))
